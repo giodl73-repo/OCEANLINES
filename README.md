@@ -4,7 +4,7 @@
 
 [![validate](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml/badge.svg)](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml)
 
-**[Explore the live Atlas 04 →](https://giodl73-repo.github.io/OCEANLINES/atlas/)**
+**[Explore the live Atlas 05 →](https://giodl73-repo.github.io/OCEANLINES/atlas/)**
 
 ![Planetary heat geography](figures/planetary-heat-geography.svg)
 
@@ -45,7 +45,7 @@ quantitative.
 
 ## Start here
 
-1. Explore the [ATLAS 05 candidate](atlas/) for conceptual zones, co-located
+1. Explore [ATLAS 05](atlas/) for conceptual zones, co-located
    inspection, and paired northern/southern latitude-ring geometry.
 2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
@@ -82,7 +82,7 @@ The calculator uses only the Python standard library.
 ## Project status
 
 OCEANLINES is an early observation-class research and visual-atlas project.
-The Atlas 05 candidate combines conceptual SVG geography with fixed NOAA OISST
+Atlas 05 combines conceptual SVG geography with fixed NOAA OISST
 absolute, anomaly, and estimated-error surface layers, a bookmarkable
 coordinate probe, and symmetric latitude-ring comparisons. It is not a live
 ocean analysis or present-day forecast. The observed modes declare their
