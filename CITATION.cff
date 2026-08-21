@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use OCEANLINES, cite the project and the underlying datasets used by the relevant layer."
+title: "OCEANLINES: Mapping Earth's Hidden Waterworld"
+type: software
+version: 0.1.0
+date-released: 2026-08-21
+authors:
+  - family-names: Della-Libera
+    given-names: Gio
+license: MIT
+abstract: >-
+  A visual and quantitative atlas framework for mapping ocean heat reservoirs,
+  pathways, anomalies, buried layers, and exchange gates without conflating
+  temperature, heat content, or transport.

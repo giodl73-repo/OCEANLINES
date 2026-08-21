@@ -41,12 +41,13 @@ quantitative.
 
 ## Start here
 
-1. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
-2. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
-3. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
-4. Carry the measurement discipline to Jupiter and Saturn in [OCEANBELTS](OCEANBELTS.md).
-5. Review the four falsifiable [PREDICTIONS](PREDICTIONS.md).
-6. Check claim provenance in the [SOURCE REGISTER](SOURCE-REGISTER.md).
+1. Explore [ATLAS 00](atlas/) for the interactive twelve-zone map.
+2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
+3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
+4. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
+5. Carry the measurement discipline to Jupiter and Saturn in [OCEANBELTS](OCEANBELTS.md).
+6. Review the four falsifiable [PREDICTIONS](PREDICTIONS.md).
+7. Check claim provenance in the [SOURCE REGISTER](SOURCE-REGISTER.md).
 
 ## Reproduce the scale ledger
 
@@ -67,9 +68,10 @@ The calculator uses only the Python standard library.
 ## Project status
 
 OCEANLINES is an early observation-class research and visual-atlas project.
-The current maps are original conceptual SVGs; they do not encode a live ocean
-analysis or present-day forecast. The next technical phase is to generate
-separate, time-matched storage, transport, and anomaly layers from public data.
+Atlas 00 and the current SVG maps are conceptual; they do not encode a live
+ocean analysis or present-day forecast. The next technical phase is to generate
+separate, time-matched storage, transport, anomaly, and gate layers from the
+versioned public datasets listed in the atlas data roadmap.
 
 No remote repository has been configured.
 

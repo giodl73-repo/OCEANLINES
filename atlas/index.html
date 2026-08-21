@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An interactive conceptual atlas of Earth's hidden ocean heat geography.">
+  <title>OCEANLINES — Mapping Earth's Hidden Waterworld</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="../README.md" aria-label="OCEANLINES home">OCEANLINES</a>
+    <p>Mapping Earth's Hidden Waterworld</p>
+    <span class="edition">ATLAS 00 · CONCEPTUAL</span>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="atlas-title">
+      <div class="hero-copy">
+        <p class="eyebrow">A fluid geography</p>
+        <h1 id="atlas-title">The ocean has continents,<br>rivers, islands, and gates.</h1>
+        <p class="dek">Not of land—of stored heat, moving water, temporary anomalies,
+          submerged layers, and the narrow passages that rearrange them.</p>
+      </div>
+      <div class="readout" aria-label="Atlas scope">
+        <span><strong id="visible-count">12</strong> named zones</span>
+        <span><strong>4</strong> evidence classes</span>
+        <span><strong>0</strong> false precision</span>
+      </div>
+    </section>
+    <nav class="lenses" aria-label="Atlas lens">
+      <button class="lens active" data-lens="all" aria-pressed="true"><span>00</span> All lines</button>
+      <button class="lens" data-lens="heatmass" aria-pressed="false"><span>01</span> HEATMASS</button>
+      <button class="lens" data-lens="oceanrealms" aria-pressed="false"><span>02</span> OCEANREALMS</button>
+      <button class="lens" data-lens="oceanbelts" aria-pressed="false"><span>03</span> OCEANBELTS</button>
+    </nav>
+    <section class="atlas-shell" aria-label="Interactive ocean heat atlas">
+      <div class="map-panel">
+        <div class="map-stage" id="map-stage">
+          <img src="../figures/planetary-heat-geography.svg"
+            alt="Conceptual world map of ocean heat reservoirs, pathways, anomalies, buried layers, and gates.">
+          <div id="markers" class="markers" aria-label="Selectable ocean zones"></div>
+        </div>
+        <p class="map-note"><span></span> Schematic locations and pathways · not navigational · not a live analysis</p>
+      </div>
+      <aside class="zone-panel" id="zone-panel" aria-live="polite">
+        <p class="zone-index" id="zone-index">SELECT A LINE</p>
+        <h2 id="zone-name">Read the moving map</h2>
+        <p class="zone-kind" id="zone-kind">Start with any numbered marker.</p>
+        <p class="zone-summary" id="zone-summary">Each zone is classified by role, depth,
+          persistence, and evidence—not by color alone.</p>
+        <dl class="zone-facts">
+          <div><dt>ROLE</dt><dd id="zone-role">reservoir · pathway · anomaly · gate</dd></div>
+          <div><dt>DEPTH</dt><dd id="zone-depth">declared for every zone</dd></div>
+          <div><dt>CLOCK</dt><dd id="zone-clock">persistent or transient</dd></div>
+          <div><dt>EVIDENCE</dt><dd id="zone-evidence">conceptual atlas</dd></div>
+        </dl>
+        <div class="boundary">
+          <h3>What this does not show</h3>
+          <p id="zone-boundary">Temperature is not heat content. A pathway is not a closed budget.</p>
+        </div>
+        <a class="source-link" id="zone-source" href="../SOURCE-REGISTER.md">Open the source register →</a>
+      </aside>
+    </section>
+    <section class="grammar" aria-labelledby="grammar-title">
+      <div><div><p class="eyebrow">The map grammar</p><h2 id="grammar-title">Seven shapes of ocean heat</h2></div></div>
+      <div class="grammar-grid">
+        <article><b>01</b><h3>CONTINENT</h3><p>Persistent or seasonal reservoir</p></article>
+        <article><b>02</b><h3>RIVER</h3><p>Current carrying water and energy</p></article>
+        <article><b>03</b><h3>ISLAND</h3><p>Moving warm-core ring or eddy</p></article>
+        <article><b>04</b><h3>BLOB</h3><p>Temporary regional anomaly</p></article>
+        <article><b>05</b><h3>TONGUE</h3><p>Basin-scale anomaly extending east</p></article>
+        <article><b>06</b><h3>BURIED</h3><p>Warm layer beneath a cold or fresh lid</p></article>
+        <article><b>07</b><h3>GATE</h3><p>Narrow section controlling exchange</p></article>
+      </div>
+    </section>
+    <section class="firewall" aria-labelledby="firewall-title">
+      <p class="eyebrow">The measurement firewall</p>
+      <h2 id="firewall-title">One ocean. Four different measurements.</h2>
+      <div class="firewall-grid">
+        <article><span>SURFACE</span><h3>Temperature</h3><p>A value at a place, depth, and time.</p></article>
+        <article><span>VOLUME</span><h3>Heat content</h3><p>Energy integrated through declared water.</p></article>
+        <article><span>SECTION</span><h3>Transport</h3><p>Energy crossing a declared gate per time.</p></article>
+        <article><span>REFERENCE</span><h3>Anomaly</h3><p>Departure from a declared climatology.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer><strong>OCEANLINES</strong><p>Atlas 00 is a conceptual index. Reproducible observational layers come next.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
+  <noscript>This atlas requires JavaScript for zone selection. The complete map remains visible above.</noscript>
+  <script src="app.js" defer></script>
+</body>
+</html>
