@@ -2,6 +2,8 @@
 
 ## Mapping Earth's Hidden Waterworld
 
+[![validate](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml/badge.svg)](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml)
+
 ![Planetary heat geography](figures/planetary-heat-geography.svg)
 
 Most world maps end at the coastline. OCEANLINES starts there.
@@ -83,7 +85,9 @@ anomaly, and estimated-error surface layers. It is not a live ocean analysis or
 present-day forecast. The observed modes declare their projection and include a
 non-color latitude-band summary; uncertainty remains product- and surface-specific.
 
-No remote repository has been configured.
+Public repository: [github.com/giodl73-repo/OCEANLINES](https://github.com/giodl73-repo/OCEANLINES).
+The first hosted validation run passed both the offline suite and pinned NetCDF
+fixture job on the approved Atlas 03 history.
 
 ## Atlas milestones
 
