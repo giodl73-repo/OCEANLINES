@@ -27,7 +27,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 04 · COORDINATE PROBE", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 05 · POLAR RINGS", "not a live analysis"):
             self.assertIn(token, source)
 
     def test_observed_map_declares_projection_and_text_equivalent(self):
@@ -79,6 +79,19 @@ class AtlasTests(unittest.TestCase):
         source = APP.read_text(encoding="utf-8")
         for token in ('searchParams.set("mode"', 'searchParams.set("lat"', 'searchParams.set("lon"', 'searchParams.delete("mode"', "OCEANLINES_OISST_ANOMALY", "OCEANLINES_OISST_ERROR", "not heat content or transport"):
             self.assertIn(token, source)
+
+    def test_polar_rings_have_visual_text_and_keyboard_paths(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        for token in ('id="ring-form"', 'id="ring-lat"', 'id="north-ring"', 'id="south-ring"', 'id="ring-summary"', 'id="ring-body"'):
+            self.assertIn(token, html)
+        for token in ("pairedRingRows", "longestCyclicRun", "ringStatistics", "geometryData = window.OCEANLINES_OISST", "renderRingComparison", 'searchParams.set("ring"', "not a current, barrier strength, heat-content, or transport measurement"):
+            self.assertIn(token, app)
+
+    def test_polar_ring_claim_is_geometry_not_transport(self):
+        html = HTML.read_text(encoding="utf-8")
+        for token in ("Land-or-missing gaps expose analyzed-water continuity", "do not measure currents or heat transport", "Analyzed-water coverage", "Longest arc"):
+            self.assertIn(token, html)
 
     def test_local_links_resolve(self):
         source = HTML.read_text(encoding="utf-8")

@@ -71,6 +71,22 @@ h1 { max-width: 980px; margin: 0; font-size: clamp(3rem, 6.5vw, 7.5rem); line-he
 .probe-controls button { min-height: 42px; padding: .6rem .9rem; border: 1px solid var(--warm); color: var(--deep); background: var(--warm); cursor: pointer; font: 800 .62rem ui-monospace, monospace; text-transform: uppercase; }
 .probe-controls input:focus-visible, .probe-controls button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
 #probe-result { display: block; min-height: 3rem; margin-top: .9rem; padding: .75rem; border-left: 3px solid var(--cyan); color: var(--ink); background: #06171c; font: .72rem/1.55 ui-monospace, monospace; }
+.ring-comparison { margin-top: 1.2rem; padding: 1rem; border: 1px solid var(--line); }
+.ring-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: end; }
+.ring-heading h3 { color: var(--warm); }
+.ring-heading p { max-width: 54rem; }
+.ring-form { display: flex; gap: .65rem; align-items: end; }
+.ring-form label { color: var(--muted); font: 700 .62rem/1.3 ui-monospace, monospace; text-transform: uppercase; }
+.ring-form label span { display: flex; align-items: center; gap: .4rem; margin-top: .35rem; color: var(--ink); }
+.ring-form input { width: 6rem; min-height: 42px; padding: .55rem .65rem; border: 1px solid var(--line); border-radius: 0; color: var(--ink); background: var(--deep); font: 700 .8rem ui-monospace, monospace; }
+.ring-form button { min-height: 42px; padding: .6rem .9rem; border: 1px solid var(--warm); color: var(--deep); background: var(--warm); cursor: pointer; font: 800 .62rem ui-monospace, monospace; text-transform: uppercase; }
+.ring-form input:focus-visible, .ring-form button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+#ring-summary { display: block; min-height: 3rem; margin-top: 1rem; padding: .75rem; border-left: 3px solid var(--violet); color: var(--ink); background: #06171c; font: .72rem/1.55 ui-monospace, monospace; }
+.ring-strips { display: grid; gap: .7rem; margin-top: 1rem; }
+.ring-strips figure { display: grid; grid-template-columns: 9rem minmax(0, 1fr); align-items: center; gap: .75rem; margin: 0; }
+.ring-strips figcaption { color: var(--muted); font: 700 .62rem/1.3 ui-monospace, monospace; text-transform: uppercase; }
+.ring-strips canvas { display: block; width: 100%; height: 32px; border: 1px solid var(--line); image-rendering: pixelated; background: #c8bda5; }
+.ring-table td:last-child { white-space: normal; }
 .zone-panel { min-height: 620px; padding: clamp(1.5rem, 3vw, 3.5rem); display: flex; flex-direction: column; }
 .zone-index { margin: 0 0 2.2rem; color: var(--cyan); font: 800 .68rem/1 ui-monospace, monospace; letter-spacing: .14em; }
 .zone-panel h2 { margin: 0; font-size: clamp(2rem, 3vw, 4rem); line-height: .95; letter-spacing: -.045em; }
@@ -110,5 +126,7 @@ footer strong { color: var(--cyan); letter-spacing: .15em; } footer a { margin-l
   .firewall-grid { grid-template-columns: 1fr 1fr; } footer { align-items: flex-start; flex-direction: column; } footer a { margin-left: 0; }
   .map-modes { grid-template-columns: 1fr 1fr; }
   .probe-controls { grid-template-columns: 1fr 1fr; } .probe-controls button { grid-column: 1 / -1; }
+  .ring-heading { grid-template-columns: 1fr; } .ring-form { align-items: end; }
+  .ring-strips figure { grid-template-columns: 1fr; gap: .3rem; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .marker { transition: none; } }

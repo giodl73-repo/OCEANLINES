@@ -19,6 +19,7 @@ const fields = Object.fromEntries(["index", "name", "kind", "summary", "role", "
 let selectedZone = zones[0];
 let currentMode = "conceptual";
 let probeCell = null;
+let ringLatitude = 64;
 
 function selectZone(zone) {
   selectedZone = zone;
@@ -87,6 +88,15 @@ function renderObservedField(data, colorFunction) {
   for (let latitude = 30; latitude < 180; latitude += 30) {
     context.beginPath(); context.moveTo(0, latitude / 180 * canvas.height); context.lineTo(canvas.width, latitude / 180 * canvas.height); context.stroke();
   }
+  const rings = pairedRingRows(ringLatitude, data);
+  for (const [ring, color] of [[rings.north, "#5ee2d6"], [rings.south, "#ff6f61"]]) {
+    const y = (rows - ring.row - 0.5) * cellHeight;
+    context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y);
+    context.strokeStyle = "#071b22"; context.lineWidth = 5; context.stroke();
+    context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y);
+    context.strokeStyle = color; context.lineWidth = 2; context.setLineDash([8, 5]); context.stroke();
+    context.setLineDash([]);
+  }
   if (probeCell) {
     const shiftedColumn = (probeCell.column + columns / 2) % columns;
     const x = (shiftedColumn + 0.5) * cellWidth;
@@ -115,7 +125,7 @@ function showObservedMetadata(data, mode) {
   const anomaly = mode === "anomaly";
   const error = mode === "error";
   const fieldClass = anomaly ? "REFERENCE-BASED" : error ? "UNCERTAINTY" : "ABSOLUTE";
-  fields.index.textContent = `ATLAS 04 · ${fieldClass} SURFACE FIELD`;
+  fields.index.textContent = `ATLAS 05 · ${fieldClass} SURFACE FIELD`;
   fields.name.textContent = anomaly ? "SST Anomaly" : error ? "Estimated SST Analysis Error" : "Sea Surface Temperature";
   fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
   fields.summary.textContent = anomaly
@@ -200,6 +210,94 @@ function probeCellFromCoordinates(latitude, longitude, data = window.OCEANLINES_
   };
 }
 
+function pairedRingRows(magnitude, data = window.OCEANLINES_OISST) {
+  const bounded = Math.max(0, Math.min(89, Math.abs(magnitude)));
+  const north = probeCellFromCoordinates(bounded, 0, data);
+  const south = probeCellFromCoordinates(-bounded, 0, data);
+  return { requested: bounded, north: { row: north.row, latitude: north.latitude }, south: { row: south.row, latitude: south.latitude } };
+}
+
+function longestCyclicRun(flags) {
+  if (flags.every(Boolean)) return flags.length;
+  let longest = 0;
+  let current = 0;
+  for (let index = 0; index < flags.length * 2; index += 1) {
+    current = flags[index % flags.length] ? Math.min(current + 1, flags.length) : 0;
+    longest = Math.max(longest, current);
+  }
+  return longest;
+}
+
+function ringStatistics(data, ring, geometryData = window.OCEANLINES_OISST) {
+  const columns = data.shape[1];
+  const encoded = data.values_c_hundredths.slice(ring.row * columns, (ring.row + 1) * columns);
+  const geometryEncoded = geometryData.values_c_hundredths.slice(ring.row * columns, (ring.row + 1) * columns);
+  const ocean = geometryEncoded.map(value => value !== null);
+  const values = encoded.filter(value => value !== null).map(value => value / 100);
+  const arcs = ocean.every(Boolean) ? 1 : ocean.reduce((count, value, index) => count + (value && !ocean[(index - 1 + columns) % columns] ? 1 : 0), 0);
+  const mean = values.length ? values.reduce((total, value) => total + value, 0) / values.length : null;
+  return {
+    encoded,
+    valid: values.length,
+    coverage: values.length / columns * 100,
+    arcs,
+    longestDegrees: longestCyclicRun(ocean) * Math.abs(data.longitude.step),
+    mean,
+    minimum: values.length ? Math.min(...values) : null,
+    maximum: values.length ? Math.max(...values) : null
+  };
+}
+
+function renderRingStrip(canvas, data, statistics, colorFunction) {
+  const context = canvas.getContext("2d");
+  const columns = data.shape[1];
+  const width = canvas.width / columns;
+  context.fillStyle = "#c8bda5";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  statistics.encoded.forEach((value, column) => {
+    if (value === null) return;
+    const shiftedColumn = (column + columns / 2) % columns;
+    context.fillStyle = colorFunction(value / 100);
+    context.fillRect(shiftedColumn * width, 0, Math.ceil(width), canvas.height);
+  });
+  context.strokeStyle = "rgba(255,255,255,.45)";
+  for (let longitude = 60; longitude < 360; longitude += 60) {
+    context.beginPath(); context.moveTo(longitude / 360 * canvas.width, 0); context.lineTo(longitude / 360 * canvas.width, canvas.height); context.stroke();
+  }
+}
+
+function renderRingComparison(data, mode, colorFunction) {
+  const rings = pairedRingRows(ringLatitude, data);
+  const specifications = [
+    ["north", "Northern", rings.north, document.querySelector("#north-ring")],
+    ["south", "Southern", rings.south, document.querySelector("#south-ring")]
+  ];
+  const body = document.querySelector("#ring-body");
+  body.replaceChildren();
+  const summaries = [];
+  for (const [id, name, ring, canvas] of specifications) {
+    const statistics = ringStatistics(data, ring);
+    renderRingStrip(canvas, data, statistics, colorFunction);
+    const coordinate = coordinatePhrase(ring.latitude, "N", "S");
+    document.querySelector(`#${id}-ring-label`).textContent = `${name} ring · ${coordinate}`;
+    canvas.setAttribute("aria-label", `${name} longitude strip at ${coordinate}; land-or-missing gaps use beige and the displayed field uses the active map scale.`);
+    const row = document.createElement("tr");
+    const range = statistics.mean === null ? "No ocean values" : `${valuePhrase(statistics.mean, mode)} mean; ${valuePhrase(statistics.minimum, mode)} to ${valuePhrase(statistics.maximum, mode)}`;
+    const cells = [`${name} · ${coordinate}`, `${statistics.valid}/${data.shape[1]} cells · ${statistics.coverage.toFixed(1)}%`, String(statistics.arcs), `${statistics.longestDegrees.toFixed(0)}° longitude`, range];
+    cells.forEach((content, index) => {
+      const cell = document.createElement(index === 0 ? "th" : "td");
+      if (index === 0) cell.scope = "row";
+      cell.textContent = content;
+      row.append(cell);
+    });
+    body.append(row);
+    summaries.push(`${name} ${coordinate}: ${statistics.coverage.toFixed(1)}% analyzed-water coverage in ${statistics.arcs} arc${statistics.arcs === 1 ? "" : "s"}; longest ${statistics.longestDegrees.toFixed(0)}°`);
+  }
+  const fieldName = mode === "anomaly" ? "SST anomaly" : mode === "error" ? "estimated analysis error" : "absolute SST";
+  document.querySelector("#ring-summary").textContent = `${summaries.join(". ")}. Display-grid geometry with ${fieldName}; not a current, barrier strength, heat-content, or transport measurement.`;
+  document.querySelector("#ring-caption").textContent = `Latitude-ring geometry and ${fieldName} statistics; values are not area-weighted.`;
+}
+
 function coordinatePhrase(value, positive, negative) {
   if (Math.abs(value) < 0.005) return "0.00°";
   return `${Math.abs(value).toFixed(2)}°${value > 0 ? positive : negative}`;
@@ -223,14 +321,28 @@ function updateAtlasUrl() {
     url.searchParams.delete("mode");
     url.searchParams.delete("lat");
     url.searchParams.delete("lon");
+    url.searchParams.delete("ring");
   } else {
     url.searchParams.set("mode", currentMode);
+    url.searchParams.set("ring", ringLatitude.toFixed(3));
     if (probeCell) {
       url.searchParams.set("lat", probeCell.latitude.toFixed(3));
       url.searchParams.set("lon", probeCell.longitude.toFixed(3));
     }
   }
   window.history.replaceState({}, "", url);
+}
+
+function setRingLatitude(latitude, updateUrl = true) {
+  if (!Number.isFinite(latitude)) return;
+  ringLatitude = Math.max(0, Math.min(89, Math.abs(latitude)));
+  document.querySelector("#ring-lat").value = ringLatitude.toFixed(3);
+  if (currentMode !== "conceptual") {
+    const [data, colorFunction] = activeObservedField();
+    renderObservedField(data, colorFunction);
+    renderRingComparison(data, currentMode, colorFunction);
+  }
+  if (updateUrl) updateAtlasUrl();
 }
 
 function inspectCoordinates(latitude, longitude, updateUrl = true) {
@@ -284,6 +396,7 @@ function setMapMode(mode) {
     renderObservedField(data, anomaly ? anomalyColor : error ? errorColor : temperatureColor);
     showObservedMetadata(data, mode);
     renderTextSummary(data, mode);
+    renderRingComparison(data, mode, anomaly ? anomalyColor : error ? errorColor : temperatureColor);
     if (probeCell) inspectCoordinates(probeCell.latitude, probeCell.longitude, false);
   } else selectZone(selectedZone);
   updateAtlasUrl();
@@ -326,6 +439,10 @@ document.querySelector("#coordinate-probe").addEventListener("submit", event => 
   event.preventDefault();
   inspectCoordinates(Number(document.querySelector("#probe-lat").value), Number(document.querySelector("#probe-lon").value));
 });
+document.querySelector("#ring-form").addEventListener("submit", event => {
+  event.preventDefault();
+  setRingLatitude(Number(document.querySelector("#ring-lat").value));
+});
 document.querySelector("#sst-canvas").addEventListener("click", event => {
   const rectangle = event.currentTarget.getBoundingClientRect();
   const longitude = (event.clientX - rectangle.left) / rectangle.width * 360 - 180;
@@ -335,6 +452,7 @@ document.querySelector("#sst-canvas").addEventListener("click", event => {
 selectZone(zones[0]);
 const requestedParameters = new URLSearchParams(window.location.search);
 const requestedMode = requestedParameters.get("mode");
+if (requestedParameters.has("ring")) setRingLatitude(Number(requestedParameters.get("ring")), false);
 if (["observed", "sst", "anomaly", "error"].includes(requestedMode)) setMapMode(requestedMode);
 if (currentMode !== "conceptual" && requestedParameters.has("lat") && requestedParameters.has("lon")) {
   inspectCoordinates(Number(requestedParameters.get("lat")), Number(requestedParameters.get("lon")));
