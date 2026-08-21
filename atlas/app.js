@@ -125,7 +125,7 @@ function showObservedMetadata(data, mode) {
   const anomaly = mode === "anomaly";
   const error = mode === "error";
   const fieldClass = anomaly ? "REFERENCE-BASED" : error ? "UNCERTAINTY" : "ABSOLUTE";
-  fields.index.textContent = `ATLAS 05 · ${fieldClass} SURFACE FIELD`;
+  fields.index.textContent = `ATLAS 06 · ${fieldClass} SURFACE FIELD`;
   fields.name.textContent = anomaly ? "SST Anomaly" : error ? "Estimated SST Analysis Error" : "Sea Surface Temperature";
   fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
   fields.summary.textContent = anomaly
@@ -296,6 +296,102 @@ function renderRingComparison(data, mode, colorFunction) {
   const fieldName = mode === "anomaly" ? "SST anomaly" : mode === "error" ? "estimated analysis error" : "absolute SST";
   document.querySelector("#ring-summary").textContent = `${summaries.join(". ")}. Display-grid geometry with ${fieldName}; not a current, barrier strength, heat-content, or transport measurement.`;
   document.querySelector("#ring-caption").textContent = `Latitude-ring geometry and ${fieldName} statistics; values are not area-weighted.`;
+  renderLatitudeLadder();
+}
+
+function latitudeLadder(data = window.OCEANLINES_OISST) {
+  const ladder = [];
+  for (let magnitude = 0; magnitude <= 88; magnitude += 2) {
+    const rings = pairedRingRows(magnitude, data);
+    ladder.push({
+      magnitude,
+      north: { ...rings.north, ...ringStatistics(data, rings.north, data) },
+      south: { ...rings.south, ...ringStatistics(data, rings.south, data) }
+    });
+  }
+  return ladder;
+}
+
+function renderLatitudeLadder() {
+  const data = window.OCEANLINES_OISST;
+  const ladder = latitudeLadder(data);
+  const canvas = document.querySelector("#continuity-chart");
+  const context = canvas.getContext("2d");
+  const margin = { left: 54, right: 20, top: 20, bottom: 42 };
+  const width = canvas.width - margin.left - margin.right;
+  const height = canvas.height - margin.top - margin.bottom;
+  const xFor = magnitude => margin.left + Math.min(88, magnitude) / 88 * width;
+  const yFor = coverage => margin.top + (100 - coverage) / 100 * height;
+  context.fillStyle = "#06171c";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.font = "11px ui-monospace, monospace";
+  context.textAlign = "right";
+  context.textBaseline = "middle";
+  for (const coverage of [0, 25, 50, 75, 100]) {
+    const y = yFor(coverage);
+    context.beginPath(); context.moveTo(margin.left, y); context.lineTo(canvas.width - margin.right, y);
+    context.strokeStyle = "rgba(146,170,169,.25)"; context.lineWidth = 1; context.stroke();
+    context.fillStyle = "#92aaa9"; context.fillText(`${coverage}%`, margin.left - 8, y);
+  }
+  context.textAlign = "center";
+  context.textBaseline = "top";
+  for (const magnitude of [0, 30, 60, 88]) {
+    const x = xFor(magnitude);
+    context.beginPath(); context.moveTo(x, margin.top); context.lineTo(x, canvas.height - margin.bottom);
+    context.strokeStyle = "rgba(146,170,169,.14)"; context.stroke();
+    context.fillStyle = "#92aaa9"; context.fillText(`${magnitude}°`, x, canvas.height - margin.bottom + 10);
+  }
+  const drawSeries = (hemisphere, color, dashed) => {
+    context.beginPath();
+    ladder.forEach((point, index) => {
+      const x = xFor(point.magnitude);
+      const y = yFor(point[hemisphere].coverage);
+      if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
+    });
+    context.strokeStyle = "#071b22"; context.lineWidth = 7; context.setLineDash([]); context.stroke();
+    context.strokeStyle = color; context.lineWidth = 3; context.setLineDash(dashed ? [10, 7] : []); context.stroke();
+    context.setLineDash([]);
+  };
+  drawSeries("north", "#5ee2d6", false);
+  drawSeries("south", "#ff6f61", true);
+  const selected = pairedRingRows(ringLatitude, data);
+  const selectedNorth = ringStatistics(data, selected.north, data);
+  const selectedSouth = ringStatistics(data, selected.south, data);
+  const selectedX = xFor(ringLatitude);
+  context.beginPath(); context.moveTo(selectedX, margin.top); context.lineTo(selectedX, canvas.height - margin.bottom);
+  context.strokeStyle = "#ffb250"; context.lineWidth = 2; context.stroke();
+  for (const [statistics, color] of [[selectedNorth, "#5ee2d6"], [selectedSouth, "#ff6f61"]]) {
+    context.beginPath(); context.arc(selectedX, yFor(statistics.coverage), 6, 0, Math.PI * 2);
+    context.fillStyle = color; context.fill(); context.strokeStyle = "#071b22"; context.lineWidth = 3; context.stroke();
+  }
+  const body = document.querySelector("#continuity-body");
+  body.replaceChildren();
+  ladder.forEach(point => {
+    const row = document.createElement("tr");
+    const cells = [
+      `${point.magnitude}°`,
+      coordinatePhrase(point.north.latitude, "N", "S"),
+      `${point.north.valid}/${data.shape[1]} · ${point.north.coverage.toFixed(1)}%`,
+      `${point.north.arcs} / ${point.north.longestDegrees.toFixed(0)}°`,
+      coordinatePhrase(point.south.latitude, "N", "S"),
+      `${point.south.valid}/${data.shape[1]} · ${point.south.coverage.toFixed(1)}%`,
+      `${point.south.arcs} / ${point.south.longestDegrees.toFixed(0)}°`
+    ];
+    cells.forEach((content, index) => {
+      const cell = document.createElement(index === 0 ? "th" : "td");
+      if (index === 0) cell.scope = "row";
+      cell.textContent = content;
+      row.append(cell);
+    });
+    body.append(row);
+  });
+  const nearCircumpolar = hemisphere => ladder.find(point => point[hemisphere].coverage >= 95 && point[hemisphere].longestDegrees >= 300);
+  const northThreshold = nearCircumpolar("north");
+  const southThreshold = nearCircumpolar("south");
+  const selectedText = `Selected ${ringLatitude.toFixed(1)}° request: north ${selectedNorth.coverage.toFixed(1)}%, south ${selectedSouth.coverage.toFixed(1)}%.`;
+  const thresholdText = `First scan rows meeting the declared ≥95% coverage and ≥300° longest-arc threshold: south ${southThreshold.magnitude}° request (${coordinatePhrase(southThreshold.south.latitude, "N", "S")}); north ${northThreshold.magnitude}° request (${coordinatePhrase(northThreshold.north.latitude, "N", "S")}).`;
+  document.querySelector("#continuity-summary").textContent = `${thresholdText} ${selectedText} Product-mask topology only; not a circulation boundary.`;
+  canvas.setAttribute("aria-label", `Latitude continuity ladder. Northern coverage is a solid line and southern coverage is dashed. ${thresholdText} ${selectedText}`);
 }
 
 function coordinatePhrase(value, positive, negative) {

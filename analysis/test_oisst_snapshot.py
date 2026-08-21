@@ -185,6 +185,31 @@ class OisstSnapshotTests(unittest.TestCase):
         self.assertEqual((64.125, 46, 7, 28.0), north)
         self.assertEqual((-63.875, 179, 1, 358.0), south)
 
+    def test_latitude_ladder_locks_declared_circumpolar_thresholds(self):
+        artifact = MODULE_PATH.parents[1] / "atlas" / "data" / "oisst-2026-08-01.js"
+        line = artifact.read_text(encoding="utf-8").splitlines()[1]
+        payload = json.loads(line.removeprefix("window.OCEANLINES_OISST=").removesuffix(";"))
+        rows, columns = payload["shape"]
+
+        def statistics(requested_latitude):
+            row = round((requested_latitude - payload["latitude"]["start"]) / payload["latitude"]["step"])
+            row = max(0, min(rows - 1, row))
+            values = payload["values_c_hundredths"][row * columns : (row + 1) * columns]
+            ocean = [value is not None for value in values]
+            doubled = ocean + ocean
+            longest = current = 0
+            for value in doubled:
+                current = min(current + 1, columns) if value else 0
+                longest = max(longest, current)
+            return sum(ocean) / columns * 100, longest * payload["longitude"]["step"]
+
+        ladder = [(magnitude, statistics(magnitude), statistics(-magnitude)) for magnitude in range(0, 89, 2)]
+        north = next(magnitude for magnitude, stats, _ in ladder if stats[0] >= 95 and stats[1] >= 300)
+        south = next(magnitude for magnitude, _, stats in ladder if stats[0] >= 95 and stats[1] >= 300)
+        self.assertEqual(45, len(ladder))
+        self.assertEqual(84, north)
+        self.assertEqual(48, south)
+
 
 if __name__ == "__main__":
     unittest.main()

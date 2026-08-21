@@ -45,8 +45,8 @@ quantitative.
 
 ## Start here
 
-1. Explore [ATLAS 05](atlas/) for conceptual zones, co-located
-   inspection, and paired northern/southern latitude-ring geometry.
+1. Explore the [ATLAS 06 candidate](atlas/) for conceptual zones, co-located
+   inspection, paired polar rings, and a full latitude-continuity ladder.
 2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
 4. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
@@ -82,12 +82,13 @@ The calculator uses only the Python standard library.
 ## Project status
 
 OCEANLINES is an early observation-class research and visual-atlas project.
-Atlas 05 combines conceptual SVG geography with fixed NOAA OISST
+The Atlas 06 candidate combines conceptual SVG geography with fixed NOAA OISST
 absolute, anomaly, and estimated-error surface layers, a bookmarkable
-coordinate probe, and symmetric latitude-ring comparisons. It is not a live
-ocean analysis or present-day forecast. The observed modes declare their
-projection and include non-color regional, cell-level, and ring-level
-summaries; uncertainty remains product- and surface-specific.
+coordinate probe, symmetric latitude-ring comparisons, and a 45-pair latitude
+continuity scan. It is not a live ocean analysis or present-day forecast. The
+observed modes declare their projection and include non-color regional,
+cell-level, ring-level, and full-scan summaries; uncertainty remains product-
+and surface-specific.
 
 Public repository: [github.com/giodl73-repo/OCEANLINES](https://github.com/giodl73-repo/OCEANLINES).
 Live atlas: [giodl73-repo.github.io/OCEANLINES/atlas/](https://giodl73-repo.github.io/OCEANLINES/atlas/).
@@ -104,6 +105,7 @@ fixture job on the approved Atlas 03 history.
 | 03 | `3769594` | conceptual, absolute, anomaly, and estimated-error layers | 2026-08-01 | **APPROVED** · [review](signals/roles/check/oceanlines-atlases-roles-check-2026-08-21.md) |
 | 04 | `a4ae7ca` | Atlas 03 layers plus accessible coordinate inspection | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-04-coordinate-probe-roles-check-2026-08-21.md) |
 | 05 | `10daeee` | Atlas 04 plus paired northern/southern latitude-ring geometry | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-05-polar-rings-roles-check-2026-08-21.md) |
+| 06 | `df78415` | Atlas 05 plus a 45-pair latitude-continuity ladder | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-06-latitude-ladder-roles-check-2026-08-21.md) |
 
 ## License
 

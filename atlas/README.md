@@ -1,11 +1,12 @@
-# Atlas 05
+# Atlas 06
 
-Atlas 05 separates four views: the conceptual twelve-zone geography, absolute
+Atlas 06 separates four views: the conceptual twelve-zone geography, absolute
 NOAA OISST v2.1 sea surface temperature, NOAA's published SST anomaly, and its
 time-matched estimated analysis error for 1 August 2026. It adds a coordinate
 probe that reports all three observed fields at the nearest display-grid cell
 and a paired latitude-ring comparison that exposes analyzed-water continuity
-north and south at one requested latitude magnitude.
+north and south at one requested latitude magnitude. A latitude ladder extends
+that comparison across 45 paired requests from 0° through 88°.
 
 Serve the repository root locally so relative links resolve:
 
@@ -69,6 +70,21 @@ Ring selections are bookmarkable with `ring=64.000`. Analyzed-water continuity c
 help explain why circumpolar geometry is possible in the south and interrupted
 in the north, but this surface snapshot does not measure the ACC, frontal
 barrier strength, heat content, or heat transport.
+
+## Scan the latitude ladder
+
+Atlas 06 plots canonical SST-mask coverage for every even requested latitude
+magnitude from the equator through 88°. Northern rows use a solid line;
+southern rows use a dashed line. The selected polar-ring request is marked on
+the chart, and the complete 45-pair result is available as a semantic table.
+
+For a declared diagnostic threshold of at least 95% analyzed-water coverage
+and a longest cyclic water arc of at least 300° longitude, the first southern
+scan match is the 48° request (47.875°S) and the first northern match is the 84°
+request (84.125°N). The high-latitude northern result reflects the central
+Arctic Ocean; the southern curve returns to zero over the Antarctic interior.
+This threshold is not a coastline estimate, ACC edge, front, current boundary,
+or transport diagnostic.
 
 ## Rebuild the observed layer
 
