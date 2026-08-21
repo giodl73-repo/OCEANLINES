@@ -8,6 +8,8 @@ authors:
   - family-names: Della-Libera
     given-names: Gio
 license: MIT
+repository-code: "https://github.com/giodl73-repo/OCEANLINES"
+url: "https://github.com/giodl73-repo/OCEANLINES"
 abstract: >-
   A visual and quantitative atlas framework for mapping ocean heat reservoirs,
   pathways, anomalies, buried layers, and exchange gates without conflating
