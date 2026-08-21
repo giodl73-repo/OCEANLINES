@@ -125,7 +125,7 @@ function showObservedMetadata(data, mode) {
   const anomaly = mode === "anomaly";
   const error = mode === "error";
   const fieldClass = anomaly ? "REFERENCE-BASED" : error ? "UNCERTAINTY" : "ABSOLUTE";
-  fields.index.textContent = `ATLAS 06 · ${fieldClass} SURFACE FIELD`;
+  fields.index.textContent = `ATLAS 07 · ${fieldClass} SURFACE FIELD`;
   fields.name.textContent = anomaly ? "SST Anomaly" : error ? "Estimated SST Analysis Error" : "Sea Surface Temperature";
   fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
   fields.summary.textContent = anomaly
@@ -296,7 +296,85 @@ function renderRingComparison(data, mode, colorFunction) {
   const fieldName = mode === "anomaly" ? "SST anomaly" : mode === "error" ? "estimated analysis error" : "absolute SST";
   document.querySelector("#ring-summary").textContent = `${summaries.join(". ")}. Display-grid geometry with ${fieldName}; not a current, barrier strength, heat-content, or transport measurement.`;
   document.querySelector("#ring-caption").textContent = `Latitude-ring geometry and ${fieldName} statistics; values are not area-weighted.`;
+  renderPolarMirrors(data, mode, colorFunction);
   renderLatitudeLadder();
+}
+
+function renderPolarMirror(canvas, data, colorFunction, hemisphere) {
+  const context = canvas.getContext("2d");
+  const size = canvas.width;
+  const center = size / 2;
+  const radius = center - 10;
+  const capLatitude = 40;
+  const image = context.createImageData(size, size);
+  const colorCache = new Map();
+  const [rows, columns] = data.shape;
+  const background = [6, 23, 28];
+  const missing = [200, 189, 165];
+  const colorFor = encoded => {
+    if (encoded === null) return missing;
+    if (!colorCache.has(encoded)) colorCache.set(encoded, colorFunction(encoded / 100).match(/\d+/g).map(Number));
+    return colorCache.get(encoded);
+  };
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const dx = x + 0.5 - center;
+      const dy = y + 0.5 - center;
+      const distance = Math.hypot(dx, dy);
+      let color = background;
+      if (distance <= radius) {
+        const magnitude = 90 - distance / radius * (90 - capLatitude);
+        const latitude = hemisphere === "north" ? magnitude : -magnitude;
+        const longitude = Math.atan2(dx, -dy) * 180 / Math.PI;
+        const cell = probeCellFromCoordinates(latitude, longitude, data);
+        color = colorFor(data.values_c_hundredths[cell.row * columns + cell.column]);
+      }
+      const offset = (y * size + x) * 4;
+      image.data[offset] = color[0];
+      image.data[offset + 1] = color[1];
+      image.data[offset + 2] = color[2];
+      image.data[offset + 3] = 255;
+    }
+  }
+  context.putImageData(image, 0, 0);
+  context.strokeStyle = "rgba(255,255,255,.35)";
+  context.lineWidth = 1;
+  for (const latitude of [40, 60, 80]) {
+    const ringRadius = (90 - latitude) / (90 - capLatitude) * radius;
+    context.beginPath(); context.arc(center, center, ringRadius, 0, Math.PI * 2); context.stroke();
+  }
+  for (let longitude = 0; longitude < 360; longitude += 90) {
+    const angle = longitude * Math.PI / 180;
+    context.beginPath(); context.moveTo(center, center);
+    context.lineTo(center + Math.sin(angle) * radius, center - Math.cos(angle) * radius); context.stroke();
+  }
+  const selected = pairedRingRows(ringLatitude, data)[hemisphere];
+  const selectedMagnitude = Math.abs(selected.latitude);
+  const selectedVisible = selectedMagnitude >= capLatitude;
+  if (selectedVisible) {
+    const selectedRadius = (90 - selectedMagnitude) / (90 - capLatitude) * radius;
+    context.beginPath(); context.arc(center, center, selectedRadius, 0, Math.PI * 2);
+    context.strokeStyle = "#071b22"; context.lineWidth = 6; context.stroke();
+    context.beginPath(); context.arc(center, center, selectedRadius, 0, Math.PI * 2);
+    context.strokeStyle = "#ffb250"; context.lineWidth = 2; context.setLineDash([9, 6]); context.stroke();
+    context.setLineDash([]);
+  }
+  return { selected, selectedVisible };
+}
+
+function renderPolarMirrors(data, mode, colorFunction) {
+  const northCanvas = document.querySelector("#north-polar");
+  const southCanvas = document.querySelector("#south-polar");
+  const north = renderPolarMirror(northCanvas, data, colorFunction, "north");
+  const south = renderPolarMirror(southCanvas, data, colorFunction, "south");
+  const fieldName = mode === "anomaly" ? "SST anomaly" : mode === "error" ? "estimated analysis error" : "absolute SST";
+  const selectedText = north.selectedVisible && south.selectedVisible
+    ? `Amber circles mark sampled ${coordinatePhrase(north.selected.latitude, "N", "S")} and ${coordinatePhrase(south.selected.latitude, "N", "S")}.`
+    : `The selected ${ringLatitude.toFixed(1)}° request lies outside at least one 40–90° cap, so no out-of-domain circle is drawn.`;
+  const orientation = "Both caps place 0° longitude at top and 90°E at right; the south is an intentional comparison mirror.";
+  document.querySelector("#polar-summary").textContent = `${fieldName} on ${data.date}. ${selectedText} ${orientation} Surface display only; not bathymetry, sea ice, circulation, or heat transport.`;
+  northCanvas.setAttribute("aria-label", `Northern 40–90° polar cap showing ${fieldName}. ${selectedText} ${orientation}`);
+  southCanvas.setAttribute("aria-label", `Southern 40–90° polar comparison mirror showing ${fieldName}. ${selectedText} ${orientation}`);
 }
 
 function latitudeLadder(data = window.OCEANLINES_OISST) {
