@@ -22,7 +22,7 @@
 - [x] Complete the native Atlas 05 polar-ring role review
 - [x] Publish Atlas 05 and the `v0.6.0` release
 - [x] Complete the native Atlas 06 latitude-ladder role review
-- [ ] Publish Atlas 06 and the `v0.7.0` release
+- [x] Publish Atlas 06 and the `v0.7.0` release
 
 The MIT license covers the repository, including its code, prose, and original
 figures.
