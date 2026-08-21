@@ -41,7 +41,8 @@ quantitative.
 
 ## Start here
 
-1. Explore [ATLAS 02](atlas/) for conceptual zones, absolute SST, and SST anomaly.
+1. Explore [ATLAS 03](atlas/) for conceptual zones, absolute SST, SST anomaly,
+   and time-matched estimated analysis error.
 2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
 4. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
@@ -77,10 +78,10 @@ The calculator uses only the Python standard library.
 ## Project status
 
 OCEANLINES is an early observation-class research and visual-atlas project.
-Atlas 02 combines conceptual SVG geography with fixed NOAA OISST absolute and
-anomaly surface layers. It is not a live ocean analysis or present-day forecast.
-The next technical phase is to add OISST's time-matched estimated-error field so
-the atlas can expose observational confidence rather than only color.
+Atlas 03 combines conceptual SVG geography with fixed NOAA OISST absolute,
+anomaly, and estimated-error surface layers. It is not a live ocean analysis or
+present-day forecast. The observed modes declare their projection and include a
+non-color latitude-band summary; uncertainty remains product- and surface-specific.
 
 No remote repository has been configured.
 

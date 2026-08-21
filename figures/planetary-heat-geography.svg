@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
   <title id="title">Planetary heat geography of Earth's ocean</title>
-  <desc id="desc">A conceptual world map classifies persistent warm pools as heat continents, boundary currents as heat rivers, warm-core rings as moving heat islands, marine heatwaves as temporary heat blobs, equatorial anomalies as heat tongues, subsurface polar water masses as buried heat continents, and narrow passages or fronts as heat gates. Locations and paths are schematic rather than quantitative.</desc>
+  <desc id="desc">A conceptual world map classifies persistent warm pools as heat continents, boundary currents as heat rivers, warm-core rings as moving heat islands, marine heatwaves as temporary heat blobs, equatorial anomalies as heat tongues, subsurface polar water masses as buried heat continents, and narrow passages or fronts as heat gates. Locations and paths are schematic, permeable, and moving rather than quantitative or fixed boundaries; the figure does not measure heat content or transport.</desc>
   <defs>
     <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#5da9c0"/>

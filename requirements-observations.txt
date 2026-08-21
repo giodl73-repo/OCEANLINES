@@ -1,2 +1,2 @@
-# Required only for the NOAA NCSS/NetCDF fallback backend.
+# Required for the NOAA NCSS/NetCDF backend and its deterministic local fixture.
 netCDF4==1.7.4

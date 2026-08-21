@@ -11,8 +11,9 @@
 - [ ] Resolve all P1 findings in the OCEANLINES atlas role review
 - [x] Select `giodl73-repo` as the public GitHub owner
 - [ ] Create the remote repository
-- [ ] Add a passing offline CI gate
-- [ ] Run a final secret and provenance scan
+- [x] Add an offline CI definition and validate its commands locally
+- [ ] Confirm the first hosted CI run after remote publication
+- [x] Run a final secret and provenance scan
 - [ ] Push the reviewed publication history
 
 The MIT license covers the repository, including its code, prose, and original

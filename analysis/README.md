@@ -19,13 +19,15 @@ library only.
 ## OISST snapshot pipeline
 
 `fetch_oisst_snapshot.py` retrieves a fixed NOAA/NCEI subset, validates its
-rectangular grid, quantizes SST or anomaly to integer hundredths of a degree
-Celsius, and writes a compact browser artifact with query and checksum
-provenance. The ERDDAP/CSV backend uses the standard library. The NCSS/NetCDF
-fallback requires `requirements-observations.txt`.
+rectangular grid, quantizes SST, anomaly, or estimated analysis error to integer
+hundredths of a degree Celsius, and writes a compact browser artifact with query
+and checksum provenance. The ERDDAP/CSV backend uses the standard library. The
+NCSS/NetCDF backend used by the committed artifacts requires
+`requirements-observations.txt`.
 
 ```powershell
-python fetch_oisst_snapshot.py --date 2026-08-01 --stride 8 `
+python -m pip install -r ../requirements-observations.txt
+python fetch_oisst_snapshot.py --backend ncss --date 2026-08-01 --stride 8 `
   --retrieved-at 2026-08-21T14:00:00Z `
   --output ../atlas/data/oisst-2026-08-01.js
 
@@ -33,4 +35,9 @@ python fetch_oisst_snapshot.py --backend ncss --variable anom `
   --date 2026-08-01 --stride 8 `
   --retrieved-at 2026-08-21T14:00:00Z `
   --output ../atlas/data/oisst-anomaly-2026-08-01.js
+
+python fetch_oisst_snapshot.py --backend ncss --variable err `
+  --date 2026-08-01 --stride 8 `
+  --retrieved-at 2026-08-21T14:00:00Z `
+  --output ../atlas/data/oisst-error-2026-08-01.js
 ```

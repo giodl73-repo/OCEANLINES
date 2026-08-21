@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1050" viewBox="0 0 1400 1050" role="img" aria-labelledby="title desc">
   <title id="title">Heat zones are budgets, not belts</title>
-  <desc id="desc">A conceptual Southern Ocean cross-section distinguishes temperature, heat content, and heat transport. Heat crosses the Antarctic Circumpolar Current fronts through eddies and overturning, enters Circumpolar Deep Water below a cold surface layer, then must cross a second slope-front gate and follow shelf troughs before reaching an ice-shelf cavity.</desc>
+  <desc id="desc">A conceptual Southern Ocean cross-section distinguishes temperature, heat content, and heat transport. Heat crosses the Antarctic Circumpolar Current fronts through eddies and overturning, enters Circumpolar Deep Water below a cold surface layer, then must cross a second slope-front gate and follow shelf troughs before reaching an ice-shelf cavity. The fronts and gates are permeable dynamical regions, not fixed walls, and the schematic does not quantify a heat budget.</desc>
   <defs>
     <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#70bfd2"/>

@@ -9,7 +9,7 @@ CSS = ROOT / "atlas" / "styles.css"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js"):
+        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -27,8 +27,22 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ABSOLUTE + ANOMALY", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ABSOLUTE + ANOMALY + ERROR", "not a live analysis"):
             self.assertIn(token, source)
+
+    def test_observed_map_declares_projection_and_text_equivalent(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        for token in ("Equirectangular display", "antimeridian", "Non-color map summary", 'aria-describedby="map-a11y-summary projection-note"'):
+            self.assertIn(token, html)
+        for token in ("renderTextSummary", "warmer", "cooler", "latitudeBands"):
+            self.assertIn(token, app)
+
+    def test_conceptual_boundaries_are_explicitly_permeable(self):
+        html = HTML.read_text(encoding="utf-8")
+        figure = (ROOT / "figures" / "planetary-heat-geography.svg").read_text(encoding="utf-8")
+        self.assertIn("Schematic, permeable, moving regions", html)
+        self.assertIn("rather than quantitative or fixed boundaries", figure)
 
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")
@@ -42,6 +56,16 @@ class AtlasTests(unittest.TestCase):
         app = APP.read_text(encoding="utf-8")
         self.assertIn('data-mode="anomaly"', html)
         self.assertIn("1971–2000", app)
+
+    def test_error_mode_is_time_matched_and_bounded(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        self.assertIn('data-mode="error"', html)
+        self.assertIn("TIME-MATCHED ERROR", app)
+        self.assertIn("not forecast error", (ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js").read_text(encoding="utf-8"))
+
+    def test_oceanbelts_is_labeled_as_reading_lens(self):
+        self.assertIn("OCEANBELTS <small>reading lens</small>", HTML.read_text(encoding="utf-8"))
 
     def test_local_links_resolve(self):
         source = HTML.read_text(encoding="utf-8")

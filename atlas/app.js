@@ -54,6 +54,13 @@ function anomalyColor(value) {
   ]);
 }
 
+function errorColor(value) {
+  return colorFromStops(value, [
+    [0.1, [244, 241, 222]], [0.2, [184, 216, 186]], [0.3, [110, 182, 167]],
+    [0.4, [223, 179, 92]], [0.5, [184, 76, 76]], [0.6, [99, 44, 85]]
+  ]);
+}
+
 function renderObservedField(data, colorFunction) {
   const canvas = document.querySelector("#sst-canvas");
   const context = canvas.getContext("2d");
@@ -88,13 +95,17 @@ function showObservedMetadata(data, mode) {
     maximum_c: Math.max(...valid) / 100
   };
   const anomaly = mode === "anomaly";
-  fields.index.textContent = `ATLAS 02 · ${anomaly ? "REFERENCE-BASED" : "ABSOLUTE"} SURFACE FIELD`;
-  fields.name.textContent = anomaly ? "SST Anomaly" : "Sea Surface Temperature";
+  const error = mode === "error";
+  const fieldClass = anomaly ? "REFERENCE-BASED" : error ? "UNCERTAINTY" : "ABSOLUTE";
+  fields.index.textContent = `ATLAS 03 · ${fieldClass} SURFACE FIELD`;
+  fields.name.textContent = anomaly ? "SST Anomaly" : error ? "Estimated SST Analysis Error" : "Sea Surface Temperature";
   fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
   fields.summary.textContent = anomaly
     ? `Departure from NOAA's 1971–2000 daily climatology across ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(1)}–${summary.maximum_c.toFixed(1)}°C.`
+    : error
+      ? `Time-matched estimated analysis error across ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(2)}–${summary.maximum_c.toFixed(2)}°C.`
     : `Absolute surface temperature across ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(1)}–${summary.maximum_c.toFixed(1)}°C.`;
-  fields.role.textContent = anomaly ? "surface departure from climatology" : "absolute surface thermal field";
+  fields.role.textContent = anomaly ? "surface departure from climatology" : error ? "estimated surface analysis uncertainty" : "absolute surface thermal field";
   fields.depth.textContent = "sea surface · 0 m product level";
   fields.clock.textContent = `one day · ${data.date}`;
   fields.evidence.textContent = "observational analysis · D1";
@@ -103,11 +114,61 @@ function showObservedMetadata(data, mode) {
   fields.source.textContent = "Open NOAA dataset record →";
 }
 
+const latitudeBands = [
+  ["Arctic", 60, 90],
+  ["Northern midlatitudes", 30, 60],
+  ["Tropics", -30, 30],
+  ["Southern midlatitudes", -60, -30],
+  ["Southern Ocean", -90, -60]
+];
+
+function valuePhrase(value, mode, includeSign = false) {
+  if (mode === "anomaly") {
+    const sign = value > 0 ? "+" : value < 0 ? "−" : "";
+    const direction = value > 0 ? "warmer" : value < 0 ? "cooler" : "at baseline";
+    return `${sign}${Math.abs(value).toFixed(2)}°C ${direction}`;
+  }
+  const precision = mode === "error" ? 2 : 1;
+  return `${includeSign && value > 0 ? "+" : ""}${value.toFixed(precision)}°C`;
+}
+
+function renderTextSummary(data, mode) {
+  const [rows, columns] = data.shape;
+  const table = document.querySelector("#summary-body");
+  table.replaceChildren();
+  for (const [name, south, north] of latitudeBands) {
+    const values = [];
+    for (let row = 0; row < rows; row += 1) {
+      const latitude = data.latitude.start + row * data.latitude.step;
+      const inBand = latitude >= south && (north === 90 ? latitude <= north : latitude < north);
+      if (!inBand) continue;
+      for (let column = 0; column < columns; column += 1) {
+        const encoded = data.values_c_hundredths[row * columns + column];
+        if (encoded !== null) values.push(encoded / 100);
+      }
+    }
+    const mean = values.reduce((total, value) => total + value, 0) / values.length;
+    const row = document.createElement("tr");
+    const cells = [name, valuePhrase(mean, mode), `${valuePhrase(Math.min(...values), mode)} to ${valuePhrase(Math.max(...values), mode)}`, values.length.toLocaleString()];
+    cells.forEach((content, index) => {
+      const cell = document.createElement(index === 0 ? "th" : "td");
+      if (index === 0) cell.scope = "row";
+      cell.textContent = content;
+      row.append(cell);
+    });
+    table.append(row);
+  }
+  const fieldName = mode === "anomaly" ? "SST anomaly relative to 1971–2000" : mode === "error" ? "estimated SST analysis error" : "absolute sea surface temperature";
+  document.querySelector("#map-a11y-summary").textContent = `Text equivalent for ${fieldName} on ${data.date}: five latitude-band rows report mean, range, and valid-cell count. Missing and land cells are excluded.`;
+  document.querySelector("#summary-caption").textContent = `Latitude-band statistics for ${fieldName}; values are not area-weighted.`;
+}
+
 function setMapMode(mode) {
   if (mode === "observed") mode = "sst";
   const observed = mode !== "conceptual";
   const anomaly = mode === "anomaly";
-  const data = anomaly ? window.OCEANLINES_OISST_ANOMALY : window.OCEANLINES_OISST;
+  const error = mode === "error";
+  const data = anomaly ? window.OCEANLINES_OISST_ANOMALY : error ? window.OCEANLINES_OISST_ERROR : window.OCEANLINES_OISST;
   document.querySelectorAll(".map-mode").forEach(button => {
     const active = button.dataset.mode === mode;
     button.classList.toggle("active", active);
@@ -118,19 +179,25 @@ function setMapMode(mode) {
   document.querySelector("#observed-stamp").hidden = !observed;
   document.querySelector("#temperature-key").hidden = !observed;
   document.querySelector("#temperature-key").classList.toggle("anomaly", anomaly);
+  document.querySelector("#temperature-key").classList.toggle("error", error);
+  document.querySelector("#map-data-summary").hidden = !observed;
   markers.hidden = observed;
   document.querySelector("#map-stage").classList.toggle("observed", observed);
   document.querySelectorAll(".lens").forEach(button => { button.disabled = observed; });
-  document.querySelector("#observed-title").textContent = anomaly ? "OBSERVATIONAL · SURFACE ANOMALY" : "OBSERVATIONAL · ABSOLUTE SURFACE";
-  document.querySelector("#observed-status").textContent = anomaly ? "NOAA OISST v2.1 · 1971–2000 BASELINE" : "NOAA OISST v2.1 · FINAL · 2026-08-01";
-  document.querySelector("#scale-min").textContent = anomaly ? "−5°C" : "−2°C";
-  document.querySelector("#scale-max").textContent = anomaly ? "+5°C" : "32°C";
+  document.querySelector("#observed-title").textContent = anomaly ? "OBSERVATIONAL · SURFACE ANOMALY" : error ? "OBSERVATIONAL · ESTIMATED ERROR" : "OBSERVATIONAL · ABSOLUTE SURFACE";
+  document.querySelector("#observed-status").textContent = anomaly ? "NOAA OISST v2.1 · 1971–2000 BASELINE" : error ? "NOAA OISST v2.1 · TIME-MATCHED ERROR" : "NOAA OISST v2.1 · FINAL · 2026-08-01";
+  document.querySelector("#scale-min").textContent = anomaly ? "−5°C cooler" : error ? "0.1°C lower" : "−2°C";
+  document.querySelector("#scale-max").textContent = anomaly ? "+5°C warmer" : error ? "0.6°C higher" : "32°C";
+  document.querySelector("#temperature-key").setAttribute("aria-label", anomaly ? "SST anomaly scale from five degrees cooler to five degrees warmer than baseline" : error ? "Estimated analysis error scale from lower to higher error" : "Absolute sea surface temperature color scale");
+  const canvas = document.querySelector("#sst-canvas");
+  canvas.setAttribute("aria-label", anomaly ? "NOAA OISST anomaly for 1 August 2026 relative to 1971 to 2000, displayed on a two-degree equirectangular grid." : error ? "NOAA OISST estimated analysis error for 1 August 2026, displayed on a two-degree equirectangular grid." : "NOAA OISST absolute sea surface temperature for 1 August 2026, displayed on a two-degree equirectangular grid.");
   document.querySelector("#map-note").innerHTML = observed
-    ? `<span></span> ${anomaly ? "SST anomaly · 1971–2000 reference · symmetric ±5°C display clamp" : "absolute SST"} · final product · 2° display stride`
-    : "<span></span> Schematic locations and pathways · not navigational · not a live analysis";
+    ? `<span></span> ${anomaly ? "SST anomaly · 1971–2000 reference · symmetric ±5°C display clamp" : error ? "estimated analysis error · 0.1–0.6°C display clamp" : "absolute SST"} · equirectangular · antimeridian seam · 2° display stride`
+    : "<span></span> Schematic, permeable, moving regions · not fixed boundaries · not a live analysis";
   if (observed) {
-    renderObservedField(data, anomaly ? anomalyColor : temperatureColor);
+    renderObservedField(data, anomaly ? anomalyColor : error ? errorColor : temperatureColor);
     showObservedMetadata(data, mode);
+    renderTextSummary(data, mode);
   } else selectZone(selectedZone);
 }
 
@@ -169,4 +236,4 @@ document.querySelectorAll(".lens").forEach(button => {
 document.querySelectorAll(".map-mode").forEach(button => button.addEventListener("click", () => setMapMode(button.dataset.mode)));
 selectZone(zones[0]);
 const requestedMode = new URLSearchParams(window.location.search).get("mode");
-if (["observed", "sst", "anomaly"].includes(requestedMode)) setMapMode(requestedMode);
+if (["observed", "sst", "anomaly", "error"].includes(requestedMode)) setMapMode(requestedMode);

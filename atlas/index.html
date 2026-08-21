@@ -11,7 +11,7 @@
   <header class="masthead">
     <a class="wordmark" href="../README.md" aria-label="OCEANLINES home">OCEANLINES</a>
     <p>Mapping Earth's Hidden Waterworld</p>
-    <span class="edition">ATLAS 02 · ABSOLUTE + ANOMALY</span>
+    <span class="edition">ATLAS 03 · ABSOLUTE + ANOMALY + ERROR</span>
   </header>
   <main>
     <section class="hero" aria-labelledby="atlas-title">
@@ -31,7 +31,7 @@
       <button class="lens active" data-lens="all" aria-pressed="true"><span>00</span> All lines</button>
       <button class="lens" data-lens="heatmass" aria-pressed="false"><span>01</span> HEATMASS</button>
       <button class="lens" data-lens="oceanrealms" aria-pressed="false"><span>02</span> OCEANREALMS</button>
-      <button class="lens" data-lens="oceanbelts" aria-pressed="false"><span>03</span> OCEANBELTS</button>
+      <button class="lens" data-lens="oceanbelts" aria-pressed="false"><span>03</span> OCEANBELTS <small>reading lens</small></button>
     </nav>
     <section class="atlas-shell" aria-label="Interactive ocean heat atlas">
       <div class="map-panel">
@@ -39,12 +39,14 @@
           <button class="map-mode active" data-mode="conceptual" aria-pressed="true">Conceptual geography</button>
           <button class="map-mode" data-mode="sst" aria-pressed="false">Observed SST</button>
           <button class="map-mode" data-mode="anomaly" aria-pressed="false">SST anomaly</button>
+          <button class="map-mode" data-mode="error" aria-pressed="false">Estimated error</button>
         </div>
         <div class="map-stage" id="map-stage">
           <img id="conceptual-map" src="../figures/planetary-heat-geography.svg"
             alt="Conceptual world map of ocean heat reservoirs, pathways, anomalies, buried layers, and gates.">
           <canvas id="sst-canvas" width="720" height="360" hidden
-            aria-label="NOAA OISST surface field for 1 August 2026, displayed on a two-degree grid."></canvas>
+            aria-label="NOAA OISST surface field for 1 August 2026, displayed on a two-degree equirectangular grid."
+            aria-describedby="map-a11y-summary projection-note"></canvas>
           <div id="markers" class="markers" aria-label="Selectable ocean zones"></div>
           <div class="observed-stamp" id="observed-stamp" hidden>
             <strong id="observed-title">OBSERVATIONAL · SURFACE</strong>
@@ -54,7 +56,19 @@
         <div class="temperature-key" id="temperature-key" hidden aria-label="Sea surface temperature color scale">
           <span id="scale-min">−2°C</span><i></i><span id="scale-max">32°C</span>
         </div>
-        <p class="map-note" id="map-note"><span></span> Schematic locations and pathways · not navigational · not a live analysis</p>
+        <p class="map-note" id="map-note"><span></span> Schematic, permeable, moving regions · not fixed boundaries · not a live analysis</p>
+        <section class="map-data-summary" id="map-data-summary" hidden aria-labelledby="map-data-title">
+          <h3 id="map-data-title">Non-color map summary</h3>
+          <p id="map-a11y-summary">Select an observed layer for a text summary by latitude band.</p>
+          <p id="projection-note">Equirectangular display; the antimeridian is the left/right seam and 0° longitude is centered.</p>
+          <div class="summary-table-wrap">
+            <table>
+              <caption id="summary-caption">Latitude-band statistics for the displayed field</caption>
+              <thead><tr><th scope="col">Region</th><th scope="col">Mean</th><th scope="col">Range</th><th scope="col">Valid cells</th></tr></thead>
+              <tbody id="summary-body"></tbody>
+            </table>
+          </div>
+        </section>
       </div>
       <aside class="zone-panel" id="zone-panel" aria-live="polite">
         <p class="zone-index" id="zone-index">SELECT A LINE</p>
@@ -98,10 +112,11 @@
       </div>
     </section>
   </main>
-  <footer><strong>OCEANLINES</strong><p>Atlas 02 separates absolute surface temperature from historical anomaly.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
+  <footer><strong>OCEANLINES</strong><p>Atlas 03 separates absolute temperature, historical anomaly, and estimated analysis error.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
   <noscript>This atlas requires JavaScript for zone selection. The complete map remains visible above.</noscript>
   <script src="data/oisst-2026-08-01.js" defer></script>
   <script src="data/oisst-anomaly-2026-08-01.js" defer></script>
+  <script src="data/oisst-error-2026-08-01.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

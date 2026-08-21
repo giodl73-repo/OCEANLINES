@@ -3,7 +3,8 @@
 The output is a compact JavaScript data artifact so Atlas 02 also works when
 opened directly from disk. Temperatures are stored as integer hundredths of a
 degree Celsius; missing values remain null. Supported fields are absolute sea
-surface temperature (sst) and the published 1971-2000 anomaly (anom).
+surface temperature (sst), the published 1971-2000 anomaly (anom), and the
+time-matched estimated analysis error (err).
 """
 
 from __future__ import annotations
@@ -38,6 +39,12 @@ VARIABLES = {
         "window": "OCEANLINES_OISST_ANOMALY",
         "baseline": "1971-2000 climatological mean",
         "boundary": "SST anomaly is departure from a historical surface climatology, not absolute temperature, heat content, or attribution.",
+    },
+    "err": {
+        "name": "estimated sea surface temperature analysis error",
+        "window": "OCEANLINES_OISST_ERROR",
+        "baseline": None,
+        "boundary": "Estimated OISST analysis error describes product uncertainty at the surface; it is not forecast error, a confidence interval, or uncertainty in full-depth heat content.",
     },
 }
 
@@ -105,8 +112,11 @@ def parse_netcdf(raw: bytes, variable: str) -> tuple[list[int | None], list[floa
         grid = dataset.variables[variable][0, 0, :, :]
         values = []
         for value in grid.flat:
+            if bool(getattr(value, "mask", False)):
+                values.append(None)
+                continue
             number = float(value)
-            values.append(None if getattr(value, "mask", False) or math.isnan(number) else round(number * 100))
+            values.append(None if math.isnan(number) else round(number * 100))
     latitudes = [latitude for latitude in latitudes_axis for _ in longitudes_axis]
     longitudes = longitudes_axis * len(latitudes_axis)
     return values, latitudes, longitudes
@@ -124,7 +134,7 @@ def package(raw: bytes, date: str, stride: int, retrieved_at: str, variable: str
         raise ValueError("snapshot is unexpectedly small")
     valid_values = [value for value in values if value is not None]
     return {
-        "schema": "oceanlines.oisst.snapshot.v1",
+        "schema": "oceanlines.oisst.snapshot.v2",
         "status": "observational surface field",
         "source": "NOAA/NCEI OISST v2.1 AVHRR-only final",
         "dataset_id": DATASET_ID,
@@ -181,7 +191,7 @@ def main() -> None:
     if args.stride < 1:
         parser.error("--stride must be positive")
     if args.output is None:
-        label = "oisst-anomaly" if args.variable == "anom" else "oisst"
+        label = {"sst": "oisst", "anom": "oisst-anomaly", "err": "oisst-error"}[args.variable]
         args.output = pathlib.Path(f"atlas/data/{label}-{args.date}.js")
     retrieved_at = args.retrieved_at or dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     url = build_query(args.date, args.stride, args.variable) if args.backend == "erddap" else build_ncss_query(args.date, args.stride, args.variable)
