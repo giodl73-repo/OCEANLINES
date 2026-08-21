@@ -19,7 +19,7 @@
 - [x] Publish the `v0.4.0` Atlas 03 release
 - [x] Complete the native Atlas 04 coordinate-probe role review
 - [x] Publish Atlas 04 and the `v0.5.0` release
-- [ ] Complete the native Atlas 05 polar-ring role review
+- [x] Complete the native Atlas 05 polar-ring role review
 - [ ] Publish Atlas 05 and the `v0.6.0` release
 
 The MIT license covers the repository, including its code, prose, and original
