@@ -27,7 +27,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 05 · POLAR RINGS", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 06 · LATITUDE LADDER", "not a live analysis"):
             self.assertIn(token, source)
 
     def test_observed_map_declares_projection_and_text_equivalent(self):
@@ -92,6 +92,21 @@ class AtlasTests(unittest.TestCase):
         html = HTML.read_text(encoding="utf-8")
         for token in ("Land-or-missing gaps expose analyzed-water continuity", "do not measure currents or heat transport", "Analyzed-water coverage", "Longest arc"):
             self.assertIn(token, html)
+
+    def test_latitude_ladder_has_chart_and_complete_text_table(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        for token in ('id="continuity-chart"', 'id="continuity-summary"', 'id="continuity-method"', 'id="continuity-body"', "Open the complete 45-pair scan"):
+            self.assertIn(token, html)
+        for token in ("latitudeLadder", "renderLatitudeLadder", "magnitude <= 88", "coverage >= 95", "longestDegrees >= 300", "Product-mask topology only; not a circulation boundary"):
+            self.assertIn(token, app)
+
+    def test_latitude_ladder_uses_redundant_line_patterns(self):
+        html = HTML.read_text(encoding="utf-8")
+        css = CSS.read_text(encoding="utf-8")
+        self.assertIn("Northern rows · solid", html)
+        self.assertIn("Southern rows · dashed", html)
+        self.assertIn("border-top-style: dashed", css)
 
     def test_local_links_resolve(self):
         source = HTML.read_text(encoding="utf-8")

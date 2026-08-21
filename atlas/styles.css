@@ -87,6 +87,19 @@ h1 { max-width: 980px; margin: 0; font-size: clamp(3rem, 6.5vw, 7.5rem); line-he
 .ring-strips figcaption { color: var(--muted); font: 700 .62rem/1.3 ui-monospace, monospace; text-transform: uppercase; }
 .ring-strips canvas { display: block; width: 100%; height: 32px; border: 1px solid var(--line); image-rendering: pixelated; background: #c8bda5; }
 .ring-table td:last-child { white-space: normal; }
+.continuity-ladder { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px solid var(--line); }
+.continuity-ladder h4 { margin: 0; color: var(--cyan); font: 800 .7rem/1 ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; }
+.ladder-legend { display: flex; gap: 1.5rem; margin-top: 1rem; color: var(--muted); font: 700 .62rem/1.3 ui-monospace, monospace; text-transform: uppercase; }
+.ladder-legend span { display: flex; align-items: center; gap: .5rem; }
+.ladder-legend span::before { width: 2.5rem; border-top: 3px solid var(--cyan); content: ""; }
+.ladder-legend .south-line::before { border-color: var(--coral); border-top-style: dashed; }
+#continuity-chart { display: block; width: 100%; height: auto; margin-top: .75rem; border: 1px solid var(--line); background: #06171c; }
+#continuity-method, #continuity-summary { padding: 0 .2rem; }
+#continuity-summary { color: var(--ink); }
+.continuity-ladder details { margin-top: 1rem; }
+.continuity-ladder summary { min-height: 42px; padding: .75rem; border: 1px solid var(--line); color: var(--warm); cursor: pointer; font: 800 .65rem/1.3 ui-monospace, monospace; text-transform: uppercase; }
+.continuity-ladder summary:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+.continuity-table { min-width: 760px; }
 .zone-panel { min-height: 620px; padding: clamp(1.5rem, 3vw, 3.5rem); display: flex; flex-direction: column; }
 .zone-index { margin: 0 0 2.2rem; color: var(--cyan); font: 800 .68rem/1 ui-monospace, monospace; letter-spacing: .14em; }
 .zone-panel h2 { margin: 0; font-size: clamp(2rem, 3vw, 4rem); line-height: .95; letter-spacing: -.045em; }

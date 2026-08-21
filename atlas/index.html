@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An interactive atlas of ocean heat geography with observed polar-ring comparisons.">
+  <meta name="description" content="An interactive atlas of ocean heat geography with polar-ring comparisons across the latitude ladder.">
   <title>OCEANLINES — Mapping Earth's Hidden Waterworld</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,7 +11,7 @@
   <header class="masthead">
     <a class="wordmark" href="../README.md" aria-label="OCEANLINES home">OCEANLINES</a>
     <p>Mapping Earth's Hidden Waterworld</p>
-    <span class="edition">ATLAS 05 · POLAR RINGS</span>
+    <span class="edition">ATLAS 06 · LATITUDE LADDER</span>
   </header>
   <main>
     <section class="hero" aria-labelledby="atlas-title">
@@ -102,6 +102,24 @@
                 <tbody id="ring-body"></tbody>
               </table>
             </div>
+            <section class="continuity-ladder" aria-labelledby="continuity-title">
+              <h4 id="continuity-title">Latitude continuity ladder</h4>
+              <p>Scan paired rows from the equator toward both poles. Coverage comes from the canonical SST land-or-missing mask; the declared near-circumpolar threshold is a display diagnostic, not a current or front boundary.</p>
+              <div class="ladder-legend" aria-hidden="true"><span class="north-line">Northern rows · solid</span><span class="south-line">Southern rows · dashed</span></div>
+              <canvas id="continuity-chart" width="720" height="300" role="img" aria-describedby="continuity-summary continuity-method"></canvas>
+              <p id="continuity-method">Vertical axis: analyzed-water coverage from 0–100%. Horizontal axis: requested latitude magnitude from 0–88°. The selected ring is marked vertically.</p>
+              <p id="continuity-summary"></p>
+              <details>
+                <summary>Open the complete 45-pair scan</summary>
+                <div class="summary-table-wrap">
+                  <table class="continuity-table">
+                    <caption>Two-degree latitude scan using the fixed canonical SST mask</caption>
+                    <thead><tr><th scope="col">Request</th><th scope="col">North sample</th><th scope="col">North coverage</th><th scope="col">North arcs / longest</th><th scope="col">South sample</th><th scope="col">South coverage</th><th scope="col">South arcs / longest</th></tr></thead>
+                    <tbody id="continuity-body"></tbody>
+                  </table>
+                </div>
+              </details>
+            </section>
           </section>
           <div class="summary-table-wrap">
             <table>
@@ -154,7 +172,7 @@
       </div>
     </section>
   </main>
-  <footer><strong>OCEANLINES</strong><p>Atlas 05 compares northern and southern latitude-ring geometry without mistaking a surface field for transport.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
+  <footer><strong>OCEANLINES</strong><p>Atlas 06 scans latitude-ring continuity from equator to pole without turning product-mask geometry into circulation.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
   <noscript>This atlas requires JavaScript for zone selection. The complete map remains visible above.</noscript>
   <script src="data/oisst-2026-08-01.js" defer></script>
   <script src="data/oisst-anomaly-2026-08-01.js" defer></script>
