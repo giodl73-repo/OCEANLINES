@@ -15,6 +15,8 @@
 - [x] Confirm the first hosted CI run after remote publication
 - [x] Run a final secret and provenance scan
 - [x] Push the reviewed publication history
+- [x] Deploy Atlas 03 through GitHub Pages with HTTPS
+- [x] Publish the `v0.4.0` Atlas 03 release
 
 The MIT license covers the repository, including its code, prose, and original
 figures.

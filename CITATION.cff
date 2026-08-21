@@ -9,7 +9,7 @@ authors:
     given-names: Gio
 license: MIT
 repository-code: "https://github.com/giodl73-repo/OCEANLINES"
-url: "https://github.com/giodl73-repo/OCEANLINES"
+url: "https://giodl73-repo.github.io/OCEANLINES/atlas/"
 abstract: >-
   A visual and quantitative atlas framework for mapping ocean heat reservoirs,
   pathways, anomalies, buried layers, and exchange gates without conflating
