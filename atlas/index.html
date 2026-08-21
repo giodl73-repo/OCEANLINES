@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An interactive conceptual atlas of Earth's hidden ocean heat geography.">
+  <meta name="description" content="An interactive atlas of ocean heat geography with observed polar-ring comparisons.">
   <title>OCEANLINES — Mapping Earth's Hidden Waterworld</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -11,7 +11,7 @@
   <header class="masthead">
     <a class="wordmark" href="../README.md" aria-label="OCEANLINES home">OCEANLINES</a>
     <p>Mapping Earth's Hidden Waterworld</p>
-    <span class="edition">ATLAS 04 · COORDINATE PROBE</span>
+    <span class="edition">ATLAS 05 · POLAR RINGS</span>
   </header>
   <main>
     <section class="hero" aria-labelledby="atlas-title">
@@ -77,6 +77,32 @@
               <output id="probe-result" for="probe-lat probe-lon" aria-live="polite">No cell selected yet.</output>
             </fieldset>
           </form>
+          <section class="ring-comparison" aria-labelledby="ring-title">
+            <div class="ring-heading">
+              <div>
+                <h3 id="ring-title">Compare latitude rings</h3>
+                <p>Trace the displayed surface field around the same requested latitude north and south. Land gaps reveal geometry; they do not measure currents or heat transport.</p>
+              </div>
+              <form id="ring-form" class="ring-form">
+                <label for="ring-lat">Latitude magnitude
+                  <span><input id="ring-lat" name="ring" type="number" min="0" max="89" step="any" inputmode="decimal" value="64" required> °N / °S</span>
+                </label>
+                <button type="submit">Compare rings</button>
+              </form>
+            </div>
+            <output id="ring-summary" for="ring-lat" aria-live="polite">Select an observed layer to compare latitude rings.</output>
+            <div class="ring-strips">
+              <figure><figcaption id="north-ring-label">Northern ring</figcaption><canvas id="north-ring" width="720" height="44" role="img" aria-labelledby="north-ring-label" aria-describedby="ring-summary"></canvas></figure>
+              <figure><figcaption id="south-ring-label">Southern ring</figcaption><canvas id="south-ring" width="720" height="44" role="img" aria-labelledby="south-ring-label" aria-describedby="ring-summary"></canvas></figure>
+            </div>
+            <div class="summary-table-wrap">
+              <table class="ring-table">
+                <caption id="ring-caption">Polar-ring geometry and displayed-field statistics</caption>
+                <thead><tr><th scope="col">Ring</th><th scope="col">Ocean coverage</th><th scope="col">Ocean arcs</th><th scope="col">Longest arc</th><th scope="col">Field mean and range</th></tr></thead>
+                <tbody id="ring-body"></tbody>
+              </table>
+            </div>
+          </section>
           <div class="summary-table-wrap">
             <table>
               <caption id="summary-caption">Latitude-band statistics for the displayed field</caption>
@@ -128,7 +154,7 @@
       </div>
     </section>
   </main>
-  <footer><strong>OCEANLINES</strong><p>Atlas 04 inspects co-located temperature, anomaly, and estimated analysis error.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
+  <footer><strong>OCEANLINES</strong><p>Atlas 05 compares northern and southern latitude-ring geometry without mistaking a surface field for transport.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
   <noscript>This atlas requires JavaScript for zone selection. The complete map remains visible above.</noscript>
   <script src="data/oisst-2026-08-01.js" defer></script>
   <script src="data/oisst-anomaly-2026-08-01.js" defer></script>

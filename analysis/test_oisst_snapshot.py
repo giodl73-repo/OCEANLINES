@@ -160,6 +160,31 @@ class OisstSnapshotTests(unittest.TestCase):
         self.assertEqual(1, len({json.dumps(payload["latitude"], sort_keys=True) for payload in payloads}))
         self.assertEqual(1, len({json.dumps(payload["longitude"], sort_keys=True) for payload in payloads}))
 
+    def test_default_polar_rings_lock_land_ocean_geometry(self):
+        artifact = MODULE_PATH.parents[1] / "atlas" / "data" / "oisst-2026-08-01.js"
+        line = artifact.read_text(encoding="utf-8").splitlines()[1]
+        payload = json.loads(line.removeprefix("window.OCEANLINES_OISST=").removesuffix(";"))
+        rows, columns = payload["shape"]
+
+        def statistics(requested_latitude):
+            row = round((requested_latitude - payload["latitude"]["start"]) / payload["latitude"]["step"])
+            row = max(0, min(rows - 1, row))
+            values = payload["values_c_hundredths"][row * columns : (row + 1) * columns]
+            ocean = [value is not None for value in values]
+            arcs = 1 if all(ocean) else sum(value and not ocean[index - 1] for index, value in enumerate(ocean))
+            doubled = ocean + ocean
+            longest = current = 0
+            for value in doubled:
+                current = min(current + 1, columns) if value else 0
+                longest = max(longest, current)
+            latitude = payload["latitude"]["start"] + row * payload["latitude"]["step"]
+            return latitude, sum(ocean), arcs, longest * payload["longitude"]["step"]
+
+        north = statistics(64)
+        south = statistics(-64)
+        self.assertEqual((64.125, 46, 7, 28.0), north)
+        self.assertEqual((-63.875, 179, 1, 358.0), south)
+
 
 if __name__ == "__main__":
     unittest.main()
