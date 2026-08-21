@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
+  <title id="title">Planetary heat geography of Earth's ocean</title>
+  <desc id="desc">A conceptual world map classifies persistent warm pools as heat continents, boundary currents as heat rivers, warm-core rings as moving heat islands, marine heatwaves as temporary heat blobs, equatorial anomalies as heat tongues, subsurface polar water masses as buried heat continents, and narrow passages or fronts as heat gates. Locations and paths are schematic rather than quantitative.</desc>
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5da9c0"/>
+      <stop offset="0.55" stop-color="#2e7898"/>
+      <stop offset="1" stop-color="#174b70"/>
+    </linearGradient>
+    <radialGradient id="warmPool">
+      <stop offset="0" stop-color="#ffd36e" stop-opacity="0.95"/>
+      <stop offset="0.65" stop-color="#f5a742" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#ed7c35" stop-opacity="0.12"/>
+    </radialGradient>
+    <pattern id="buried" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(24)">
+      <rect width="12" height="12" fill="#6d5b9e" fill-opacity="0.32"/>
+      <path d="M0 0 V12" stroke="#d8cdf5" stroke-width="4" stroke-opacity="0.72"/>
+    </pattern>
+    <filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.22"/></filter>
+    <marker id="arrowWarm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#ffb14e"/></marker>
+    <marker id="arrowCold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#d9f3f7"/></marker>
+    <clipPath id="mapClip"><rect x="55" y="112" width="1490" height="680" rx="24"/></clipPath>
+  </defs>
+
+  <rect width="1600" height="1050" fill="#f7f4ed"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="800" y="47" text-anchor="middle" font-size="32" font-weight="700" fill="#173444">THE OCEAN HAS A PLANETARY HEAT GEOGRAPHY</text>
+    <text x="800" y="78" text-anchor="middle" font-size="16" fill="#536a77">continents · rivers · islands · blobs · tongues · buried reservoirs · gates</text>
+
+    <g clip-path="url(#mapClip)">
+      <rect x="55" y="112" width="1490" height="680" fill="url(#sea)"/>
+
+      <!-- latitude/longitude reference grid -->
+      <g stroke="#d8f3f7" stroke-opacity="0.20" stroke-width="1">
+        <path d="M55 282 H1545 M55 452 H1545 M55 622 H1545"/>
+        <path d="M303 112 V792 M551 112 V792 M800 112 V792 M1048 112 V792 M1297 112 V792"/>
+      </g>
+      <g fill="#e8f7f9" fill-opacity="0.70" font-size="11">
+        <text x="67" y="276">45°N</text><text x="67" y="446">EQ</text><text x="67" y="616">45°S</text>
+      </g>
+
+      <!-- buried heat first: under the surface geography -->
+      <path d="M55 648 C285 619 520 640 765 626 C1010 612 1260 635 1545 647 L1545 736 C1250 724 1018 705 772 718 C520 732 288 714 55 738 Z" fill="url(#buried)" stroke="#d8cdf5" stroke-width="2" stroke-dasharray="9 6"/>
+      <path d="M455 154 C560 128 710 125 820 151 C866 162 875 198 830 218 C720 259 544 247 451 208 C421 195 424 166 455 154 Z" fill="url(#buried)" stroke="#d8cdf5" stroke-width="2" stroke-dasharray="9 6"/>
+
+      <!-- persistent surface warm pools -->
+      <path d="M932 400 C1050 345 1235 343 1435 384 C1515 401 1560 448 1523 503 C1475 572 1270 567 1115 541 C975 518 872 474 932 400 Z" fill="url(#warmPool)" stroke="#ffc461" stroke-width="3"/>
+      <path d="M55 405 C115 379 194 378 258 403 C320 427 320 480 268 506 C195 544 99 522 55 493 Z" fill="url(#warmPool)" stroke="#ffc461" stroke-width="3"/>
+      <path d="M420 389 C500 358 598 373 651 411 C690 439 672 486 620 505 C535 536 427 501 400 457 C385 432 397 405 420 389 Z" fill="url(#warmPool)" stroke="#ffc461" stroke-width="3"/>
+
+      <!-- transient anomalies / tongues -->
+      <ellipse cx="215" cy="292" rx="126" ry="67" fill="#ef6b55" fill-opacity="0.26" stroke="#ffac9d" stroke-width="4" stroke-dasharray="11 8"/>
+      <path d="M55 430 C135 414 225 419 318 438 C380 450 419 464 461 478 C412 504 345 508 277 491 C188 470 119 460 55 471 Z" fill="#ef6b55" fill-opacity="0.24" stroke="#ffac9d" stroke-width="3" stroke-dasharray="11 8"/>
+      <path d="M1420 424 C1475 416 1511 419 1545 427 V469 C1500 463 1460 454 1420 451 Z" fill="#ef6b55" fill-opacity="0.24" stroke="#ffac9d" stroke-width="3" stroke-dasharray="11 8"/>
+
+      <!-- simplified continents -->
+      <g fill="#c8b79b" stroke="#f0e7d5" stroke-width="2.2" filter="url(#shadow)">
+        <!-- North America -->
+        <path d="M88 183 L149 147 L245 153 L320 185 L382 214 L407 258 L374 286 L342 321 L315 359 L274 373 L247 341 L214 330 L181 287 L139 274 L104 234 Z"/>
+        <path d="M315 359 L340 378 L357 405 L338 426 L309 400 L293 374 Z"/>
+        <!-- South America -->
+        <path d="M371 427 L423 413 L480 438 L503 487 L493 541 L465 597 L444 668 L407 714 L384 668 L390 607 L367 554 L342 498 Z"/>
+        <!-- Greenland -->
+        <path d="M416 149 L470 129 L514 153 L500 218 L458 247 L426 213 Z"/>
+        <!-- Eurasia -->
+        <path d="M665 216 L724 176 L806 177 L862 199 L935 187 L1013 210 L1082 193 L1165 216 L1261 238 L1354 274 L1394 319 L1361 347 L1275 341 L1209 365 L1152 348 L1094 365 L1034 342 L973 363 L916 337 L853 343 L803 318 L747 330 L704 300 Z"/>
+        <!-- Africa -->
+        <path d="M738 353 L807 330 L878 349 L923 389 L913 459 L877 532 L827 594 L779 569 L747 507 L711 434 Z"/>
+        <!-- Arabia/India -->
+        <path d="M909 366 L961 376 L985 421 L961 452 L930 412 Z"/>
+        <path d="M1000 374 L1044 390 L1064 428 L1037 487 L1017 449 L988 414 Z"/>
+        <!-- Southeast Asian islands -->
+        <path d="M1115 423 L1165 409 L1204 432 L1181 451 L1138 447 Z M1210 454 L1282 468 L1322 496 L1270 505 L1219 485 Z"/>
+        <!-- Japan -->
+        <path d="M1283 330 L1296 342 L1280 381 L1269 368 Z"/>
+        <!-- Australia -->
+        <path d="M1221 526 L1289 504 L1362 527 L1397 574 L1361 626 L1285 641 L1228 611 L1198 567 Z"/>
+        <!-- Antarctica -->
+        <path d="M55 721 C188 697 296 715 419 710 C565 704 676 729 805 716 C956 700 1078 720 1215 710 C1347 700 1440 719 1545 707 L1545 792 H55 Z" fill="#edf6f7"/>
+      </g>
+
+      <!-- heat rivers / boundary currents -->
+      <g fill="none" stroke="#ffb14e" stroke-width="8" stroke-linecap="round" marker-end="url(#arrowWarm)">
+        <path d="M343 379 C366 335 393 305 438 284 C483 263 523 251 564 246"/>
+        <path d="M1264 387 C1271 345 1310 319 1368 300 C1416 285 1460 274 1503 261"/>
+        <path d="M898 517 C918 558 922 596 897 629 C870 664 832 672 798 653"/>
+        <path d="M473 512 C500 555 510 602 497 647"/>
+      </g>
+      <!-- ACC -->
+      <path d="M55 655 C280 628 514 650 756 637 C1002 624 1250 646 1545 658" fill="none" stroke="#d9f3f7" stroke-width="7" stroke-dasharray="18 9" marker-end="url(#arrowCold)"/>
+
+      <!-- moving heat islands -->
+      <g fill="none" stroke="#ffd272" stroke-width="4">
+        <path d="M503 278 c-20-20-51 2-35 26 c13 20 48 8 42-17 c-5-20-34-24-48-9"/>
+        <path d="M840 647 c-19-21-52 1-36 26 c13 20 49 8 43-18 c-5-20-35-24-49-8"/>
+        <path d="M1430 286 c-17-18-45 1-31 23 c11 17 42 7 36-16 c-4-18-30-21-43-8"/>
+      </g>
+
+      <!-- heat gates -->
+      <g fill="#fff" stroke="#283a58" stroke-width="3">
+        <circle cx="367" cy="665" r="10"/><circle cx="494" cy="222" r="10"/><circle cx="1200" cy="455" r="10"/><circle cx="882" cy="630" r="10"/>
+      </g>
+      <g fill="#283a58" font-size="18" font-weight="700" text-anchor="middle">
+        <text x="367" y="672">G</text><text x="494" y="229">G</text><text x="1200" y="462">G</text><text x="882" y="637">G</text>
+      </g>
+
+      <!-- labels -->
+      <g filter="url(#shadow)">
+        <g transform="translate(1075 455)"><rect x="-152" y="-30" width="304" height="57" rx="13" fill="#683c21" fill-opacity="0.91"/><text y="-7" text-anchor="middle" font-size="15" font-weight="700" fill="#fff4dd">INDO-PACIFIC WARM POOL</text><text y="14" text-anchor="middle" font-size="11" fill="#ffdda0">persistent heat continent</text></g>
+        <g transform="translate(525 445)"><rect x="-132" y="-27" width="264" height="53" rx="13" fill="#683c21" fill-opacity="0.91"/><text y="-5" text-anchor="middle" font-size="14" font-weight="700" fill="#fff4dd">WESTERN HEMISPHERE</text><text y="14" text-anchor="middle" font-size="11" fill="#ffdda0">seasonal warm pool</text></g>
+        <g transform="translate(209 289)"><rect x="-84" y="-24" width="168" height="47" rx="12" fill="#7b3532" fill-opacity="0.92"/><text y="-3" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">THE BLOB</text><text y="14" text-anchor="middle" font-size="10" fill="#ffd4cd">marine heatwave</text></g>
+        <g transform="translate(202 468)"><rect x="-94" y="-23" width="188" height="44" rx="11" fill="#7b3532" fill-opacity="0.90"/><text y="-2" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">EL NIÑO TONGUE</text><text y="14" text-anchor="middle" font-size="10" fill="#ffd4cd">basin-scale anomaly</text></g>
+        <g transform="translate(665 676)"><rect x="-139" y="-26" width="278" height="51" rx="12" fill="#4e4676" fill-opacity="0.94"/><text y="-5" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">CIRCUMPOLAR DEEP WATER</text><text y="13" text-anchor="middle" font-size="10" fill="#e4dcff">buried heat continent beneath cold surface</text></g>
+        <g transform="translate(652 174)"><rect x="-112" y="-25" width="224" height="49" rx="12" fill="#4e4676" fill-opacity="0.94"/><text y="-5" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">ATLANTIC WATER</text><text y="13" text-anchor="middle" font-size="10" fill="#e4dcff">warm layer below Arctic halocline</text></g>
+      </g>
+
+      <g fill="#fff" font-size="11" font-weight="700">
+        <text x="407" y="300">GULF STREAM →</text><text x="1314" y="319">KUROSHIO →</text>
+        <text x="821" y="610">AGULHAS</text><text x="448" y="581">BRAZIL</text>
+        <text x="1085" y="625">ANTARCTIC CIRCUMPOLAR CURRENT →</text>
+      </g>
+      <g fill="#26384f" font-size="10" font-weight="700">
+        <text x="333" y="694">DRAKE</text><text x="459" y="207">FRAM</text><text x="1162" y="481">INDONESIAN</text><text x="854" y="617">AGULHAS</text>
+      </g>
+    </g>
+
+    <rect x="55" y="112" width="1490" height="680" rx="24" fill="none" stroke="#315d73" stroke-width="3"/>
+
+    <!-- taxonomy legend -->
+    <g transform="translate(55 820)">
+      <rect width="1490" height="174" rx="20" fill="#fff" stroke="#9eb5bb" filter="url(#shadow)"/>
+      <text x="26" y="31" font-size="14" font-weight="700" fill="#45606d">READ THE MAP BY MECHANISM, NOT COLOR ALONE</text>
+
+      <g transform="translate(30 55)">
+        <ellipse cx="38" cy="32" rx="37" ry="24" fill="url(#warmPool)" stroke="#f3a141" stroke-width="2"/>
+        <text x="86" y="24" font-size="14" font-weight="700" fill="#623d20">HEAT CONTINENT</text>
+        <text x="86" y="44" font-size="11" fill="#5c6d74">persistent or seasonal reservoir</text>
+      </g>
+      <g transform="translate(320 55)">
+        <path d="M2 36 C30 5 57 8 80 30" fill="none" stroke="#ef9e3b" stroke-width="7" marker-end="url(#arrowWarm)"/>
+        <text x="100" y="24" font-size="14" font-weight="700" fill="#623d20">HEAT RIVER</text>
+        <text x="100" y="44" font-size="11" fill="#5c6d74">current transporting energy</text>
+      </g>
+      <g transform="translate(610 55)">
+        <path d="M40 9 c-23-18-51 11-32 33 c17 20 50 2 37-23 c-11-20-39-12-42 7" fill="none" stroke="#ef9e3b" stroke-width="4"/>
+        <text x="85" y="24" font-size="14" font-weight="700" fill="#623d20">HEAT ISLAND</text>
+        <text x="85" y="44" font-size="11" fill="#5c6d74">moving warm-core eddy or ring</text>
+      </g>
+      <g transform="translate(900 55)">
+        <ellipse cx="39" cy="31" rx="37" ry="23" fill="#ef6b55" fill-opacity="0.28" stroke="#df5e4c" stroke-width="3" stroke-dasharray="8 5"/>
+        <text x="90" y="24" font-size="14" font-weight="700" fill="#713631">HEAT BLOB / TONGUE</text>
+        <text x="90" y="44" font-size="11" fill="#5c6d74">temporary anomaly, not fixed geography</text>
+      </g>
+      <g transform="translate(1217 55)">
+        <rect x="1" y="7" width="75" height="48" rx="8" fill="url(#buried)" stroke="#675a92" stroke-width="2"/>
+        <text x="91" y="24" font-size="14" font-weight="700" fill="#4e4676">BURIED HEAT</text>
+        <text x="91" y="44" font-size="11" fill="#5c6d74">hidden below a cold/fresh lid</text>
+      </g>
+
+      <text x="745" y="148" text-anchor="middle" font-size="12" fill="#536a77">G = transport gate · Conceptual geography only: footprints, pathways, and temperatures are schematic and vary with depth, season, and definition.</text>
+    </g>
+  </g>
+</svg>

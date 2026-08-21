@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1050" viewBox="0 0 1400 1050" role="img" aria-labelledby="title desc">
+  <title id="title">Heat zones are budgets, not belts</title>
+  <desc id="desc">A conceptual Southern Ocean cross-section distinguishes temperature, heat content, and heat transport. Heat crosses the Antarctic Circumpolar Current fronts through eddies and overturning, enters Circumpolar Deep Water below a cold surface layer, then must cross a second slope-front gate and follow shelf troughs before reaching an ice-shelf cavity.</desc>
+  <defs>
+    <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#70bfd2"/>
+      <stop offset="0.48" stop-color="#327b9b"/>
+      <stop offset="1" stop-color="#153e62"/>
+    </linearGradient>
+    <linearGradient id="deepWarm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e2ad55" stop-opacity="0.30"/>
+      <stop offset="0.66" stop-color="#f1aa48" stop-opacity="0.82"/>
+      <stop offset="1" stop-color="#ef8b3b" stop-opacity="0.92"/>
+    </linearGradient>
+    <linearGradient id="ice" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#cce8ef"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.17"/></filter>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#f2a541"/></marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#d8f3f7"/></marker>
+    <marker id="arrowDark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#275f78"/></marker>
+  </defs>
+
+  <rect width="1400" height="1050" fill="#f7f4ed"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="700" y="48" text-anchor="middle" font-size="31" font-weight="700" fill="#173444">HEAT ZONES ARE BUDGETS, NOT BELTS</text>
+    <text x="700" y="78" text-anchor="middle" font-size="16" fill="#536a77">Cold at the surface does not mean heat is absent below</text>
+
+    <g transform="translate(55 105)" filter="url(#shadow)">
+      <rect width="410" height="112" rx="16" fill="#ffffff" stroke="#79a8b5"/>
+      <text x="205" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#28617a">TEMPERATURE · °C</text>
+      <text x="205" y="61" text-anchor="middle" font-size="21" font-weight="700" fill="#173f55">How warm is this sample?</text>
+      <text x="205" y="88" text-anchor="middle" font-size="13" fill="#5c707a">local property · must state depth and time</text>
+    </g>
+    <g transform="translate(495 105)" filter="url(#shadow)">
+      <rect width="410" height="112" rx="16" fill="#ffffff" stroke="#c8964e"/>
+      <text x="205" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#916329">HEAT CONTENT · J</text>
+      <text x="205" y="61" text-anchor="middle" font-size="21" font-weight="700" fill="#67491f">How much energy is stored?</text>
+      <text x="205" y="88" text-anchor="middle" font-size="13" fill="#746757">temperature × water mass · integrated volume</text>
+    </g>
+    <g transform="translate(935 105)" filter="url(#shadow)">
+      <rect width="410" height="112" rx="16" fill="#ffffff" stroke="#678a9d"/>
+      <text x="205" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#315c72">HEAT TRANSPORT · W</text>
+      <text x="205" y="61" text-anchor="middle" font-size="21" font-weight="700" fill="#173f55">How fast does energy cross?</text>
+      <text x="205" y="88" text-anchor="middle" font-size="13" fill="#5c707a">temperature × normal velocity · integrated section</text>
+    </g>
+
+    <g transform="translate(55 250)" filter="url(#shadow)">
+      <rect width="1290" height="570" rx="20" fill="#ffffff" stroke="#678a9d"/>
+      <text x="35" y="38" font-size="15" font-weight="700" fill="#44606d">EQUATORWARD</text>
+      <text x="1255" y="38" text-anchor="end" font-size="15" font-weight="700" fill="#44606d">ANTARCTICA · POLEWARD</text>
+
+      <path d="M25 105 C260 95 505 111 735 101 C900 94 1025 101 1265 105 L1265 520 L25 520 Z" fill="url(#ocean)"/>
+      <path d="M25 105 C260 95 505 111 735 101 C900 94 1025 101 1265 105" fill="none" stroke="#edf9fb" stroke-width="4"/>
+
+      <path d="M25 520 L720 520 C820 510 885 481 930 430 C970 385 1010 355 1065 350 L1265 350 L1265 545 L25 545 Z" fill="#7f6b58"/>
+      <path d="M25 520 L720 520 C820 510 885 481 930 430 C970 385 1010 355 1065 350 L1265 350" fill="none" stroke="#5f5145" stroke-width="8"/>
+
+      <path d="M25 108 C250 101 470 116 700 108 C870 103 1010 110 1125 111 L1125 190 C970 182 830 192 690 186 C460 178 255 187 25 181 Z" fill="#9ad8e4" opacity="0.74"/>
+      <text x="155" y="151" font-size="14" font-weight="700" fill="#174d65">COLD SURFACE LAYER</text>
+
+      <path d="M80 375 C305 342 525 349 735 324 C860 309 920 288 991 277 C1037 270 1074 281 1114 295 L1114 356 C1065 349 1020 363 975 383 C886 423 790 434 670 441 C460 451 275 446 80 466 Z" fill="url(#deepWarm)"/>
+      <text x="505" y="397" text-anchor="middle" font-size="18" font-weight="700" fill="#fff4dc">WARMER CIRCUMPOLAR DEEP WATER</text>
+      <text x="505" y="419" text-anchor="middle" font-size="12" fill="#fff4dc">large subsurface reservoir · warm relative to freezing</text>
+
+      <g stroke="#d7f3f7" stroke-width="5" fill="none" marker-end="url(#arrowBlue)">
+        <path d="M210 148 C245 122 282 122 317 147"/>
+        <path d="M390 151 C427 124 462 125 500 150"/>
+        <path d="M574 151 C610 122 650 124 687 150"/>
+      </g>
+      <g font-size="12" font-weight="700" fill="#315c72" text-anchor="middle">
+        <text x="265" y="95">SUBANTARCTIC FRONT</text>
+        <text x="447" y="89">POLAR FRONT</text>
+        <text x="630" y="94">SOUTHERN ACC FRONTS</text>
+      </g>
+      <g stroke="#bde9f0" stroke-width="2" stroke-dasharray="7 7">
+        <path d="M280 102 L280 487"/>
+        <path d="M465 104 L465 488"/>
+        <path d="M650 103 L650 477"/>
+      </g>
+
+      <g transform="translate(250 208)">
+        <rect width="440" height="56" rx="14" fill="#173f55" opacity="0.94"/>
+        <text x="220" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#e6f7fa">GATE 1 · ACC FRONTAL SYSTEM</text>
+        <text x="220" y="43" text-anchor="middle" font-size="12" fill="#bfe3ea">strong along-front jets · leaky cross-front exchange</text>
+      </g>
+      <g stroke="#f4b45b" stroke-width="5" fill="none" marker-end="url(#arrowOrange)">
+        <path d="M340 290 C365 268 390 311 418 287 C445 263 470 309 499 284"/>
+        <path d="M545 306 C570 280 595 327 623 299 C650 273 677 316 706 291"/>
+      </g>
+      <text x="521" y="333" text-anchor="middle" font-size="12" font-weight="700" fill="#ffe0ac">EDDIES + OVERTURNING CROSS THE MEAN FRONTS</text>
+
+      <path d="M1090 72 L1265 72 L1265 238 C1215 230 1173 230 1133 243 L1090 243 Z" fill="url(#ice)" stroke="#9acbd8" stroke-width="3"/>
+      <path d="M1133 243 C1174 230 1216 231 1265 238 L1265 350 L1114 350 L1114 295 Z" fill="#d8f0f4" opacity="0.92"/>
+      <text x="1180" y="127" text-anchor="middle" font-size="15" font-weight="700" fill="#315c72">ICE SHEET</text>
+      <text x="1180" y="151" text-anchor="middle" font-size="13" fill="#526d79">floating ice shelf</text>
+      <text x="1210" y="313" text-anchor="middle" font-size="11" font-weight="700" fill="#315c72">CAVITY</text>
+      <text x="1210" y="329" text-anchor="middle" font-size="10" fill="#526d79">BELOW THE ICE SHELF</text>
+
+      <path d="M925 177 C957 154 986 153 1017 178 C1045 201 1071 202 1100 181" fill="none" stroke="#d8f3f7" stroke-width="5" marker-end="url(#arrowBlue)"/>
+      <path d="M962 120 L962 430" stroke="#bde9f0" stroke-width="2" stroke-dasharray="7 7"/>
+      <g transform="translate(785 208)">
+        <rect width="316" height="56" rx="14" fill="#173f55" opacity="0.94"/>
+        <text x="158" y="23" text-anchor="middle" font-size="14" font-weight="700" fill="#e6f7fa">GATE 2 · SLOPE FRONT</text>
+        <text x="158" y="43" text-anchor="middle" font-size="12" fill="#bfe3ea">topography + current regulate shelf access</text>
+      </g>
+
+      <path d="M810 388 C876 367 923 344 966 330 C1025 311 1052 311 1094 323 C1125 331 1147 310 1171 291" fill="none" stroke="#f2a541" stroke-width="8" marker-end="url(#arrowOrange)"/>
+      <text x="919" y="456" text-anchor="middle" font-size="12" font-weight="700" fill="#f8d8a0">TROUGHS + EDDIES + WINDS OPEN REGIONAL PATHS</text>
+      <path d="M1176 286 C1202 269 1227 269 1248 284" fill="none" stroke="#ef8b3b" stroke-width="6" marker-end="url(#arrowOrange)"/>
+      <text x="1192" y="374" text-anchor="middle" font-size="12" font-weight="700" fill="#f7c67d">HEAT → BASAL MELT</text>
+
+      <g transform="translate(30 477)" font-size="12" font-weight="700">
+        <rect width="650" height="45" rx="11" fill="#183d52" opacity="0.92"/>
+        <text x="325" y="19" text-anchor="middle" fill="#fff">A FRONT GUIDES FLOW MORE STRONGLY THAN IT STOPS FLOW</text>
+        <text x="325" y="36" text-anchor="middle" fill="#bfe3ea">mean boundary ≠ material wall</text>
+      </g>
+    </g>
+
+    <g transform="translate(55 850)" filter="url(#shadow)">
+      <rect width="1290" height="145" rx="18" fill="#173444"/>
+      <text x="645" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#9ed4e4">THE BUDGET MUST CLOSE FOR A DECLARED VOLUME AND TIME</text>
+      <g transform="translate(30 51)" font-size="13" font-weight="700" text-anchor="middle">
+        <rect width="205" height="55" rx="12" fill="#2e6680"/><text x="102" y="24" fill="#fff">SURFACE FLUX</text><text x="102" y="42" fill="#cde8ee">air ↔ ocean</text>
+        <text x="229" y="35" fill="#9ed4e4" font-size="22">+</text>
+        <rect x="255" width="205" height="55" rx="12" fill="#396f86"/><text x="357" y="24" fill="#fff">TRANSPORT CONVERGENCE</text><text x="357" y="42" fill="#cde8ee">currents + eddies</text>
+        <text x="484" y="35" fill="#9ed4e4" font-size="22">−</text>
+        <rect x="510" width="205" height="55" rx="12" fill="#8b6534"/><text x="612" y="24" fill="#fff">ICE + OTHER SINKS</text><text x="612" y="42" fill="#f8dfb5">latent + sensible heat</text>
+        <text x="739" y="35" fill="#9ed4e4" font-size="22">=</text>
+        <rect x="765" width="445" height="55" rx="12" fill="#e8f0f2"/><text x="987" y="24" fill="#173444">CHANGE IN STORED HEAT</text><text x="987" y="42" fill="#526d79">not sea-surface temperature alone</text>
+      </g>
+      <text x="645" y="130" text-anchor="middle" font-size="12" fill="#e9c583">MAP → VERTICAL SECTION → VELOCITY → COVARIANCE → CLOSED BUDGET → MECHANISM</text>
+    </g>
+  </g>
+</svg>
