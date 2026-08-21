@@ -85,12 +85,12 @@ class AtlasTests(unittest.TestCase):
         app = APP.read_text(encoding="utf-8")
         for token in ('id="ring-form"', 'id="ring-lat"', 'id="north-ring"', 'id="south-ring"', 'id="ring-summary"', 'id="ring-body"'):
             self.assertIn(token, html)
-        for token in ("pairedRingRows", "longestCyclicRun", "ringStatistics", "renderRingComparison", 'searchParams.set("ring"', "not a current, barrier strength, heat-content, or transport measurement"):
+        for token in ("pairedRingRows", "longestCyclicRun", "ringStatistics", "geometryData = window.OCEANLINES_OISST", "renderRingComparison", 'searchParams.set("ring"', "not a current, barrier strength, heat-content, or transport measurement"):
             self.assertIn(token, app)
 
     def test_polar_ring_claim_is_geometry_not_transport(self):
         html = HTML.read_text(encoding="utf-8")
-        for token in ("Land gaps reveal geometry", "do not measure currents or heat transport", "Ocean coverage", "Longest arc"):
+        for token in ("Land-or-missing gaps expose analyzed-water continuity", "do not measure currents or heat transport", "Analyzed-water coverage", "Longest arc"):
             self.assertIn(token, html)
 
     def test_local_links_resolve(self):

@@ -4,8 +4,8 @@ Atlas 05 separates four views: the conceptual twelve-zone geography, absolute
 NOAA OISST v2.1 sea surface temperature, NOAA's published SST anomaly, and its
 time-matched estimated analysis error for 1 August 2026. It adds a coordinate
 probe that reports all three observed fields at the nearest display-grid cell
-and a paired latitude-ring comparison that exposes land/ocean continuity north
-and south at one requested latitude magnitude.
+and a paired latitude-ring comparison that exposes analyzed-water continuity
+north and south at one requested latitude magnitude.
 
 Serve the repository root locally so relative links resolve:
 
@@ -54,16 +54,18 @@ surface-product fields; the probe does not calculate heat content or transport.
 Choose a latitude magnitude to trace the active surface field across every
 display longitude at both the northern and southern counterpart. Atlas 05
 draws the two sampled rows on the map, renders longitude strips, and reports
-ocean coverage, the number of separated ocean arcs, the longest continuous
-ocean arc, and field statistics in text.
+valid SST-mask coverage, the number of separated water arcs, the longest
+continuous water arc, and field statistics in text.
 
 The default request of 64° snaps to the nearest available display rows:
 64.125°N and 63.875°S. On the fixed snapshot, the northern row contains 46
 ocean cells in seven arcs and the southern row contains 179 ocean cells in one
-cyclic arc. The longest arcs are 28° and 358° of longitude respectively. These are
-two-degree display-grid geometry diagnostics, not coast-resolution estimates.
+cyclic arc. The longest arcs are 28° and 358° of longitude respectively. These
+are two-degree display-grid geometry diagnostics, not coast-resolution
+estimates. The source mask combines land and missing values, so the atlas does
+not assign a cause to every individual gap.
 
-Ring selections are bookmarkable with `ring=64.000`. Land/ocean continuity can
+Ring selections are bookmarkable with `ring=64.000`. Analyzed-water continuity can
 help explain why circumpolar geometry is possible in the south and interrupted
 in the north, but this surface snapshot does not measure the ACC, frontal
 barrier strength, heat content, or heat transport.

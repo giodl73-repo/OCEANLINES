@@ -228,10 +228,11 @@ function longestCyclicRun(flags) {
   return longest;
 }
 
-function ringStatistics(data, ring) {
+function ringStatistics(data, ring, geometryData = window.OCEANLINES_OISST) {
   const columns = data.shape[1];
   const encoded = data.values_c_hundredths.slice(ring.row * columns, (ring.row + 1) * columns);
-  const ocean = encoded.map(value => value !== null);
+  const geometryEncoded = geometryData.values_c_hundredths.slice(ring.row * columns, (ring.row + 1) * columns);
+  const ocean = geometryEncoded.map(value => value !== null);
   const values = encoded.filter(value => value !== null).map(value => value / 100);
   const arcs = ocean.every(Boolean) ? 1 : ocean.reduce((count, value, index) => count + (value && !ocean[(index - 1 + columns) % columns] ? 1 : 0), 0);
   const mean = values.length ? values.reduce((total, value) => total + value, 0) / values.length : null;
@@ -279,7 +280,7 @@ function renderRingComparison(data, mode, colorFunction) {
     renderRingStrip(canvas, data, statistics, colorFunction);
     const coordinate = coordinatePhrase(ring.latitude, "N", "S");
     document.querySelector(`#${id}-ring-label`).textContent = `${name} ring · ${coordinate}`;
-    canvas.setAttribute("aria-label", `${name} longitude strip at ${coordinate}; land gaps use beige and the displayed field uses the active map scale.`);
+    canvas.setAttribute("aria-label", `${name} longitude strip at ${coordinate}; land-or-missing gaps use beige and the displayed field uses the active map scale.`);
     const row = document.createElement("tr");
     const range = statistics.mean === null ? "No ocean values" : `${valuePhrase(statistics.mean, mode)} mean; ${valuePhrase(statistics.minimum, mode)} to ${valuePhrase(statistics.maximum, mode)}`;
     const cells = [`${name} · ${coordinate}`, `${statistics.valid}/${data.shape[1]} cells · ${statistics.coverage.toFixed(1)}%`, String(statistics.arcs), `${statistics.longestDegrees.toFixed(0)}° longitude`, range];
@@ -290,7 +291,7 @@ function renderRingComparison(data, mode, colorFunction) {
       row.append(cell);
     });
     body.append(row);
-    summaries.push(`${name} ${coordinate}: ${statistics.coverage.toFixed(1)}% ocean coverage in ${statistics.arcs} arc${statistics.arcs === 1 ? "" : "s"}; longest ${statistics.longestDegrees.toFixed(0)}°`);
+    summaries.push(`${name} ${coordinate}: ${statistics.coverage.toFixed(1)}% analyzed-water coverage in ${statistics.arcs} arc${statistics.arcs === 1 ? "" : "s"}; longest ${statistics.longestDegrees.toFixed(0)}°`);
   }
   const fieldName = mode === "anomaly" ? "SST anomaly" : mode === "error" ? "estimated analysis error" : "absolute SST";
   document.querySelector("#ring-summary").textContent = `${summaries.join(". ")}. Display-grid geometry with ${fieldName}; not a current, barrier strength, heat-content, or transport measurement.`;
