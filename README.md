@@ -4,6 +4,8 @@
 
 [![validate](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml/badge.svg)](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml)
 
+**[Explore the live Atlas 03 →](https://giodl73-repo.github.io/OCEANLINES/atlas/)**
+
 ![Planetary heat geography](figures/planetary-heat-geography.svg)
 
 Most world maps end at the coastline. OCEANLINES starts there.
@@ -86,6 +88,7 @@ present-day forecast. The observed modes declare their projection and include a
 non-color latitude-band summary; uncertainty remains product- and surface-specific.
 
 Public repository: [github.com/giodl73-repo/OCEANLINES](https://github.com/giodl73-repo/OCEANLINES).
+Live atlas: [giodl73-repo.github.io/OCEANLINES/atlas/](https://giodl73-repo.github.io/OCEANLINES/atlas/).
 The first hosted validation run passed both the offline suite and pinned NetCDF
 fixture job on the approved Atlas 03 history.
 
