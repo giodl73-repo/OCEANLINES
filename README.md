@@ -4,7 +4,7 @@
 
 [![validate](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml/badge.svg)](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml)
 
-**[Explore the live Atlas 03 →](https://giodl73-repo.github.io/OCEANLINES/atlas/)**
+**[Explore the live Atlas 04 →](https://giodl73-repo.github.io/OCEANLINES/atlas/)**
 
 ![Planetary heat geography](figures/planetary-heat-geography.svg)
 
@@ -45,8 +45,8 @@ quantitative.
 
 ## Start here
 
-1. Explore [ATLAS 03](atlas/) for conceptual zones, absolute SST, SST anomaly,
-   and time-matched estimated analysis error.
+1. Explore [ATLAS 04](atlas/) for conceptual zones and co-located inspection of
+   absolute SST, SST anomaly, and time-matched estimated analysis error.
 2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
 4. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
@@ -82,10 +82,11 @@ The calculator uses only the Python standard library.
 ## Project status
 
 OCEANLINES is an early observation-class research and visual-atlas project.
-Atlas 03 combines conceptual SVG geography with fixed NOAA OISST absolute,
-anomaly, and estimated-error surface layers. It is not a live ocean analysis or
-present-day forecast. The observed modes declare their projection and include a
-non-color latitude-band summary; uncertainty remains product- and surface-specific.
+Atlas 04 combines conceptual SVG geography with fixed NOAA OISST absolute,
+anomaly, and estimated-error surface layers plus a bookmarkable coordinate
+probe. It is not a live ocean analysis or present-day forecast. The observed
+modes declare their projection and include non-color regional and cell-level
+summaries; uncertainty remains product- and surface-specific.
 
 Public repository: [github.com/giodl73-repo/OCEANLINES](https://github.com/giodl73-repo/OCEANLINES).
 Live atlas: [giodl73-repo.github.io/OCEANLINES/atlas/](https://giodl73-repo.github.io/OCEANLINES/atlas/).
@@ -100,6 +101,7 @@ fixture job on the approved Atlas 03 history.
 | 01 | `cd7f1b9` | NOAA OISST absolute SST | 2026-08-01 | superseded by Atlas 03 review |
 | 02 | `31765f3` | absolute SST plus referenced anomaly | 2026-08-01 | superseded by Atlas 03 review |
 | 03 | `3769594` | conceptual, absolute, anomaly, and estimated-error layers | 2026-08-01 | **APPROVED** · [review](signals/roles/check/oceanlines-atlases-roles-check-2026-08-21.md) |
+| 04 | pending review commit | Atlas 03 layers plus accessible coordinate inspection | 2026-08-01 | review pending |
 
 ## License
 

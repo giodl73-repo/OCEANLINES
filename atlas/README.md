@@ -1,8 +1,9 @@
-# Atlas 03
+# Atlas 04
 
-Atlas 03 separates four views: the conceptual twelve-zone geography, absolute
+Atlas 04 separates four views: the conceptual twelve-zone geography, absolute
 NOAA OISST v2.1 sea surface temperature, NOAA's published SST anomaly, and its
-time-matched estimated analysis error for 1 August 2026.
+time-matched estimated analysis error for 1 August 2026. It adds a coordinate
+probe that reports all three observed fields at the nearest display-grid cell.
 
 Serve the repository root locally so relative links resolve:
 
@@ -28,6 +29,23 @@ Observed fields use an equirectangular display centered on 0° longitude, with
 the antimeridian at the left/right seam. A non-color table reports mean, range,
 and valid-cell count for five latitude bands. Those summaries are not
 area-weighted and do not replace local inspection.
+
+## Inspect a location
+
+Click an observed map or enter latitude and longitude in the probe form. The
+atlas snaps the request to the nearest two-degree display cell, marks that cell,
+and reports absolute SST, referenced anomaly, and estimated analysis error
+together. Land and missing values remain explicit.
+
+Probe selections are bookmarkable:
+
+```text
+?mode=anomaly&lat=-63.875&lon=-59.875
+```
+
+The reported coordinates describe the sampled display cell, not the exact
+pointer coordinate or NOAA's full native-resolution grid. All values remain
+surface-product fields; the probe does not calculate heat content or transport.
 
 ## Rebuild the observed layer
 
