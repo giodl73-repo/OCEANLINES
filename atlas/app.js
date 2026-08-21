@@ -29,11 +29,7 @@ function selectZone(zone) {
   fields.source.textContent = zone.source.startsWith("../") ? "Open the source register →" : "Open primary source →";
 }
 
-function temperatureColor(value) {
-  const stops = [
-    [-2, [216, 244, 255]], [0, [141, 211, 232]], [8, [43, 156, 189]],
-    [16, [56, 182, 138]], [22, [242, 207, 91]], [28, [240, 120, 66]], [32, [185, 39, 53]]
-  ];
+function colorFromStops(value, stops) {
   const bounded = Math.max(stops[0][0], Math.min(stops.at(-1)[0], value));
   let upper = stops.findIndex(stop => stop[0] >= bounded);
   if (upper < 1) upper = 1;
@@ -44,8 +40,21 @@ function temperatureColor(value) {
   return `rgb(${color.join(",")})`;
 }
 
-function renderObservedSst() {
-  const data = window.OCEANLINES_OISST;
+function temperatureColor(value) {
+  return colorFromStops(value, [
+    [-2, [216, 244, 255]], [0, [141, 211, 232]], [8, [43, 156, 189]],
+    [16, [56, 182, 138]], [22, [242, 207, 91]], [28, [240, 120, 66]], [32, [185, 39, 53]]
+  ]);
+}
+
+function anomalyColor(value) {
+  return colorFromStops(value, [
+    [-5, [35, 59, 131]], [-3, [61, 119, 184]], [-1, [155, 203, 225]],
+    [0, [238, 233, 216]], [1, [241, 187, 120]], [3, [207, 91, 71]], [5, [124, 35, 69]]
+  ]);
+}
+
+function renderObservedField(data, colorFunction) {
   const canvas = document.querySelector("#sst-canvas");
   const context = canvas.getContext("2d");
   const [rows, columns] = data.shape;
@@ -58,7 +67,7 @@ function renderObservedSst() {
     const row = Math.floor(index / columns);
     const column = index % columns;
     const shiftedColumn = (column + columns / 2) % columns;
-    context.fillStyle = temperatureColor(encoded / 100);
+    context.fillStyle = colorFunction(encoded / 100);
     context.fillRect(shiftedColumn * cellWidth, (rows - row - 1) * cellHeight, Math.ceil(cellWidth), Math.ceil(cellHeight));
   });
   context.strokeStyle = "rgba(255,255,255,.24)";
@@ -71,19 +80,21 @@ function renderObservedSst() {
   }
 }
 
-function showObservedMetadata() {
-  const data = window.OCEANLINES_OISST;
+function showObservedMetadata(data, mode) {
   const valid = data.values_c_hundredths.filter(value => value !== null);
   const summary = data.summary || {
     valid_ocean_cells: valid.length,
     minimum_c: Math.min(...valid) / 100,
     maximum_c: Math.max(...valid) / 100
   };
-  fields.index.textContent = "ATLAS 01 · OBSERVATIONAL SURFACE FIELD";
-  fields.name.textContent = "Sea Surface Temperature";
+  const anomaly = mode === "anomaly";
+  fields.index.textContent = `ATLAS 02 · ${anomaly ? "REFERENCE-BASED" : "ABSOLUTE"} SURFACE FIELD`;
+  fields.name.textContent = anomaly ? "SST Anomaly" : "Sea Surface Temperature";
   fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
-  fields.summary.textContent = `A daily, spatially complete analysis sampled into ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(1)}–${summary.maximum_c.toFixed(1)}°C.`;
-  fields.role.textContent = "surface thermal field";
+  fields.summary.textContent = anomaly
+    ? `Departure from NOAA's 1971–2000 daily climatology across ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(1)}–${summary.maximum_c.toFixed(1)}°C.`
+    : `Absolute surface temperature across ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(1)}–${summary.maximum_c.toFixed(1)}°C.`;
+  fields.role.textContent = anomaly ? "surface departure from climatology" : "absolute surface thermal field";
   fields.depth.textContent = "sea surface · 0 m product level";
   fields.clock.textContent = `one day · ${data.date}`;
   fields.evidence.textContent = "observational analysis · D1";
@@ -93,7 +104,10 @@ function showObservedMetadata() {
 }
 
 function setMapMode(mode) {
-  const observed = mode === "observed";
+  if (mode === "observed") mode = "sst";
+  const observed = mode !== "conceptual";
+  const anomaly = mode === "anomaly";
+  const data = anomaly ? window.OCEANLINES_OISST_ANOMALY : window.OCEANLINES_OISST;
   document.querySelectorAll(".map-mode").forEach(button => {
     const active = button.dataset.mode === mode;
     button.classList.toggle("active", active);
@@ -103,13 +117,21 @@ function setMapMode(mode) {
   document.querySelector("#sst-canvas").hidden = !observed;
   document.querySelector("#observed-stamp").hidden = !observed;
   document.querySelector("#temperature-key").hidden = !observed;
+  document.querySelector("#temperature-key").classList.toggle("anomaly", anomaly);
   markers.hidden = observed;
   document.querySelector("#map-stage").classList.toggle("observed", observed);
   document.querySelectorAll(".lens").forEach(button => { button.disabled = observed; });
+  document.querySelector("#observed-title").textContent = anomaly ? "OBSERVATIONAL · SURFACE ANOMALY" : "OBSERVATIONAL · ABSOLUTE SURFACE";
+  document.querySelector("#observed-status").textContent = anomaly ? "NOAA OISST v2.1 · 1971–2000 BASELINE" : "NOAA OISST v2.1 · FINAL · 2026-08-01";
+  document.querySelector("#scale-min").textContent = anomaly ? "−5°C" : "−2°C";
+  document.querySelector("#scale-max").textContent = anomaly ? "+5°C" : "32°C";
   document.querySelector("#map-note").innerHTML = observed
-    ? "<span></span> Observed SST · final product · 2° display stride from native 0.25° grid"
+    ? `<span></span> ${anomaly ? "SST anomaly · 1971–2000 reference · symmetric ±5°C display clamp" : "absolute SST"} · final product · 2° display stride`
     : "<span></span> Schematic locations and pathways · not navigational · not a live analysis";
-  if (observed) showObservedMetadata(); else selectZone(selectedZone);
+  if (observed) {
+    renderObservedField(data, anomaly ? anomalyColor : temperatureColor);
+    showObservedMetadata(data, mode);
+  } else selectZone(selectedZone);
 }
 
 for (const zone of zones) {
@@ -145,6 +167,6 @@ document.querySelectorAll(".lens").forEach(button => {
 });
 
 document.querySelectorAll(".map-mode").forEach(button => button.addEventListener("click", () => setMapMode(button.dataset.mode)));
-renderObservedSst();
 selectZone(zones[0]);
-if (new URLSearchParams(window.location.search).get("mode") === "observed") setMapMode("observed");
+const requestedMode = new URLSearchParams(window.location.search).get("mode");
+if (["observed", "sst", "anomaly"].includes(requestedMode)) setMapMode(requestedMode);

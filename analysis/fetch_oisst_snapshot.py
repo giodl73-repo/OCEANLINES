@@ -1,8 +1,9 @@
 """Fetch and package one reproducible NOAA OISST display snapshot.
 
-The output is a compact JavaScript data artifact so Atlas 01 also works when
+The output is a compact JavaScript data artifact so Atlas 02 also works when
 opened directly from disk. Temperatures are stored as integer hundredths of a
-degree Celsius; missing values remain null.
+degree Celsius; missing values remain null. Supported fields are absolute sea
+surface temperature (sst) and the published 1971-2000 anomaly (anom).
 """
 
 from __future__ import annotations
@@ -21,20 +22,50 @@ import urllib.request
 
 DATASET_ID = "ncdc_oisst_v2_avhrr_by_time_zlev_lat_lon"
 ERDDAP = "https://www.ncei.noaa.gov/erddap/griddap"
+NCSS = "https://www.ncei.noaa.gov/thredds/ncss/grid/OisstBase/NetCDF/V2.1/AVHRR"
 DOI = "https://doi.org/10.25921/RE9P-PT57"
 DEFAULT_DATE = "2026-08-01"
 DEFAULT_STRIDE = 8
+VARIABLES = {
+    "sst": {
+        "name": "sea surface temperature",
+        "window": "OCEANLINES_OISST",
+        "baseline": None,
+        "boundary": "SST is a surface temperature field, not full-depth heat content or heat transport.",
+    },
+    "anom": {
+        "name": "sea surface temperature anomaly",
+        "window": "OCEANLINES_OISST_ANOMALY",
+        "baseline": "1971-2000 climatological mean",
+        "boundary": "SST anomaly is departure from a historical surface climatology, not absolute temperature, heat content, or attribution.",
+    },
+}
 
 
-def build_query(date: str, stride: int) -> str:
+def build_query(date: str, stride: int, variable: str = "sst") -> str:
+    if variable not in VARIABLES:
+        raise ValueError(f"unsupported variable: {variable}")
     constraint = (
-        f"sst[({date}T12:00:00Z)][(0.0)]"
+        f"{variable}[({date}T12:00:00Z)][(0.0)]"
         f"[(-89.875):{stride}:(89.875)]"
         f"[(0.125):{stride}:(359.875)]"
     )
     # Encode square brackets so urllib and intermediary proxies preserve the
     # ERDDAP constraint as one query expression.
     return f"{ERDDAP}/{DATASET_ID}.csv0?{urllib.parse.quote(constraint, safe='():.-')}"
+
+
+def build_ncss_query(date: str, stride: int, variable: str = "sst") -> str:
+    if variable not in VARIABLES:
+        raise ValueError(f"unsupported variable: {variable}")
+    month = date.replace("-", "")[:6]
+    day = date.replace("-", "")
+    query = urllib.parse.urlencode({
+        "var": variable, "north": "89.875", "west": "0.125",
+        "east": "359.875", "south": "-89.875", "horizStride": stride,
+        "time": f"{date}T12:00:00Z", "accept": "netcdf3",
+    })
+    return f"{NCSS}/{month}/oisst-avhrr-v02r01.{day}.nc?{query}"
 
 
 def fetch(url: str) -> bytes:
@@ -63,8 +94,27 @@ def parse_rows(raw: bytes) -> tuple[list[int | None], list[float], list[float]]:
     return values, latitudes, longitudes
 
 
-def package(raw: bytes, date: str, stride: int, retrieved_at: str) -> dict:
-    values, latitudes, longitudes = parse_rows(raw)
+def parse_netcdf(raw: bytes, variable: str) -> tuple[list[int | None], list[float], list[float]]:
+    try:
+        from netCDF4 import Dataset
+    except ImportError as error:
+        raise RuntimeError("the NCSS backend requires netCDF4; install requirements-observations.txt") from error
+    with Dataset("oisst-snapshot.nc", memory=raw) as dataset:
+        latitudes_axis = [float(value) for value in dataset.variables["lat"][:]]
+        longitudes_axis = [float(value) for value in dataset.variables["lon"][:]]
+        grid = dataset.variables[variable][0, 0, :, :]
+        values = []
+        for value in grid.flat:
+            number = float(value)
+            values.append(None if getattr(value, "mask", False) or math.isnan(number) else round(number * 100))
+    latitudes = [latitude for latitude in latitudes_axis for _ in longitudes_axis]
+    longitudes = longitudes_axis * len(latitudes_axis)
+    return values, latitudes, longitudes
+
+
+def package(raw: bytes, date: str, stride: int, retrieved_at: str, variable: str = "sst", backend: str = "erddap") -> dict:
+    definition = VARIABLES[variable]
+    values, latitudes, longitudes = parse_rows(raw) if backend == "erddap" else parse_netcdf(raw, variable)
     unique_latitudes = list(dict.fromkeys(latitudes))
     unique_longitudes = list(dict.fromkeys(longitudes))
     expected = len(unique_latitudes) * len(unique_longitudes)
@@ -81,9 +131,12 @@ def package(raw: bytes, date: str, stride: int, retrieved_at: str) -> dict:
         "doi": DOI,
         "date": date,
         "retrieved_at": retrieved_at,
-        "query_url": build_query(date, stride),
+        "query_url": build_query(date, stride, variable) if backend == "erddap" else build_ncss_query(date, stride, variable),
+        "source_format": "csv0" if backend == "erddap" else "netcdf3",
         "source_sha256": hashlib.sha256(raw).hexdigest(),
-        "variable": "sea surface temperature",
+        "variable_id": variable,
+        "variable": definition["name"],
+        "baseline": definition["baseline"],
         "units": "degree_C",
         "depth_m": 0.0,
         "precision": 0.01,
@@ -100,7 +153,7 @@ def package(raw: bytes, date: str, stride: int, retrieved_at: str) -> dict:
             "minimum_c": min(valid_values) / 100,
             "maximum_c": max(valid_values) / 100,
         },
-        "boundary": "SST is a surface temperature field, not full-depth heat content or heat transport.",
+        "boundary": definition["boundary"],
     }
 
 
@@ -109,7 +162,7 @@ def write_artifact(payload: dict, output: pathlib.Path) -> None:
     serialized = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
     output.write_text(
         "// Generated by analysis/fetch_oisst_snapshot.py; do not edit by hand.\n"
-        f"window.OCEANLINES_OISST={serialized};\n",
+        f"window.{VARIABLES[payload['variable_id']]['window']}={serialized};\n",
         encoding="utf-8",
         newline="\n",
     )
@@ -118,16 +171,22 @@ def write_artifact(payload: dict, output: pathlib.Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", default=DEFAULT_DATE, help="final-product day, YYYY-MM-DD")
+    parser.add_argument("--variable", choices=sorted(VARIABLES), default="sst", help="OISST field to package")
+    parser.add_argument("--backend", choices=("erddap", "ncss"), default="erddap", help="official NOAA subset service")
     parser.add_argument("--stride", type=int, default=DEFAULT_STRIDE, help="stride over the native 0.25-degree grid")
     parser.add_argument("--retrieved-at", help="ISO provenance time; defaults to current UTC")
-    parser.add_argument("--output", type=pathlib.Path, default=pathlib.Path("atlas/data/oisst-2026-08-01.js"))
+    parser.add_argument("--output", type=pathlib.Path, help="artifact path; defaults from variable and date")
     args = parser.parse_args()
     dt.date.fromisoformat(args.date)
     if args.stride < 1:
         parser.error("--stride must be positive")
+    if args.output is None:
+        label = "oisst-anomaly" if args.variable == "anom" else "oisst"
+        args.output = pathlib.Path(f"atlas/data/{label}-{args.date}.js")
     retrieved_at = args.retrieved_at or dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    raw = fetch(build_query(args.date, args.stride))
-    payload = package(raw, args.date, args.stride, retrieved_at)
+    url = build_query(args.date, args.stride, args.variable) if args.backend == "erddap" else build_ncss_query(args.date, args.stride, args.variable)
+    raw = fetch(url)
+    payload = package(raw, args.date, args.stride, retrieved_at, args.variable, args.backend)
     write_artifact(payload, args.output)
     print(f"wrote {args.output} ({payload['shape'][0]} x {payload['shape'][1]} cells)")
     print(f"source sha256 {payload['source_sha256']}")

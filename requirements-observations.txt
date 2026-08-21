@@ -1,0 +1,2 @@
+# Required only for the NOAA NCSS/NetCDF fallback backend.
+netCDF4==1.7.4

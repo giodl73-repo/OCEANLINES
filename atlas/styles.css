@@ -27,7 +27,7 @@ h1 { max-width: 980px; margin: 0; font-size: clamp(3rem, 6.5vw, 7.5rem); line-he
 .lens:disabled { cursor: not-allowed; opacity: .38; }
 .atlas-shell { display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(310px, .85fr); border: 1px solid var(--line); background: #06171c; }
 .map-panel { min-width: 0; border-right: 1px solid var(--line); }
-.map-modes { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); background: #071b22; }
+.map-modes { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); background: #071b22; }
 .map-mode { min-height: 44px; border: 0; border-right: 1px solid var(--line); color: var(--muted); background: transparent; cursor: pointer; font: 700 .64rem/1 ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
 .map-mode:last-child { border-right: 0; }
 .map-mode:hover, .map-mode:focus-visible { color: var(--ink); background: #11313a; }
@@ -42,6 +42,7 @@ h1 { max-width: 980px; margin: 0; font-size: clamp(3rem, 6.5vw, 7.5rem); line-he
 .observed-stamp span { margin-top: 5px; font: .56rem/1 ui-monospace, monospace; }
 .temperature-key { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 11px 18px 0; color: var(--muted); font: .62rem ui-monospace, monospace; }
 .temperature-key i { height: 8px; background: linear-gradient(90deg, #d8f4ff, #8dd3e8, #2b9cbd, #38b68a, #f2cf5b, #f07842, #b92735); }
+.temperature-key.anomaly i { background: linear-gradient(90deg, #233b83, #3d77b8, #9bcbe1, #eee9d8, #f1bb78, #cf5b47, #7c2345); }
 .marker { position: absolute; width: 30px; height: 30px; translate: -50% -50%; border: 2px solid #fff; border-radius: 50%; color: #092027; background: var(--cyan); box-shadow: 0 0 0 5px rgb(7 27 34 / .45); cursor: pointer; font: 900 .64rem/1 ui-monospace, monospace; transition: scale .18s, opacity .18s, filter .18s; }
 .marker:hover, .marker:focus-visible, .marker.selected { scale: 1.35; z-index: 2; outline: 0; box-shadow: 0 0 0 5px #071b22, 0 0 0 7px var(--cyan); }
 .marker[data-kind="transient"] { background: var(--coral); } .marker[data-kind="buried"] { background: var(--violet); }

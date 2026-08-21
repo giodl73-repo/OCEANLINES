@@ -1,8 +1,8 @@
-# Atlas 01
+# Atlas 02
 
-Atlas 01 is the dependency-free interactive public surface for OCEANLINES. It
-pairs the conceptual twelve-zone map with the first observational layer: NOAA
-OISST v2.1 sea surface temperature for 1 August 2026.
+Atlas 02 separates three views: the conceptual twelve-zone geography, absolute
+NOAA OISST v2.1 sea surface temperature, and NOAA's published SST anomaly for
+1 August 2026.
 
 Serve the repository root locally so relative links resolve:
 
@@ -16,8 +16,11 @@ Then open `http://localhost:8000/atlas/`.
 
 Every displayed footprint and marker in the conceptual view is schematic. A
 zone record declares its role, depth, clock, evidence class, source, and
-inferential boundary. The observed view is a fixed daily surface analysis. It
-is neither a live product nor a full-depth heat-content map.
+inferential boundary. The observed views are fixed daily surface analyses.
+Neither is a live product or a full-depth heat-content map. The anomaly is
+relative to NOAA's 1971–2000 climatology; it is not absolute temperature.
+The anomaly palette is centered at zero and clamped symmetrically at ±5°C;
+the details panel reports the unclamped sampled range.
 
 ## Rebuild the observed layer
 
@@ -27,15 +30,26 @@ preserved. The artifact records its exact query and source-response checksum.
 
 ```powershell
 python analysis/fetch_oisst_snapshot.py `
+  --variable sst `
   --date 2026-08-01 `
   --stride 8 `
   --retrieved-at 2026-08-21T14:00:00Z `
   --output atlas/data/oisst-2026-08-01.js
+
+python -m pip install -r requirements-observations.txt
+python analysis/fetch_oisst_snapshot.py `
+  --backend ncss `
+  --variable anom `
+  --date 2026-08-01 `
+  --stride 8 `
+  --retrieved-at 2026-08-21T14:00:00Z `
+  --output atlas/data/oisst-anomaly-2026-08-01.js
 ```
 
 | Layer | Candidate source | What it may show | What it may not establish |
 |---|---|---|---|
 | surface temperature | NOAA OISST v2.1 | **implemented:** spatially complete daily SST field | full-depth heat content |
+| surface anomaly | NOAA OISST v2.1 | **implemented:** departure from 1971–2000 daily climatology | absolute temperature, heat content, or cause |
 | subsurface temperature/salinity | Argo gridded products | vertical water-column structure | unsampled fine-scale pathways |
 | surface current | NASA PO.DAAC OSCAR | mixed-layer velocity estimate | full-depth heat transport |
 | dynamically consistent state | ECCO v4r4 | modeled/assimilated budgets and transports | observation-only truth |

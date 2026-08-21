@@ -9,7 +9,7 @@ CSS = ROOT / "atlas" / "styles.css"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md", ROOT / "atlas" / "data" / "oisst-2026-08-01.js"):
+        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -27,7 +27,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "CONCEPT + OBSERVATION", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ABSOLUTE + ANOMALY", "not a live analysis"):
             self.assertIn(token, source)
 
     def test_observed_layer_is_explicitly_surface_only(self):
@@ -36,6 +36,12 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("Observed SST", html)
         self.assertIn("OBSERVATIONAL · SURFACE", html)
         self.assertIn("not full-depth heat content", data)
+
+    def test_anomaly_mode_declares_reference_period(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        self.assertIn('data-mode="anomaly"', html)
+        self.assertIn("1971–2000", app)
 
     def test_local_links_resolve(self):
         source = HTML.read_text(encoding="utf-8")

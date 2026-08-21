@@ -11,7 +11,7 @@
   <header class="masthead">
     <a class="wordmark" href="../README.md" aria-label="OCEANLINES home">OCEANLINES</a>
     <p>Mapping Earth's Hidden Waterworld</p>
-    <span class="edition">ATLAS 01 · CONCEPT + OBSERVATION</span>
+    <span class="edition">ATLAS 02 · ABSOLUTE + ANOMALY</span>
   </header>
   <main>
     <section class="hero" aria-labelledby="atlas-title">
@@ -37,21 +37,22 @@
       <div class="map-panel">
         <div class="map-modes" role="group" aria-label="Map evidence mode">
           <button class="map-mode active" data-mode="conceptual" aria-pressed="true">Conceptual geography</button>
-          <button class="map-mode" data-mode="observed" aria-pressed="false">Observed SST · 01 Aug 2026</button>
+          <button class="map-mode" data-mode="sst" aria-pressed="false">Observed SST</button>
+          <button class="map-mode" data-mode="anomaly" aria-pressed="false">SST anomaly</button>
         </div>
         <div class="map-stage" id="map-stage">
           <img id="conceptual-map" src="../figures/planetary-heat-geography.svg"
             alt="Conceptual world map of ocean heat reservoirs, pathways, anomalies, buried layers, and gates.">
           <canvas id="sst-canvas" width="720" height="360" hidden
-            aria-label="NOAA OISST sea surface temperature for 1 August 2026, displayed on a two-degree grid."></canvas>
+            aria-label="NOAA OISST surface field for 1 August 2026, displayed on a two-degree grid."></canvas>
           <div id="markers" class="markers" aria-label="Selectable ocean zones"></div>
           <div class="observed-stamp" id="observed-stamp" hidden>
-            <strong>OBSERVATIONAL · SURFACE</strong>
-            <span>NOAA OISST v2.1 · FINAL · 2026-08-01</span>
+            <strong id="observed-title">OBSERVATIONAL · SURFACE</strong>
+            <span id="observed-status">NOAA OISST v2.1 · FINAL · 2026-08-01</span>
           </div>
         </div>
         <div class="temperature-key" id="temperature-key" hidden aria-label="Sea surface temperature color scale">
-          <span>−2°C</span><i></i><span>32°C</span>
+          <span id="scale-min">−2°C</span><i></i><span id="scale-max">32°C</span>
         </div>
         <p class="map-note" id="map-note"><span></span> Schematic locations and pathways · not navigational · not a live analysis</p>
       </div>
@@ -97,9 +98,10 @@
       </div>
     </section>
   </main>
-  <footer><strong>OCEANLINES</strong><p>Atlas 01 pairs conceptual geography with a reproducible observed surface field.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
+  <footer><strong>OCEANLINES</strong><p>Atlas 02 separates absolute surface temperature from historical anomaly.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
   <noscript>This atlas requires JavaScript for zone selection. The complete map remains visible above.</noscript>
   <script src="data/oisst-2026-08-01.js" defer></script>
+  <script src="data/oisst-anomaly-2026-08-01.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

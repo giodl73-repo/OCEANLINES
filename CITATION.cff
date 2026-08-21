@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use OCEANLINES, cite the project and the underlying datasets used by the relevant layer."
 title: "OCEANLINES: Mapping Earth's Hidden Waterworld"
 type: software
-version: 0.2.0
+version: 0.3.0
 date-released: 2026-08-21
 authors:
   - family-names: Della-Libera
