@@ -17,6 +17,8 @@ const markers = document.querySelector("#markers");
 const count = document.querySelector("#visible-count");
 const fields = Object.fromEntries(["index", "name", "kind", "summary", "role", "depth", "clock", "evidence", "boundary", "source"].map(key => [key, document.querySelector(`#zone-${key}`)]));
 let selectedZone = zones[0];
+let currentMode = "conceptual";
+let probeCell = null;
 
 function selectZone(zone) {
   selectedZone = zone;
@@ -85,6 +87,22 @@ function renderObservedField(data, colorFunction) {
   for (let latitude = 30; latitude < 180; latitude += 30) {
     context.beginPath(); context.moveTo(0, latitude / 180 * canvas.height); context.lineTo(canvas.width, latitude / 180 * canvas.height); context.stroke();
   }
+  if (probeCell) {
+    const shiftedColumn = (probeCell.column + columns / 2) % columns;
+    const x = (shiftedColumn + 0.5) * cellWidth;
+    const y = (rows - probeCell.row - 0.5) * cellHeight;
+    context.beginPath();
+    context.arc(x, y, 7, 0, Math.PI * 2);
+    context.strokeStyle = "#071b22";
+    context.lineWidth = 5;
+    context.stroke();
+    context.beginPath();
+    context.moveTo(x - 10, y); context.lineTo(x + 10, y);
+    context.moveTo(x, y - 10); context.lineTo(x, y + 10);
+    context.strokeStyle = "#ffffff";
+    context.lineWidth = 2;
+    context.stroke();
+  }
 }
 
 function showObservedMetadata(data, mode) {
@@ -97,7 +115,7 @@ function showObservedMetadata(data, mode) {
   const anomaly = mode === "anomaly";
   const error = mode === "error";
   const fieldClass = anomaly ? "REFERENCE-BASED" : error ? "UNCERTAINTY" : "ABSOLUTE";
-  fields.index.textContent = `ATLAS 03 · ${fieldClass} SURFACE FIELD`;
+  fields.index.textContent = `ATLAS 04 · ${fieldClass} SURFACE FIELD`;
   fields.name.textContent = anomaly ? "SST Anomaly" : error ? "Estimated SST Analysis Error" : "Sea Surface Temperature";
   fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
   fields.summary.textContent = anomaly
@@ -163,11 +181,79 @@ function renderTextSummary(data, mode) {
   document.querySelector("#summary-caption").textContent = `Latitude-band statistics for ${fieldName}; values are not area-weighted.`;
 }
 
+function normalizedLongitude(longitude) {
+  return ((longitude + 180) % 360 + 360) % 360 - 180;
+}
+
+function probeCellFromCoordinates(latitude, longitude, data = window.OCEANLINES_OISST) {
+  const [rows, columns] = data.shape;
+  const boundedLatitude = Math.max(-90, Math.min(90, latitude));
+  const longitude360 = (normalizedLongitude(longitude) + 360) % 360;
+  const row = Math.max(0, Math.min(rows - 1, Math.round((boundedLatitude - data.latitude.start) / data.latitude.step)));
+  const rawColumn = Math.round((longitude360 - data.longitude.start) / data.longitude.step);
+  const column = ((rawColumn % columns) + columns) % columns;
+  return {
+    row,
+    column,
+    latitude: data.latitude.start + row * data.latitude.step,
+    longitude: normalizedLongitude(data.longitude.start + column * data.longitude.step)
+  };
+}
+
+function coordinatePhrase(value, positive, negative) {
+  if (Math.abs(value) < 0.005) return "0.00°";
+  return `${Math.abs(value).toFixed(2)}°${value > 0 ? positive : negative}`;
+}
+
+function probeValue(data, cell, mode) {
+  const encoded = data.values_c_hundredths[cell.row * data.shape[1] + cell.column];
+  if (encoded === null) return "land or missing";
+  return valuePhrase(encoded / 100, mode);
+}
+
+function activeObservedField() {
+  if (currentMode === "anomaly") return [window.OCEANLINES_OISST_ANOMALY, anomalyColor];
+  if (currentMode === "error") return [window.OCEANLINES_OISST_ERROR, errorColor];
+  return [window.OCEANLINES_OISST, temperatureColor];
+}
+
+function updateAtlasUrl() {
+  const url = new URL(window.location.href);
+  if (currentMode === "conceptual") {
+    url.searchParams.delete("mode");
+    url.searchParams.delete("lat");
+    url.searchParams.delete("lon");
+  } else {
+    url.searchParams.set("mode", currentMode);
+    if (probeCell) {
+      url.searchParams.set("lat", probeCell.latitude.toFixed(3));
+      url.searchParams.set("lon", probeCell.longitude.toFixed(3));
+    }
+  }
+  window.history.replaceState({}, "", url);
+}
+
+function inspectCoordinates(latitude, longitude, updateUrl = true) {
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+  probeCell = probeCellFromCoordinates(latitude, longitude);
+  document.querySelector("#probe-lat").value = probeCell.latitude.toFixed(3);
+  document.querySelector("#probe-lon").value = probeCell.longitude.toFixed(3);
+  const location = `${coordinatePhrase(probeCell.latitude, "N", "S")}, ${coordinatePhrase(probeCell.longitude, "E", "W")}`;
+  const sst = probeValue(window.OCEANLINES_OISST, probeCell, "sst");
+  const anomaly = probeValue(window.OCEANLINES_OISST_ANOMALY, probeCell, "anomaly");
+  const error = probeValue(window.OCEANLINES_OISST_ERROR, probeCell, "error");
+  document.querySelector("#probe-result").textContent = `Nearest 2° display cell · ${location}. SST: ${sst}. Anomaly: ${anomaly}. Estimated analysis error: ${error}. Surface product values; not heat content or transport.`;
+  const [data, colorFunction] = activeObservedField();
+  renderObservedField(data, colorFunction);
+  if (updateUrl) updateAtlasUrl();
+}
+
 function setMapMode(mode) {
   if (mode === "observed") mode = "sst";
   const observed = mode !== "conceptual";
   const anomaly = mode === "anomaly";
   const error = mode === "error";
+  currentMode = mode;
   const data = anomaly ? window.OCEANLINES_OISST_ANOMALY : error ? window.OCEANLINES_OISST_ERROR : window.OCEANLINES_OISST;
   document.querySelectorAll(".map-mode").forEach(button => {
     const active = button.dataset.mode === mode;
@@ -198,7 +284,9 @@ function setMapMode(mode) {
     renderObservedField(data, anomaly ? anomalyColor : error ? errorColor : temperatureColor);
     showObservedMetadata(data, mode);
     renderTextSummary(data, mode);
+    if (probeCell) inspectCoordinates(probeCell.latitude, probeCell.longitude, false);
   } else selectZone(selectedZone);
+  updateAtlasUrl();
 }
 
 for (const zone of zones) {
@@ -234,6 +322,20 @@ document.querySelectorAll(".lens").forEach(button => {
 });
 
 document.querySelectorAll(".map-mode").forEach(button => button.addEventListener("click", () => setMapMode(button.dataset.mode)));
+document.querySelector("#coordinate-probe").addEventListener("submit", event => {
+  event.preventDefault();
+  inspectCoordinates(Number(document.querySelector("#probe-lat").value), Number(document.querySelector("#probe-lon").value));
+});
+document.querySelector("#sst-canvas").addEventListener("click", event => {
+  const rectangle = event.currentTarget.getBoundingClientRect();
+  const longitude = (event.clientX - rectangle.left) / rectangle.width * 360 - 180;
+  const latitude = 90 - (event.clientY - rectangle.top) / rectangle.height * 180;
+  inspectCoordinates(latitude, longitude);
+});
 selectZone(zones[0]);
-const requestedMode = new URLSearchParams(window.location.search).get("mode");
+const requestedParameters = new URLSearchParams(window.location.search);
+const requestedMode = requestedParameters.get("mode");
 if (["observed", "sst", "anomaly", "error"].includes(requestedMode)) setMapMode(requestedMode);
+if (currentMode !== "conceptual" && requestedParameters.has("lat") && requestedParameters.has("lon")) {
+  inspectCoordinates(Number(requestedParameters.get("lat")), Number(requestedParameters.get("lon")));
+}

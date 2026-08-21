@@ -140,6 +140,26 @@ class OisstSnapshotTests(unittest.TestCase):
         self.assertGreaterEqual(payload["summary"]["minimum_c"], 0)
         self.assertRegex(payload["source_sha256"], r"^[0-9a-f]{64}$")
 
+    def test_probe_coordinate_uses_three_colocated_fields(self):
+        root = MODULE_PATH.parents[1] / "atlas" / "data"
+        specifications = (
+            ("oisst-2026-08-01.js", "window.OCEANLINES_OISST=", -132),
+            ("oisst-anomaly-2026-08-01.js", "window.OCEANLINES_OISST_ANOMALY=", -21),
+            ("oisst-error-2026-08-01.js", "window.OCEANLINES_OISST_ERROR=", 31),
+        )
+        payloads = []
+        for filename, prefix, expected in specifications:
+            line = (root / filename).read_text(encoding="utf-8").splitlines()[1]
+            payload = json.loads(line.removeprefix(prefix).removesuffix(";"))
+            payloads.append(payload)
+            row = round((-63.875 - payload["latitude"]["start"]) / payload["latitude"]["step"])
+            longitude_360 = (-59.875 + 360) % 360
+            column = round((longitude_360 - payload["longitude"]["start"]) / payload["longitude"]["step"])
+            self.assertEqual(expected, payload["values_c_hundredths"][row * payload["shape"][1] + column])
+        self.assertEqual(1, len({tuple(payload["shape"]) for payload in payloads}))
+        self.assertEqual(1, len({json.dumps(payload["latitude"], sort_keys=True) for payload in payloads}))
+        self.assertEqual(1, len({json.dumps(payload["longitude"], sort_keys=True) for payload in payloads}))
+
 
 if __name__ == "__main__":
     unittest.main()

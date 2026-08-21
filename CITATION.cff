@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use OCEANLINES, cite the project and the underlying datasets used by the relevant layer."
 title: "OCEANLINES: Mapping Earth's Hidden Waterworld"
 type: software
-version: 0.4.0
+version: 0.5.0
 date-released: 2026-08-21
 authors:
   - family-names: Della-Libera
@@ -12,5 +12,6 @@ repository-code: "https://github.com/giodl73-repo/OCEANLINES"
 url: "https://giodl73-repo.github.io/OCEANLINES/atlas/"
 abstract: >-
   A visual and quantitative atlas framework for mapping ocean heat reservoirs,
-  pathways, anomalies, buried layers, and exchange gates without conflating
-  temperature, heat content, transport, or observational uncertainty.
+  pathways, anomalies, buried layers, and exchange gates with accessible,
+  co-located surface-field inspection, without conflating temperature, heat
+  content, transport, or observational uncertainty.

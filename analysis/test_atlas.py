@@ -27,7 +27,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ABSOLUTE + ANOMALY + ERROR", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 04 · COORDINATE PROBE", "not a live analysis"):
             self.assertIn(token, source)
 
     def test_observed_map_declares_projection_and_text_equivalent(self):
@@ -66,6 +66,19 @@ class AtlasTests(unittest.TestCase):
 
     def test_oceanbelts_is_labeled_as_reading_lens(self):
         self.assertIn("OCEANBELTS <small>reading lens</small>", HTML.read_text(encoding="utf-8"))
+
+    def test_coordinate_probe_has_pointer_keyboard_and_text_paths(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        for token in ('id="coordinate-probe"', 'id="probe-lat"', 'id="probe-lon"', 'id="probe-result"', 'aria-live="polite"'):
+            self.assertIn(token, html)
+        for token in ("probeCellFromCoordinates", "inspectCoordinates", 'addEventListener("click"', 'addEventListener("submit"', "Nearest 2° display cell"):
+            self.assertIn(token, app)
+
+    def test_coordinate_probe_is_bookmarkable_and_reports_all_fields(self):
+        source = APP.read_text(encoding="utf-8")
+        for token in ('searchParams.set("mode"', 'searchParams.set("lat"', 'searchParams.set("lon"', 'searchParams.delete("mode"', "OCEANLINES_OISST_ANOMALY", "OCEANLINES_OISST_ERROR", "not heat content or transport"):
+            self.assertIn(token, source)
 
     def test_local_links_resolve(self):
         source = HTML.read_text(encoding="utf-8")
