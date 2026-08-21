@@ -9,7 +9,7 @@ CSS = ROOT / "atlas" / "styles.css"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md"):
+        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md", ROOT / "atlas" / "data" / "oisst-2026-08-01.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -27,8 +27,15 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "CONCEPTUAL", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "CONCEPT + OBSERVATION", "not a live analysis"):
             self.assertIn(token, source)
+
+    def test_observed_layer_is_explicitly_surface_only(self):
+        html = HTML.read_text(encoding="utf-8")
+        data = (ROOT / "atlas" / "data" / "oisst-2026-08-01.js").read_text(encoding="utf-8")
+        self.assertIn("Observed SST", html)
+        self.assertIn("OBSERVATIONAL · SURFACE", html)
+        self.assertIn("not full-depth heat content", data)
 
     def test_local_links_resolve(self):
         source = HTML.read_text(encoding="utf-8")

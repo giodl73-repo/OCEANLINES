@@ -16,8 +16,10 @@ const zones = [
 const markers = document.querySelector("#markers");
 const count = document.querySelector("#visible-count");
 const fields = Object.fromEntries(["index", "name", "kind", "summary", "role", "depth", "clock", "evidence", "boundary", "source"].map(key => [key, document.querySelector(`#zone-${key}`)]));
+let selectedZone = zones[0];
 
 function selectZone(zone) {
+  selectedZone = zone;
   document.querySelectorAll(".marker").forEach(marker => marker.classList.toggle("selected", marker.dataset.id === zone.id));
   fields.index.textContent = `ZONE ${String(zone.n).padStart(2, "0")} · ${zone.label.toUpperCase()}`;
   fields.name.textContent = zone.name;
@@ -25,6 +27,89 @@ function selectZone(zone) {
   for (const key of ["summary", "role", "depth", "clock", "evidence", "boundary"]) fields[key].textContent = zone[key];
   fields.source.href = zone.source;
   fields.source.textContent = zone.source.startsWith("../") ? "Open the source register →" : "Open primary source →";
+}
+
+function temperatureColor(value) {
+  const stops = [
+    [-2, [216, 244, 255]], [0, [141, 211, 232]], [8, [43, 156, 189]],
+    [16, [56, 182, 138]], [22, [242, 207, 91]], [28, [240, 120, 66]], [32, [185, 39, 53]]
+  ];
+  const bounded = Math.max(stops[0][0], Math.min(stops.at(-1)[0], value));
+  let upper = stops.findIndex(stop => stop[0] >= bounded);
+  if (upper < 1) upper = 1;
+  const [lowValue, lowColor] = stops[upper - 1];
+  const [highValue, highColor] = stops[upper];
+  const mix = (bounded - lowValue) / (highValue - lowValue);
+  const color = lowColor.map((channel, index) => Math.round(channel + (highColor[index] - channel) * mix));
+  return `rgb(${color.join(",")})`;
+}
+
+function renderObservedSst() {
+  const data = window.OCEANLINES_OISST;
+  const canvas = document.querySelector("#sst-canvas");
+  const context = canvas.getContext("2d");
+  const [rows, columns] = data.shape;
+  const cellWidth = canvas.width / columns;
+  const cellHeight = canvas.height / rows;
+  context.fillStyle = "#c8bda5";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  data.values_c_hundredths.forEach((encoded, index) => {
+    if (encoded === null) return;
+    const row = Math.floor(index / columns);
+    const column = index % columns;
+    const shiftedColumn = (column + columns / 2) % columns;
+    context.fillStyle = temperatureColor(encoded / 100);
+    context.fillRect(shiftedColumn * cellWidth, (rows - row - 1) * cellHeight, Math.ceil(cellWidth), Math.ceil(cellHeight));
+  });
+  context.strokeStyle = "rgba(255,255,255,.24)";
+  context.lineWidth = 1;
+  for (let longitude = 60; longitude < 360; longitude += 60) {
+    context.beginPath(); context.moveTo(longitude / 360 * canvas.width, 0); context.lineTo(longitude / 360 * canvas.width, canvas.height); context.stroke();
+  }
+  for (let latitude = 30; latitude < 180; latitude += 30) {
+    context.beginPath(); context.moveTo(0, latitude / 180 * canvas.height); context.lineTo(canvas.width, latitude / 180 * canvas.height); context.stroke();
+  }
+}
+
+function showObservedMetadata() {
+  const data = window.OCEANLINES_OISST;
+  const valid = data.values_c_hundredths.filter(value => value !== null);
+  const summary = data.summary || {
+    valid_ocean_cells: valid.length,
+    minimum_c: Math.min(...valid) / 100,
+    maximum_c: Math.max(...valid) / 100
+  };
+  fields.index.textContent = "ATLAS 01 · OBSERVATIONAL SURFACE FIELD";
+  fields.name.textContent = "Sea Surface Temperature";
+  fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
+  fields.summary.textContent = `A daily, spatially complete analysis sampled into ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(1)}–${summary.maximum_c.toFixed(1)}°C.`;
+  fields.role.textContent = "surface thermal field";
+  fields.depth.textContent = "sea surface · 0 m product level";
+  fields.clock.textContent = `one day · ${data.date}`;
+  fields.evidence.textContent = "observational analysis · D1";
+  fields.boundary.textContent = data.boundary;
+  fields.source.href = data.doi;
+  fields.source.textContent = "Open NOAA dataset record →";
+}
+
+function setMapMode(mode) {
+  const observed = mode === "observed";
+  document.querySelectorAll(".map-mode").forEach(button => {
+    const active = button.dataset.mode === mode;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  document.querySelector("#conceptual-map").hidden = observed;
+  document.querySelector("#sst-canvas").hidden = !observed;
+  document.querySelector("#observed-stamp").hidden = !observed;
+  document.querySelector("#temperature-key").hidden = !observed;
+  markers.hidden = observed;
+  document.querySelector("#map-stage").classList.toggle("observed", observed);
+  document.querySelectorAll(".lens").forEach(button => { button.disabled = observed; });
+  document.querySelector("#map-note").innerHTML = observed
+    ? "<span></span> Observed SST · final product · 2° display stride from native 0.25° grid"
+    : "<span></span> Schematic locations and pathways · not navigational · not a live analysis";
+  if (observed) showObservedMetadata(); else selectZone(selectedZone);
 }
 
 for (const zone of zones) {
@@ -59,4 +144,7 @@ document.querySelectorAll(".lens").forEach(button => {
   });
 });
 
+document.querySelectorAll(".map-mode").forEach(button => button.addEventListener("click", () => setMapMode(button.dataset.mode)));
+renderObservedSst();
 selectZone(zones[0]);
+if (new URLSearchParams(window.location.search).get("mode") === "observed") setMapMode("observed");
