@@ -49,6 +49,15 @@ quantitative.
 6. Review the four falsifiable [PREDICTIONS](PREDICTIONS.md).
 7. Check claim provenance in the [SOURCE REGISTER](SOURCE-REGISTER.md).
 
+## Review organization
+
+OCEANLINES uses eight functional [review roles](.roles/ROLE.md) for physical
+oceanography, climate-data stewardship, cartography, public science,
+accessibility, reproducibility, repository maintenance, and planetary
+comparison. They organize internal quality control and do not replace external
+scientific peer review. The latest synthesized atlas review is stored under
+[`signals/roles/check/`](signals/roles/check/).
+
 ## Reproduce the scale ledger
 
 The Python calculator converts a water-volume temperature excess or sustained

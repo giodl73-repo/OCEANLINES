@@ -13,13 +13,19 @@ Every contribution should preserve these boundaries:
 - keep surface products separate from full-depth inference;
 - allow negative, regional, non-transfer, and observationally unresolved results.
 
-Run the local checks before proposing a change:
+Run the complete local checks before proposing a change:
 
 ```powershell
 cd analysis
-python -m unittest test_heat_zone_ledger.py
-python -m py_compile heat_zone_ledger.py test_heat_zone_ledger.py
+python -m unittest discover -p "test_*.py"
+Get-ChildItem -Filter "*.py" | ForEach-Object { python -m py_compile $_.FullName }
+node --check ..\atlas\app.js
 ```
+
+Atlas releases are reviewed through the functional lenses in [`.roles/`](.roles/ROLE.md).
+The synthesized review belongs under `signals/roles/check/` and records its
+source commit, selected roles, severities, and verdict. These internal lenses
+organize quality control; they do not replace external scientific peer review.
 
 SVG figures must contain a `<title>` and `<desc>` accessibility element and
 must remain legible at their declared view-box size.
