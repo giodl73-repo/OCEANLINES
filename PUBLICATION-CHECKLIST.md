@@ -8,7 +8,7 @@
 - [x] Add the portfolio-standard MIT license
 - [x] Add author/maintainer and citation metadata
 - [x] Install the OCEANLINES functional review roles
-- [ ] Resolve all P1 findings in the OCEANLINES atlas role review
+- [x] Resolve all P1 and P2 findings in the OCEANLINES atlas role review
 - [x] Select `giodl73-repo` as the public GitHub owner
 - [ ] Create the remote repository
 - [x] Add an offline CI definition and validate its commands locally

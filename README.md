@@ -85,6 +85,15 @@ non-color latitude-band summary; uncertainty remains product- and surface-specif
 
 No remote repository has been configured.
 
+## Atlas milestones
+
+| Atlas | Commit | Evidence class | Fixed data date | Native role verdict |
+|---|---|---|---|---|
+| 00 | `10cf92b` | interactive conceptual geography | — | superseded by Atlas 03 review |
+| 01 | `cd7f1b9` | NOAA OISST absolute SST | 2026-08-01 | superseded by Atlas 03 review |
+| 02 | `31765f3` | absolute SST plus referenced anomaly | 2026-08-01 | superseded by Atlas 03 review |
+| 03 | `3769594` | conceptual, absolute, anomaly, and estimated-error layers | 2026-08-01 | **APPROVED** · [review](signals/roles/check/oceanlines-atlases-roles-check-2026-08-21.md) |
+
 ## License
 
 MIT License. Copyright (c) Gio Della-Libera.
