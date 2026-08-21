@@ -1,12 +1,13 @@
-# Atlas 06
+# Atlas 07
 
-Atlas 06 separates four views: the conceptual twelve-zone geography, absolute
+Atlas 07 separates four views: the conceptual twelve-zone geography, absolute
 NOAA OISST v2.1 sea surface temperature, NOAA's published SST anomaly, and its
 time-matched estimated analysis error for 1 August 2026. It adds a coordinate
 probe that reports all three observed fields at the nearest display-grid cell
 and a paired latitude-ring comparison that exposes analyzed-water continuity
 north and south at one requested latitude magnitude. A latitude ladder extends
-that comparison across 45 paired requests from 0° through 88°.
+that comparison across 45 paired requests from 0° through 88°, while aligned
+polar-cap mirrors show the active field in two dimensions.
 
 Serve the repository root locally so relative links resolve:
 
@@ -85,6 +86,24 @@ request (84.125°N). The high-latitude northern result reflects the central
 Arctic Ocean; the southern curve returns to zero over the Antarctic interior.
 This threshold is not a coastline estimate, ACC edge, front, current boundary,
 or transport diagnostic.
+
+## Read the polar mirrors
+
+Atlas 07 renders the active SST, anomaly, or estimated-error field from 40° to
+each pole with radial azimuthal-equidistant sampling. Both panels intentionally
+place 0° longitude at the top and 90°E at the right so corresponding longitudes
+align. This reflects the southern cap relative to a conventional globe view;
+it is a comparison mirror, not the usual south-polar orientation.
+
+The selected northern and southern sampled rows appear as dashed amber circles
+when they lie inside the caps. Latitude circles at 40°, 60°, and 80° and four
+longitude spokes provide a common grid. Beige remains land or missing, not a
+new categorical land mask.
+
+The mirrors use the same fixed two-degree display values as the world map.
+They are not native-resolution coastlines, bathymetry, sea-ice maps, current
+vectors, full-depth heat content, or heat transport. The ring table and
+latitude ladder remain the quantitative and non-color alternatives.
 
 ## Rebuild the observed layer
 

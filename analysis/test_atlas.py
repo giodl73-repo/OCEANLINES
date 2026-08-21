@@ -27,7 +27,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 06 · LATITUDE LADDER", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 07 · POLAR MIRRORS", "not a live analysis"):
             self.assertIn(token, source)
 
     def test_observed_map_declares_projection_and_text_equivalent(self):
@@ -107,6 +107,22 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("Northern rows · solid", html)
         self.assertIn("Southern rows · dashed", html)
         self.assertIn("border-top-style: dashed", css)
+
+    def test_polar_mirrors_declare_projection_and_orientation(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        for token in ('id="north-polar"', 'id="south-polar"', 'id="polar-method"', 'id="polar-summary"', "radial azimuthal-equidistant", "intentionally mirrors the southern cap"):
+            self.assertIn(token, html)
+        for token in ("renderPolarMirror", "renderPolarMirrors", "const capLatitude = 40", "Math.atan2(dx, -dy)", 'hemisphere === "north"', "intentional comparison mirror"):
+            self.assertIn(token, app)
+
+    def test_polar_mirrors_have_text_and_non_color_selected_ring(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        self.assertIn("Beige means land or missing", html)
+        self.assertIn("amber circle is the selected ring", html)
+        self.assertIn("context.setLineDash([9, 6])", app)
+        self.assertIn("not bathymetry, sea ice, circulation, or heat transport", app)
 
     def test_local_links_resolve(self):
         source = HTML.read_text(encoding="utf-8")
