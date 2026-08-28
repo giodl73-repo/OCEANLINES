@@ -78,6 +78,8 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(app_pairs, [(zone["id"], zone["name"]) for zone in zones])
         self.assertEqual([str(value) for value in range(1, 13)], [zone["number"] for zone in zones])
         self.assertTrue(all(zone["inferential_boundary"] and zone["primary_or_register_source"] for zone in zones))
+        self.assertTrue(all("·" not in zone["evidence_class"] for zone in zones))
+        self.assertEqual("O18", zones[0]["source_ids"])
         self.assertEqual(["C1", "C2", "C3", "C4"], [claim["claim_id"] for claim in claims])
         self.assertTrue(all(claim["does_not_establish"] and claim["references"] for claim in claims))
         self.assertIn("gateway-only causation", claims[-1]["does_not_establish"])

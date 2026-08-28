@@ -26,14 +26,17 @@ function csv(headers, rows) {
 
 const zoneHeaders = [
   "catalog_version", "number", "id", "name", "kind", "map_label", "role",
-  "depth", "persistence", "evidence_class", "families", "summary",
+  "depth", "persistence", "evidence_class", "source_ids", "families", "summary",
   "inferential_boundary", "primary_or_register_source"
 ];
-const zoneRows = zones.map(zone => [
-  "atlas-08", zone.n, zone.id, zone.name, zone.kind, zone.label, zone.role,
-  zone.depth, zone.clock, zone.evidence, zone.families, zone.summary,
-  zone.boundary, zone.source
-]);
+const zoneRows = zones.map(zone => {
+  const [evidenceClass, sourceIds = ""] = zone.evidence.split(" · ");
+  return [
+    "atlas-08", zone.n, zone.id, zone.name, zone.kind, zone.label, zone.role,
+    zone.depth, zone.clock, evidenceClass, sourceIds, zone.families, zone.summary,
+    zone.boundary, zone.source
+  ];
+});
 
 const claimHeaders = [
   "claim_id", "statement", "evidence_class", "supported_by",
