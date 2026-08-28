@@ -29,6 +29,18 @@ Heat is the first revealing layer—not the only possible layer.
 The names describe complementary objects: **OCEANLINES reveal HEATMASSES
 inside OCEANREALMS**.
 
+## Abyssal heat: source or transport?
+
+The [abyssal-heat case](ABYSSAL-HEAT.md) asks whether the newly reported
+acceleration of globally averaged abyssal warming is better explained by
+changing heat from below or by changing circulation-mediated delivery. It
+keeps observed warming, estimated seafloor source power, lithosphere and vent
+opportunity, and modeled transport in four separate layers.
+
+This is a source-qualified research intake, not an OCEANLINES replication. A
+short [collaboration note and email draft](STEPHANIE-BUCHANAN-COLLABORATION.md)
+states what artifacts would make independent mapping and validation possible.
+
 ## The measurement firewall
 
 These quantities are related but not interchangeable:
@@ -51,9 +63,10 @@ quantitative.
 2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
 4. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
-5. Carry the measurement discipline to Jupiter and Saturn in [OCEANBELTS](OCEANBELTS.md).
-6. Review the four falsifiable [PREDICTIONS](PREDICTIONS.md).
-7. Check claim provenance in the [SOURCE REGISTER](SOURCE-REGISTER.md).
+5. Frame source-versus-transport attribution in [ABYSSAL HEAT](ABYSSAL-HEAT.md).
+6. Carry the measurement discipline to Jupiter and Saturn in [OCEANBELTS](OCEANBELTS.md).
+7. Review the four falsifiable [PREDICTIONS](PREDICTIONS.md).
+8. Check claim provenance in the [SOURCE REGISTER](SOURCE-REGISTER.md).
 
 ## Review organization
 
@@ -90,6 +103,9 @@ continuity scan plus aligned north/south polar-cap mirrors. It is not a live
 ocean analysis or present-day forecast. The observed modes declare their
 projections and include non-color regional, cell-level, ring-level, and
 full-scan summaries; uncertainty remains product- and surface-specific.
+The abyssal-heat collaboration case registers an external research question
+and a reproducible transport-test contract; no focal fields or solver outputs
+have been imported.
 
 Public repository: [github.com/giodl73-repo/OCEANLINES](https://github.com/giodl73-repo/OCEANLINES).
 Live atlas: [giodl73-repo.github.io/OCEANLINES/atlas/](https://giodl73-repo.github.io/OCEANLINES/atlas/).
