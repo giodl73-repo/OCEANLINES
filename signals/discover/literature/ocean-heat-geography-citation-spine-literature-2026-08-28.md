@@ -156,4 +156,3 @@ C-33 PASS. C-34, C-35, and C-36 complete.
 1. Put Orsi (1995), Sokolov & Rintoul (2009), Palmer et al. (2019), and Meyssignac et al. (2019) directly beside the front/geometry and measurement-firewall claims.
 2. Put England et al. (2017) beside Goldner et al. (2014) wherever Drake closure appears so a counterfactual result and its attribution limit travel together.
 3. Treat Bennetts et al. (2024), Thompson et al. (2018), and Rosevear et al. (2025) as the methodological bridge from the conceptual map to regional, depth-resolved barrier and heat-delivery studies.
-
