@@ -41,10 +41,17 @@ class AtlasTests(unittest.TestCase):
 
     def test_research_note_separates_claims_and_records_data_receipts(self):
         source = RESEARCH_HTML.read_text(encoding="utf-8")
-        for token in ("What can be concluded now?", "Does not establish", "What exact bytes are displayed?", "10.25921/RE9P-PT57", "54fde8766119da6856fff827b64946626eae3f61959792f962f296efb5baacd3", "a6756b88ecfe5e3c0307b7566ba142e3f9ddb8ebaa8823a5d08f9d3a3a1529e2", "24ae585b4b591b19d7b360fe8df3f9620e28f9754e8aa3e21bcb0860bc864ba6", "does not replace external scientific peer review"):
+        for token in ("What can be concluded now?", "Does not establish", "What exact bytes are displayed?", "Which papers carry the argument?", "England et al. (2017)", "Goldner, Herold &amp; Huber (2014)", "10.25921/RE9P-PT57", "54fde8766119da6856fff827b64946626eae3f61959792f962f296efb5baacd3", "a6756b88ecfe5e3c0307b7566ba142e3f9ddb8ebaa8823a5d08f9d3a3a1529e2", "24ae585b4b591b19d7b360fe8df3f9620e28f9754e8aa3e21bcb0860bc864ba6", "does not replace external scientific peer review"):
             self.assertIn(token, source)
         for target in re.findall(r'(?:href|src)="(\.\.?/[^"#]+)"', source):
             self.assertTrue((RESEARCH_HTML.parent / target).resolve().exists(), target)
+
+    def test_corrected_primary_source_attributions_are_preserved(self):
+        source_register = (ROOT / "SOURCE-REGISTER.md").read_text(encoding="utf-8")
+        for token in ("England et al. 2017", "Hodel et al. 2021", "Rosevear et al. 2025"):
+            self.assertIn(token, source_register)
+        for stale in ("Hutchinson et al. 2017", "Touzeau et al. 2021", "Jenkins 2025"):
+            self.assertNotIn(stale, source_register)
 
     def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
         html = HTML.read_text(encoding="utf-8")
