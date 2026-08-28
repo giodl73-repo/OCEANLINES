@@ -34,5 +34,16 @@
 - [ ] Acquire shareable focal inputs, code, configuration, outputs, and receipts
 - [ ] Reproduce the reported diagnostics before publishing them as OCEANLINES results
 
+## Atlas 08 review preview
+
+- [x] Replace the false-precision claim with visible inferential limits
+- [x] Separate overlapping conceptual markers and add a twelve-zone text directory
+- [x] Add geographic reference labels and three-point map scales
+- [x] Put the observed-map conclusion before the analytical controls
+- [x] Progressively disclose paired-ring, polar, and latitude-ladder diagnostics
+- [x] Validate desktop and mobile rendering with no overflow or browser errors
+- [ ] Obtain owner visual approval of the private preview
+- [ ] Decide whether to promote the preview to the released atlas
+
 The MIT license covers the repository, including its code, prose, and original
 figures.

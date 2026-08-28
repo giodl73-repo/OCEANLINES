@@ -1,6 +1,7 @@
-# Atlas 07
+# Atlas 08 review preview
 
-Atlas 07 separates four views: the conceptual twelve-zone geography, absolute
+Atlas 08 is a review-only presentation pass over the Atlas 07 evidence. It
+separates four views: the conceptual twelve-zone geography, absolute
 NOAA OISST v2.1 sea surface temperature, NOAA's published SST anomaly, and its
 time-matched estimated analysis error for 1 August 2026. It adds a coordinate
 probe that reports all three observed fields at the nearest display-grid cell
@@ -8,6 +9,12 @@ and a paired latitude-ring comparison that exposes analyzed-water continuity
 north and south at one requested latitude magnitude. A latitude ladder extends
 that comparison across 45 paired requests from 0° through 88°, while aligned
 polar-cap mirrors show the active field in two dimensions.
+
+The preview adds geographic reference labels and a three-tick scale, states a
+plain-language conclusion before the controls, keeps polar and full-latitude
+diagnostics behind an explicit disclosure, separates nearby conceptual
+markers, and provides a text directory plus a full-size conceptual map for
+small screens. It does not change the underlying fields or evidence class.
 
 Serve the repository root locally so relative links resolve:
 

@@ -6,6 +6,11 @@
 
 **[Explore the live Atlas 07 →](https://giodl73-repo.github.io/OCEANLINES/atlas/)**
 
+> **Atlas 08 review preview:** this branch contains a presentation candidate
+> that puts the surface-map conclusion first, adds geographic reference and a
+> three-tick scale, and progressively discloses advanced diagnostics. Atlas 07
+> remains the released public atlas until the preview is approved.
+
 ![Planetary heat geography](figures/planetary-heat-geography.svg)
 
 Most world maps end at the coastline. OCEANLINES starts there.

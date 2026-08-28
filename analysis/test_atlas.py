@@ -27,8 +27,36 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 07 · POLAR MIRRORS", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 08 · REVIEW PREVIEW", "not a live analysis"):
             self.assertIn(token, source)
+
+    def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        css = CSS.read_text(encoding="utf-8")
+        for token in ('id="map-insight"', 'class="ring-workbench"', 'class="advanced-diagnostics"', "Inspect the paired rings", "Open polar mirrors and the latitude continuity ladder", 'id="zone-directory-list"', "Open the full-size map"):
+            self.assertIn(token, html)
+        for token in ('document.querySelector("#zone-directory-list").append(item)', "scrollIntoView"):
+            self.assertIn(token, app)
+        self.assertIn("OCEANLINES Atlas 08 Preview", html)
+        self.assertIn(".lens[data-lens=\"all\"]", app)
+        self.assertIn(".atlas-shell.observed-mode .zone-panel", css)
+
+    def test_observed_map_has_reference_labels_and_three_tick_legend(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        for token in ('id="map-reference-labels"', "PACIFIC", "ATLANTIC", "INDIAN", "EQUATOR", 'id="scale-mid"'):
+            self.assertIn(token, html)
+        for token in ('"0°C baseline"', '"0.35°C"', '"15°C"'):
+            self.assertIn(token, app)
+
+    def test_preview_replaces_false_precision_claim_and_separates_nearby_markers(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        self.assertNotIn("false precision", html.lower())
+        self.assertIn("Limits</strong> stated beside every view", html)
+        self.assertIn('id: "indonesian-throughflow"', app)
+        self.assertIn("x: 71, y: 52", app)
 
     def test_observed_map_declares_projection_and_text_equivalent(self):
         html = HTML.read_text(encoding="utf-8")
@@ -65,7 +93,10 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("not forecast error", (ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js").read_text(encoding="utf-8"))
 
     def test_oceanbelts_is_labeled_as_reading_lens(self):
-        self.assertIn("OCEANBELTS <small>reading lens</small>", HTML.read_text(encoding="utf-8"))
+        source = HTML.read_text(encoding="utf-8")
+        self.assertIn("HEATMASS <small>reservoirs + anomalies</small>", source)
+        self.assertIn("OCEANREALMS <small>currents + gates</small>", source)
+        self.assertIn("OCEANBELTS <small>planetary reading lens</small>", source)
 
     def test_coordinate_probe_has_pointer_keyboard_and_text_paths(self):
         html = HTML.read_text(encoding="utf-8")

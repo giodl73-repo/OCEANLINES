@@ -10,7 +10,7 @@ const zones = [
   { id: "circumpolar-deep-water", n: 9, name: "Circumpolar Deep Water", kind: "buried", label: "Buried heat continent", role: "subsurface reservoir / source water", depth: "intermediate to deep; region dependent", clock: "persistent with changing access", evidence: "synthesis · O10, O14", x: 42, y: 65, families: ["heatmass", "oceanrealms"], summary: "Relatively warm subsurface water can approach Antarctic margins beneath a cold surface, making vertical structure central to ice-shelf exposure.", boundary: "Offshore presence does not equal delivery to a cavity; fronts, shelf breaks, troughs, mixing, and winds intervene.", source: "https://doi.org/10.1029/2018RG000624" },
   { id: "atlantic-water-arctic", n: 10, name: "Atlantic Water in the Arctic", kind: "buried", label: "Buried heat continent", role: "subsurface inflow and reservoir", depth: "below the cold, fresh halocline", clock: "persistent and variable", evidence: "observational synthesis · O22", x: 41, y: 16, families: ["heatmass", "oceanrealms"], summary: "Warm Atlantic-origin water can sit beneath a colder, fresher lid: the Arctic example of why the surface can conceal a large thermal contrast.", boundary: "Subsurface temperature does not determine when, where, or how much heat reaches sea ice or the atmosphere.", source: "https://doi.org/10.3389/fmars.2019.00416" },
   { id: "drake-passage", n: 11, name: "Drake Passage", kind: "gate", label: "Heat gate", role: "circumpolar transport section", depth: "full water column", clock: "persistent geometry; variable flow", evidence: "observational / modeled · O4–O7", x: 23, y: 66, families: ["oceanrealms", "oceanbelts"], summary: "The narrowest major gate on the circumpolar route. It makes ACC transport measurable and exposes how geometry reorganizes global circulation.", boundary: "Closing the gate in a model changes many coupled circulations; it is not equivalent to simply sending warm water south.", source: "https://doi.org/10.1175/JCLI-D-15-0554.1" },
-  { id: "indonesian-throughflow", n: 12, name: "Indonesian Throughflow", kind: "gate", label: "Archipelagic heat gate", role: "inter-basin exchange", depth: "multiple constrained passages", clock: "persistent and variable", evidence: "conceptual", x: 75, y: 47, families: ["oceanrealms"], summary: "A branching tropical gate where land geometry constrains exchange between the Pacific and Indian oceans.", boundary: "A point marker hides multiple straits, vertical structure, tides, mixing, and seasonal reversals.", source: "../SOURCE-REGISTER.md" }
+  { id: "indonesian-throughflow", n: 12, name: "Indonesian Throughflow", kind: "gate", label: "Archipelagic heat gate", role: "inter-basin exchange", depth: "multiple constrained passages", clock: "persistent and variable", evidence: "conceptual", x: 71, y: 52, families: ["oceanrealms"], summary: "A branching tropical gate where land geometry constrains exchange between the Pacific and Indian oceans.", boundary: "A point marker hides multiple straits, vertical structure, tides, mixing, and seasonal reversals.", source: "../SOURCE-REGISTER.md" }
 ];
 
 const markers = document.querySelector("#markers");
@@ -125,7 +125,7 @@ function showObservedMetadata(data, mode) {
   const anomaly = mode === "anomaly";
   const error = mode === "error";
   const fieldClass = anomaly ? "REFERENCE-BASED" : error ? "UNCERTAINTY" : "ABSOLUTE";
-  fields.index.textContent = `ATLAS 07 · ${fieldClass} SURFACE FIELD`;
+  fields.index.textContent = `ATLAS 08 · ${fieldClass} SURFACE FIELD`;
   fields.name.textContent = anomaly ? "SST Anomaly" : error ? "Estimated SST Analysis Error" : "Sea Surface Temperature";
   fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
   fields.summary.textContent = anomaly
@@ -140,6 +140,11 @@ function showObservedMetadata(data, mode) {
   fields.boundary.textContent = data.boundary;
   fields.source.href = data.doi;
   fields.source.textContent = "Open NOAA dataset record →";
+  document.querySelector("#map-insight").textContent = anomaly
+    ? "This one-day surface map shows where temperature departed from the 1971–2000 daily baseline. It shows the pattern, not why it occurred or how much heat is stored below the surface."
+    : error
+      ? "This layer shows where the surface analysis carries higher or lower estimated error. It qualifies the mapped product; it is not forecast error or full-budget uncertainty."
+      : "This one-day surface map shows the familiar warm tropics and cold poles, plus regional structure. Absolute surface temperature is not an anomaly, full-depth heat content, or heat transport.";
 }
 
 const latitudeBands = [
@@ -553,12 +558,16 @@ function setMapMode(mode) {
   document.querySelector("#temperature-key").classList.toggle("anomaly", anomaly);
   document.querySelector("#temperature-key").classList.toggle("error", error);
   document.querySelector("#map-data-summary").hidden = !observed;
+  document.querySelector("#conceptual-actions").hidden = observed;
+  document.querySelector("#map-reference-labels").hidden = !observed;
+  document.querySelector(".atlas-shell").classList.toggle("observed-mode", observed);
   markers.hidden = observed;
   document.querySelector("#map-stage").classList.toggle("observed", observed);
   document.querySelectorAll(".lens").forEach(button => { button.disabled = observed; });
   document.querySelector("#observed-title").textContent = anomaly ? "OBSERVATIONAL · SURFACE ANOMALY" : error ? "OBSERVATIONAL · ESTIMATED ERROR" : "OBSERVATIONAL · ABSOLUTE SURFACE";
   document.querySelector("#observed-status").textContent = anomaly ? "NOAA OISST v2.1 · 1971–2000 BASELINE" : error ? "NOAA OISST v2.1 · TIME-MATCHED ERROR" : "NOAA OISST v2.1 · FINAL · 2026-08-01";
   document.querySelector("#scale-min").textContent = anomaly ? "−5°C cooler" : error ? "0.1°C lower" : "−2°C";
+  document.querySelector("#scale-mid").textContent = anomaly ? "0°C baseline" : error ? "0.35°C" : "15°C";
   document.querySelector("#scale-max").textContent = anomaly ? "+5°C warmer" : error ? "0.6°C higher" : "32°C";
   document.querySelector("#temperature-key").setAttribute("aria-label", anomaly ? "SST anomaly scale from five degrees cooler to five degrees warmer than baseline" : error ? "Estimated analysis error scale from lower to higher error" : "Absolute sea surface temperature color scale");
   const canvas = document.querySelector("#sst-canvas");
@@ -588,6 +597,18 @@ for (const zone of zones) {
   button.setAttribute("aria-label", `${zone.name}: ${zone.label}`);
   button.addEventListener("click", () => selectZone(zone));
   markers.append(button);
+
+  const item = document.createElement("li");
+  const directoryButton = document.createElement("button");
+  directoryButton.type = "button";
+  directoryButton.innerHTML = `<span>${String(zone.n).padStart(2, "0")}</span> ${zone.name}`;
+  directoryButton.addEventListener("click", () => {
+    document.querySelector('.lens[data-lens="all"]').click();
+    selectZone(zone);
+    document.querySelector("#zone-panel").scrollIntoView({ block: "start" });
+  });
+  item.append(directoryButton);
+  document.querySelector("#zone-directory-list").append(item);
 }
 
 document.querySelectorAll(".lens").forEach(button => {
