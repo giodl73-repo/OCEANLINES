@@ -161,7 +161,7 @@ fixture job on the approved Atlas 03 history.
 | 06 | `df78415` | Atlas 05 plus a 45-pair latitude-continuity ladder | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-06-latitude-ladder-roles-check-2026-08-21.md) |
 | 07 | `666c2b3` | Atlas 06 plus aligned northern/southern polar-cap mirrors | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-07-polar-mirrors-roles-check-2026-08-21.md) |
 | 08 preview | `4f6e9a2` | Ocean-first presentation plus researcher evidence and export surfaces; underlying OISST unchanged | 2026-08-01 | **APPROVED FOR PRIVATE PREVIEW** · [status](PREVIEW-STATUS.md) |
-| 09 draft | working tree | Atlas 08 plus Scripps RG Argo potential-temperature anomaly at 700 dbar | 2026-07 | **UNREVIEWED WORKING DRAFT** · [status](PREVIEW-STATUS.md) |
+| 09 preview | `ef6662e` | Atlas 08 plus Scripps RG Argo potential-temperature anomaly at 700 dbar | 2026-07 | **NATIVE ROLES APPROVED; OWNER VISUAL REVIEW OPEN** · [review](signals/roles/check/atlas-09-argo-700dbar-roles-check-2026-08-28.md) |
 
 ## License
 

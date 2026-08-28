@@ -4,9 +4,9 @@ Atlas 08 is a private review branch. It has not replaced the released Atlas 07,
 has not been pushed from this branch, and is not represented as a new version in
 `CITATION.cff`.
 
-Atlas 09 is the current unreviewed working draft on top of that approved
-private preview. It adds one fixed Scripps RG Argo pressure-layer anomaly and
-must not inherit Atlas 08's approval by implication.
+Atlas 09 is the current native-role-approved working draft on top of that
+approved private preview. It adds one fixed Scripps RG Argo pressure-layer
+anomaly. Owner visual approval and any public promotion remain open.
 
 ## Reviewed components
 
@@ -16,6 +16,7 @@ must not inherit Atlas 08's approval by implication.
 | Researcher-facing claims and data receipt | `c57e5a6` | APPROVED for private preview | [evidence-note review](signals/roles/check/researcher-evidence-note-roles-check-2026-08-28.md) |
 | Claim-level fifteen-source literature spine | `a93999f` | APPROVED for private preview | [literature-spine review](signals/roles/check/claim-level-literature-spine-roles-check-2026-08-28.md) |
 | Machine-readable zone and claims exports | `7d673df` | APPROVED for private preview | [research-export review](signals/roles/check/machine-readable-research-exports-roles-check-2026-08-28.md) |
+| Atlas 09 RG Argo 700 dbar anomaly | `ef6662e` | APPROVED by native roles; owner visual review open | [Atlas 09 depth review](signals/roles/check/atlas-09-argo-700dbar-roles-check-2026-08-28.md) |
 
 The review commits that record those verdicts follow their source commits in
 Git history. Each approval is scoped to a private preview and does not replace
@@ -25,7 +26,7 @@ external scientific peer review.
 
 - **Unchanged observational layer:** final NOAA/NCEI OISST v2.1 surface
   temperature, anomaly, and estimated-analysis-error fields for 2026-08-01.
-- **New unreviewed depth layer:** July 2026 Scripps RG Argo potential-
+- **New reviewed depth layer:** July 2026 Scripps RG Argo potential-
   temperature anomaly at 700 dbar, sampled to a 2-degree display grid. It is
   an objectively mapped anomaly, not absolute temperature or heat content, and
   its 64.5°S limit excludes the Antarctic shelf and ice cavities.
@@ -56,8 +57,8 @@ the default offline gate.
 1. Owner visual approval of the complete private preview.
 2. Whether Atlas 08 should replace Atlas 07 on the public site.
 3. Whether a promoted release should retain `0.8.x` or receive a new version.
-4. Whether Atlas 09's first pressure layer should be promoted after native-role
-   and owner visual review.
+4. Whether Atlas 09's first pressure layer should be promoted after owner
+   visual review.
 5. Which quantitative layer should follow: absolute vertical structure,
    bathymetry/sea ice, or dynamically consistent heat transport.
 

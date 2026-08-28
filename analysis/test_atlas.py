@@ -98,6 +98,9 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(token, status)
         self.assertIn("- [ ] Obtain owner visual approval", checklist)
         self.assertIn("- [ ] Decide whether to promote", checklist)
+        self.assertIn("Atlas 09 RG Argo 700 dbar anomaly", status)
+        self.assertIn("ef6662e", status)
+        self.assertIn("owner visual review open", status.lower())
 
     def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
         html = HTML.read_text(encoding="utf-8")
