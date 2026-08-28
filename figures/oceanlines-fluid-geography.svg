@@ -103,7 +103,7 @@
       <path class="gate" d="M1288 470l10 12-10 12-10-12Z"/>
       <path class="gate" d="M905 612l10 12-10 12-10-12Z"/>
     </g>
-    
+
       <g class="callout">
         <path class="leader" d="M205.0,224.0 Q205.0,285.0 205,285"/>
         <circle class="anchor" cx="205" cy="285" r="5" style="--accent:#ff766c"/>

@@ -207,7 +207,7 @@ def build_svg(coastline_path: str, source_sha256: str, include_callouts: bool = 
       <path class="gate" d="M1288 470l10 12-10 12-10-12Z"/>
       <path class="gate" d="M905 612l10 12-10 12-10-12Z"/>
     </g>
-    {callouts}
+{callouts}
   </g>
 
   <rect x="{MAP_X}" y="{MAP_Y}" width="{MAP_WIDTH}" height="{MAP_HEIGHT}" rx="28" fill="none" stroke="#456972" stroke-width="2"/>
