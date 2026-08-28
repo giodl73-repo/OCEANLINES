@@ -1,5 +1,8 @@
 # Atlas 08 review preview
 
+**Researcher route:** begin with the concise [research note](../research/), then
+use this document for transformations, thresholds, caveats, and rebuild commands.
+
 Atlas 08 is a review-only presentation pass over the Atlas 07 evidence. It
 separates four views: the conceptual twelve-zone geography, absolute
 NOAA OISST v2.1 sea surface temperature, NOAA's published SST anomaly, and its

@@ -177,7 +177,7 @@ footer strong { color: var(--cyan); letter-spacing: .15em; } footer a { margin-l
   .grammar-grid article { border-bottom: 1px solid var(--line); }
 }
 @media (max-width: 650px) {
-  .masthead { gap: 14px; } .masthead p, .edition { display: none; } .project-nav { gap: .7rem; } .project-nav .method-link { display: none; } .project-nav a { font-size: .56rem; } .hero { padding-top: 4rem; } h1 { font-size: 3.3rem; }
+  .masthead { gap: 14px; } .masthead p, .edition { display: none; } .project-nav { gap: .7rem; } .project-nav .method-link, .project-nav a:nth-child(2) { display: none; } .project-nav a { font-size: .56rem; } .hero { padding-top: 4rem; } h1 { font-size: 3.3rem; }
   .lenses { grid-template-columns: 1fr 1fr; } .lens:nth-child(2) { border-right: 0; } .lens:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .marker { width: 25px; height: 25px; } .grammar, .firewall { padding: 5rem 0; }
   .firewall-grid { grid-template-columns: 1fr 1fr; } footer { align-items: flex-start; flex-direction: column; } footer a { margin-left: 0; }

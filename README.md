@@ -10,6 +10,7 @@
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
 [Read the field guide](HEATMASS.md) ·
+[Open the research note](research/) ·
 [See how the Atlas is built](atlas/README.md) ·
 [Check every source](SOURCE-REGISTER.md)
 
@@ -18,6 +19,7 @@
 | See the idea in one image | [Full fluid-geography map](figures/oceanlines-fluid-geography.svg) |
 | Explore regions and observational layers | [Interactive Atlas](atlas/) |
 | Understand reservoirs, anomalies, pathways, and gates | [HEATMASS field guide](HEATMASS.md) |
+| Evaluate claims, receipts, and next measurements | [Research note](research/) |
 | Follow the Antarctic and Arctic mechanisms | [OCEANREALMS](OCEANREALMS.md) |
 | Inspect evidence, limitations, and provenance | [Atlas method](atlas/README.md) and [source register](SOURCE-REGISTER.md) |
 

@@ -6,10 +6,11 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 APP = ROOT / "atlas" / "app.js"
 HTML = ROOT / "atlas" / "index.html"
 CSS = ROOT / "atlas" / "styles.css"
+RESEARCH_HTML = ROOT / "research" / "index.html"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, ROOT / "research" / "styles.css", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -33,10 +34,17 @@ class AtlasTests(unittest.TestCase):
     def test_readme_and_atlas_expose_clear_entry_routes(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         html = HTML.read_text(encoding="utf-8")
-        for token in ("## Enter OCEANLINES", "Explore the interactive Atlas 08 preview", "Open the full annotated map", "Read the field guide", "Check every source"):
+        for token in ("## Enter OCEANLINES", "Explore the interactive Atlas 08 preview", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
             self.assertIn(token, readme)
-        for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "README.md", "../SOURCE-REGISTER.md"):
+        for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
             self.assertIn(f'href="{target}"', html)
+
+    def test_research_note_separates_claims_and_records_data_receipts(self):
+        source = RESEARCH_HTML.read_text(encoding="utf-8")
+        for token in ("What can be concluded now?", "Does not establish", "What exact bytes are displayed?", "10.25921/RE9P-PT57", "54fde8766119da6856fff827b64946626eae3f61959792f962f296efb5baacd3", "a6756b88ecfe5e3c0307b7566ba142e3f9ddb8ebaa8823a5d08f9d3a3a1529e2", "24ae585b4b591b19d7b360fe8df3f9620e28f9754e8aa3e21bcb0860bc864ba6", "does not replace external scientific peer review"):
+            self.assertIn(token, source)
+        for target in re.findall(r'(?:href|src)="(\.\.?/[^"#]+)"', source):
+            self.assertTrue((RESEARCH_HTML.parent / target).resolve().exists(), target)
 
     def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
         html = HTML.read_text(encoding="utf-8")
