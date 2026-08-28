@@ -11,7 +11,7 @@
 > three-tick scale, and progressively discloses advanced diagnostics. Atlas 07
 > remains the released public atlas until the preview is approved.
 
-![Planetary heat geography](figures/planetary-heat-geography.svg)
+![OCEANLINES fluid geography](figures/oceanlines-fluid-geography.svg)
 
 Most world maps end at the coastline. OCEANLINES starts there.
 

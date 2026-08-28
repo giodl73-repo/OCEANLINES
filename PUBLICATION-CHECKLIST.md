@@ -42,6 +42,9 @@
 - [x] Put the observed-map conclusion before the analytical controls
 - [x] Progressively disclose paired-ring, polar, and latitude-ladder diagnostics
 - [x] Validate desktop and mobile rendering with no overflow or browser errors
+- [x] Replace schematic land silhouettes with pinned Natural Earth coastlines
+- [x] Generate separate annotated and interaction-ready conceptual SVGs
+- [x] Align all twelve interactive markers to the redesigned geographic anchors
 - [ ] Obtain owner visual approval of the private preview
 - [ ] Decide whether to promote the preview to the released atlas
 

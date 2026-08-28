@@ -1,6 +1,6 @@
 # HEATMASS — Planetary Heat Geography
 
-![Planetary heat geography](figures/planetary-heat-geography.svg)
+![OCEANLINES fluid geography](figures/oceanlines-fluid-geography.svg)
 
 This is not a sea-surface-temperature map. It is a map of **roles in the heat
 budget**: where heat is stored, where it is anomalously concentrated, how it

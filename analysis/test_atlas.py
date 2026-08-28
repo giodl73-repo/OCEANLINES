@@ -9,7 +9,7 @@ CSS = ROOT / "atlas" / "styles.css"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
+        for path in (APP, HTML, CSS, ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -57,7 +57,7 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("Limits</strong> stated beside every view", html)
         self.assertIn("geometry comparison, not physical equivalence", html)
         self.assertIn('id: "indonesian-throughflow"', app)
-        self.assertIn("x: 71, y: 52", app)
+        self.assertIn("x: 80.5, y: 46.2", app)
 
     def test_observed_map_declares_projection_and_text_equivalent(self):
         html = HTML.read_text(encoding="utf-8")
@@ -69,9 +69,20 @@ class AtlasTests(unittest.TestCase):
 
     def test_conceptual_boundaries_are_explicitly_permeable(self):
         html = HTML.read_text(encoding="utf-8")
-        figure = (ROOT / "figures" / "planetary-heat-geography.svg").read_text(encoding="utf-8")
+        figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
         self.assertIn("Schematic, permeable, moving regions", html)
-        self.assertIn("rather than quantitative or fixed boundaries", figure)
+        self.assertIn("schematic, permeable, and moving rather than measured boundaries", figure)
+
+    def test_conceptual_map_uses_pinned_natural_earth_geometry(self):
+        html = HTML.read_text(encoding="utf-8")
+        figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
+        interactive_figure = (ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg").read_text(encoding="utf-8")
+        builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
+        self.assertIn("oceanlines-fluid-geography-interactive.svg", html)
+        self.assertIn("ca96624a56bd078437bca8184e78163e5039ad19", figure)
+        self.assertIn("9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9", builder)
+        self.assertEqual(12, figure.count('class="callout"'))
+        self.assertEqual(0, interactive_figure.count('class="callout"'))
 
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")
