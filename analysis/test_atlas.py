@@ -55,6 +55,7 @@ class AtlasTests(unittest.TestCase):
         app = APP.read_text(encoding="utf-8")
         self.assertNotIn("false precision", html.lower())
         self.assertIn("Limits</strong> stated beside every view", html)
+        self.assertIn("geometry comparison, not physical equivalence", html)
         self.assertIn('id: "indonesian-throughflow"', app)
         self.assertIn("x: 71, y: 52", app)
 
