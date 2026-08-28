@@ -37,6 +37,8 @@ Any one of these is enough:
 - [Atlas methods and rebuild commands](atlas/README.md)
 - [Source register](SOURCE-REGISTER.md)
 - [BibTeX bibliography](REFERENCES.bib)
+- [Machine-readable zone catalog](research/zone-catalog.csv)
+- [Machine-readable claims ledger](research/claims-ledger.csv)
 - [Falsifiable predictions](PREDICTIONS.md)
 - [Causal experiment designs](EXPERIMENTS.md)
 

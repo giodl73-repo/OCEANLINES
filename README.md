@@ -12,6 +12,7 @@
 [Read the field guide](HEATMASS.md) ·
 [Open the research note](research/) ·
 [Import the bibliography](REFERENCES.bib) ·
+[Download the zone catalog](research/zone-catalog.csv) ·
 [See how the Atlas is built](atlas/README.md) ·
 [Check every source](SOURCE-REGISTER.md)
 
@@ -21,6 +22,7 @@
 | Explore regions and observational layers | [Interactive Atlas](atlas/) |
 | Understand reservoirs, anomalies, pathways, and gates | [HEATMASS field guide](HEATMASS.md) |
 | Evaluate claims, receipts, and next measurements | [Research note](research/) |
+| Reuse the framework in a spreadsheet | [Zone catalog](research/zone-catalog.csv) and [claims ledger](research/claims-ledger.csv) |
 | Offer optional, bounded feedback | [Research review guide](REVIEW-GUIDE.md) |
 | Follow the Antarctic and Arctic mechanisms | [OCEANREALMS](OCEANREALMS.md) |
 | Inspect evidence, limitations, and provenance | [Atlas method](atlas/README.md) and [source register](SOURCE-REGISTER.md) |

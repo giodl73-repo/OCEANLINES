@@ -1,3 +1,4 @@
+import csv
 import pathlib
 import re
 import unittest
@@ -11,7 +12,7 @@ REFERENCES = ROOT / "REFERENCES.bib"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "research" / "styles.css", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -66,6 +67,20 @@ class AtlasTests(unittest.TestCase):
         self.assertIn('href="../REFERENCES.bib" download', RESEARCH_HTML.read_text(encoding="utf-8"))
         for token in ("no expectation of endorsement", "not requesting public association", "Any one of these is enough"):
             self.assertIn(token, review)
+
+    def test_machine_readable_research_exports_match_the_atlas_contract(self):
+        with (ROOT / "research" / "zone-catalog.csv").open(encoding="utf-8", newline="") as source:
+            zones = list(csv.DictReader(source))
+        with (ROOT / "research" / "claims-ledger.csv").open(encoding="utf-8", newline="") as source:
+            claims = list(csv.DictReader(source))
+        app = APP.read_text(encoding="utf-8")
+        app_pairs = re.findall(r'id: "([a-z0-9-]+)", n: \d+, name: "([^"]+)"', app)
+        self.assertEqual(app_pairs, [(zone["id"], zone["name"]) for zone in zones])
+        self.assertEqual([str(value) for value in range(1, 13)], [zone["number"] for zone in zones])
+        self.assertTrue(all(zone["inferential_boundary"] and zone["primary_or_register_source"] for zone in zones))
+        self.assertEqual(["C1", "C2", "C3", "C4"], [claim["claim_id"] for claim in claims])
+        self.assertTrue(all(claim["does_not_establish"] and claim["references"] for claim in claims))
+        self.assertIn("gateway-only causation", claims[-1]["does_not_establish"])
 
     def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
         html = HTML.read_text(encoding="utf-8")

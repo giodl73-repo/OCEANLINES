@@ -42,6 +42,19 @@ python -m http.server 8000
 
 Then open `http://localhost:8000/atlas/`.
 
+## Export researcher tables
+
+The zone catalog and claims ledger are available as ordinary CSV files under
+`research/`. Regenerate them from the Atlas catalog and reviewed claim contract:
+
+```powershell
+node analysis/export_research_tables.js
+```
+
+The export is deterministic and offline. The zone table is derived from the
+interactive catalog; the four-row claims table is deliberately maintained as a
+small reviewed contract rather than inferred from page prose.
+
 ## Evidence status
 
 Every displayed footprint and marker in the conceptual view is schematic. A
