@@ -26,5 +26,13 @@
 - [x] Complete the native Atlas 07 polar-mirrors role review
 - [x] Publish Atlas 07 and the `v0.8.0` release
 
+## Abyssal-heat research intake
+
+- [x] Register the external research question without importing unreceipted outputs
+- [x] Separate observation, source estimate, opportunity, and modeled delivery
+- [x] Define the actual-versus-climatology transport-test contract
+- [ ] Acquire shareable focal inputs, code, configuration, outputs, and receipts
+- [ ] Reproduce the reported diagnostics before publishing them as OCEANLINES results
+
 The MIT license covers the repository, including its code, prose, and original
 figures.
