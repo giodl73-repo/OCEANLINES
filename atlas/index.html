@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Atlas 08 review preview: an interactive atlas of ocean heat geography with surface observations and optional polar diagnostics.">
-  <title>OCEANLINES Atlas 08 Preview — Mapping Earth's Hidden Waterworld</title>
+  <meta name="description" content="Atlas 09 research preview: an interactive atlas of ocean heat geography with surface observations, a depth-resolved Argo anomaly, and optional polar diagnostics.">
+  <title>OCEANLINES Atlas 09 Preview — Mapping Earth's Hidden Waterworld</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23071b22'/%3E%3Cpath d='M10 34c8-10 15-10 23 0s15 10 21 0' fill='none' stroke='%235ee2d6' stroke-width='7'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -19,7 +19,7 @@
       <a class="method-link" href="README.md">Method</a>
       <a href="../SOURCE-REGISTER.md">Sources</a>
     </nav>
-    <span class="edition">ATLAS 08 · REVIEW PREVIEW</span>
+    <span class="edition">ATLAS 09 · DEPTH PREVIEW</span>
   </header>
   <main>
     <section class="hero" aria-labelledby="atlas-title">
@@ -47,6 +47,7 @@
           <button class="map-mode active" data-mode="conceptual" aria-pressed="true">Conceptual geography</button>
           <button class="map-mode" data-mode="sst" aria-pressed="false">Observed SST</button>
           <button class="map-mode" data-mode="anomaly" aria-pressed="false">SST anomaly</button>
+          <button class="map-mode" data-mode="argo700" aria-pressed="false">700 dbar anomaly</button>
           <button class="map-mode" data-mode="error" aria-pressed="false">Estimated error</button>
         </div>
         <div class="map-stage" id="map-stage">
@@ -85,14 +86,14 @@
           </details>
         </div>
         <section class="map-data-summary" id="map-data-summary" hidden aria-labelledby="map-data-title">
-          <h3 id="map-data-title">How to read this surface map</h3>
+          <h3 id="map-data-title">How to read this observed map</h3>
           <p id="map-insight" class="map-insight">Select an observed layer for its main conclusion and limits.</p>
           <p id="map-a11y-summary">Non-color map summary: select an observed layer for a text summary by latitude band.</p>
           <p id="projection-note">Equirectangular display; the antimeridian is the left/right seam and 0° longitude is centered.</p>
           <form class="coordinate-probe" id="coordinate-probe">
             <fieldset>
               <legend>Inspect one display cell</legend>
-              <p>Click the observed map or enter coordinates. The probe snaps to the nearest two-degree display cell and reports all three surface fields together.</p>
+              <p>Click the observed map or enter coordinates. The probe samples each product on its own nearest display cell and reports the three surface fields plus the 700 dbar Argo anomaly.</p>
               <div class="probe-controls">
                 <label for="probe-lat">Latitude
                   <input id="probe-lat" name="lat" type="number" min="-90" max="90" step="any" inputmode="decimal" value="0" required>
@@ -105,7 +106,7 @@
               <output id="probe-result" for="probe-lat probe-lon" aria-live="polite">No cell selected yet.</output>
             </fieldset>
           </form>
-          <section class="ring-comparison" aria-labelledby="ring-title">
+          <section class="ring-comparison" id="ring-comparison" aria-labelledby="ring-title">
             <div class="ring-heading">
               <div>
                 <h3 id="ring-title">Compare latitude rings</h3>
@@ -220,11 +221,12 @@
       </div>
     </section>
   </main>
-  <footer><strong>OCEANLINES</strong><p>Atlas 08 puts the surface-map conclusion first; polar mirrors remain a geometry comparison, not physical equivalence.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
+  <footer><strong>OCEANLINES</strong><p>Atlas 09 crosses the surface for the first time; the 700 dbar view is a mapped anomaly, not heat content or Antarctic shelf delivery. Polar mirrors remain a geometry comparison, not physical equivalence.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
   <noscript>This atlas requires JavaScript for zone selection. The complete map remains visible above.</noscript>
   <script src="data/oisst-2026-08-01.js" defer></script>
   <script src="data/oisst-anomaly-2026-08-01.js" defer></script>
   <script src="data/oisst-error-2026-08-01.js" defer></script>
+  <script src="data/argo-temperature-anomaly-700dbar-2026-07.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

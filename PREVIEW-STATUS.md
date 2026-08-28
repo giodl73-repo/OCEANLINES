@@ -1,8 +1,12 @@
-# Atlas 08 preview status
+# Atlas 08 approval and Atlas 09 working status
 
 Atlas 08 is a private review branch. It has not replaced the released Atlas 07,
 has not been pushed from this branch, and is not represented as a new version in
 `CITATION.cff`.
+
+Atlas 09 is the current unreviewed working draft on top of that approved
+private preview. It adds one fixed Scripps RG Argo pressure-layer anomaly and
+must not inherit Atlas 08's approval by implication.
 
 ## Reviewed components
 
@@ -21,11 +25,15 @@ external scientific peer review.
 
 - **Unchanged observational layer:** final NOAA/NCEI OISST v2.1 surface
   temperature, anomaly, and estimated-analysis-error fields for 2026-08-01.
+- **New unreviewed depth layer:** July 2026 Scripps RG Argo potential-
+  temperature anomaly at 700 dbar, sampled to a 2-degree display grid. It is
+  an objectively mapped anomaly, not absolute temperature or heat content, and
+  its 64.5°S limit excludes the Antarctic shelf and ice cavities.
 - **New presentation layer:** pinned Natural Earth coastline geometry,
   redesigned conceptual overlays, clearer evidence modes, and researcher routes.
 - **New research handoff:** bounded claims, exact source-response receipts,
   primary-literature mapping, BibTeX, optional review prompts, and CSV exports.
-- **Still not present:** depth-resolved heat content, section heat transport,
+- **Still not present:** depth-integrated heat content, section heat transport,
   bathymetric gate diagnostics, sea-ice coupling, or validated zone boundaries.
 
 ## Validation state
@@ -48,8 +56,10 @@ the default offline gate.
 1. Owner visual approval of the complete private preview.
 2. Whether Atlas 08 should replace Atlas 07 on the public site.
 3. Whether a promoted release should retain `0.8.x` or receive a new version.
-4. Which quantitative layer should follow: depth-resolved structure,
+4. Whether Atlas 09's first pressure layer should be promoted after native-role
+   and owner visual review.
+5. Which quantitative layer should follow: absolute vertical structure,
    bathymetry/sea ice, or dynamically consistent heat transport.
 
-Until those decisions are made, repository links may expose Atlas 08 on this
+Until those decisions are made, repository links may expose Atlas 09 on this
 branch while public URLs and citation metadata continue to describe Atlas 07.

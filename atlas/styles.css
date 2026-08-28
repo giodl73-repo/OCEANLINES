@@ -31,7 +31,7 @@ h1 { max-width: 980px; margin: 0; font-size: clamp(3rem, 6.5vw, 7.5rem); line-he
 .lens:disabled { cursor: not-allowed; opacity: .38; }
 .atlas-shell { display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(310px, .85fr); border: 1px solid var(--line); background: #06171c; }
 .map-panel { min-width: 0; border-right: 1px solid var(--line); }
-.map-modes { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); background: #071b22; }
+.map-modes { display: grid; grid-template-columns: repeat(5, 1fr); border-bottom: 1px solid var(--line); background: #071b22; }
 .map-mode { min-height: 44px; border: 0; border-right: 1px solid var(--line); color: var(--muted); background: transparent; cursor: pointer; font: 700 .64rem/1 ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
 .map-mode:last-child { border-right: 0; }
 .map-mode:hover, .map-mode:focus-visible { color: var(--ink); background: #11313a; }
@@ -95,6 +95,7 @@ h1 { max-width: 980px; margin: 0; font-size: clamp(3rem, 6.5vw, 7.5rem); line-he
 .probe-controls input:focus-visible, .probe-controls button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
 #probe-result { display: block; min-height: 3rem; margin-top: .9rem; padding: .75rem; border-left: 3px solid var(--cyan); color: var(--ink); background: #06171c; font: .72rem/1.55 ui-monospace, monospace; }
 .ring-comparison { margin-top: 1.2rem; padding: 1rem; border: 1px solid var(--line); }
+.ring-comparison[hidden] { display: none; }
 .ring-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: end; }
 .ring-heading h3 { color: var(--warm); }
 .ring-heading p { max-width: 54rem; }

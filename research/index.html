@@ -69,11 +69,16 @@
       <section aria-labelledby="receipt">
         <p class="section-number">03 · REPRODUCTION RECEIPT</p>
         <h2 id="receipt">What exact bytes are displayed?</h2>
-        <p>All three observational layers are final NOAA/NCEI OISST v2.1 AVHRR-only
+        <p>The three surface layers are final NOAA/NCEI OISST v2.1 AVHRR-only
           fields for 2026-08-01, retrieved 2026-08-21 14:00 UTC. Native 0.25° data
           are sampled every eighth cell onto a 90 × 180, 2° display grid. Missing and
           land values remain explicit. Dataset DOI:
           <a href="https://doi.org/10.25921/RE9P-PT57">10.25921/RE9P-PT57</a>.</p>
+        <p>The depth layer is the July 2026 Scripps RG Argo monthly extension,
+          retrieved 2026-08-28 19:02:31 UTC. It samples the native 1° potential-
+          temperature anomaly at 700 dbar every second grid cell. Its climatological
+          reference is the RG 2019 mean and annual cycle derived from 2004–2018 Argo
+          data. The 64.5°S limit excludes the Antarctic shelf and ice cavities.</p>
         <div class="table-wrap">
           <table class="receipts">
             <thead><tr><th>Variable</th><th>Reference</th><th>Source-response SHA-256</th><th>Artifact</th></tr></thead>
@@ -81,6 +86,7 @@
               <tr><td><code>sst</code> · °C</td><td>Absolute surface temperature</td><td><code class="hash">54fde8766119da6856fff827b64946626eae3f61959792f962f296efb5baacd3</code></td><td><a href="../atlas/data/oisst-2026-08-01.js">snapshot</a></td></tr>
               <tr><td><code>anom</code> · °C</td><td>1971–2000 climatological mean</td><td><code class="hash">a6756b88ecfe5e3c0307b7566ba142e3f9ddb8ebaa8823a5d08f9d3a3a1529e2</code></td><td><a href="../atlas/data/oisst-anomaly-2026-08-01.js">snapshot</a></td></tr>
               <tr><td><code>err</code> · °C</td><td>Product-estimated analysis error</td><td><code class="hash">24ae585b4b591b19d7b360fe8df3f9620e28f9754e8aa3e21bcb0860bc864ba6</code></td><td><a href="../atlas/data/oisst-error-2026-08-01.js">snapshot</a></td></tr>
+              <tr><td><code>ARGO_TEMPERATURE_ANOMALY</code> · °C · 700 dbar</td><td>RG 2019 mean and annual cycle from 2004–2018</td><td><code class="hash">5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c</code></td><td><a href="../atlas/data/argo-temperature-anomaly-700dbar-2026-07.js">snapshot</a></td></tr>
             </tbody>
           </table>
         </div>
@@ -106,10 +112,11 @@
           <article><p>Contrary constraint</p><h3><a href="https://doi.org/10.1038/nature13597">Goldner, Herold &amp; Huber (2014)</a></h3><span>Gateway state alone does not explain Eocene–Oligocene circulation change.</span></article>
           <article><p>Heat observation</p><h3><a href="https://doi.org/10.3389/fmars.2019.00416">Palmer et al. (2019)</a></h3><span>Regional heat storage requires depth-resolved, uncertainty-aware observing coverage.</span></article>
           <article><p>System synthesis</p><h3><a href="https://doi.org/10.1029/2022RG000781">Bennetts et al. (2024)</a></h3><span>Connects Southern Ocean circulation, cryosphere, mixing, waves, and their unresolved feedbacks.</span></article>
+          <article><p>Depth-product method</p><h3><a href="https://doi.org/10.1016/j.pocean.2009.03.004">Roemmich &amp; Gilson (2009)</a></h3><span>Defines the Argo-only mean, annual cycle, and objective-mapping approach behind the RG pressure-level product.</span></article>
         </div>
-        <p>The complete 15-source audit is available in the <a href="../signals/discover/literature/ocean-heat-geography-citation-spine-literature-2026-08-28.md">literature map</a>.</p>
+        <p>The original 15-source mechanism audit is available in the <a href="../signals/discover/literature/ocean-heat-geography-citation-spine-literature-2026-08-28.md">literature map</a>; the implemented Argo product adds its method paper here.</p>
         <nav class="downloads" aria-label="Literature resources">
-          <a href="../REFERENCES.bib" download><strong>Download BibTeX</strong><span>Import all 15 references into a citation manager.</span></a>
+          <a href="../REFERENCES.bib" download><strong>Download BibTeX</strong><span>Import all 16 references into a citation manager.</span></a>
           <a href="../REVIEW-GUIDE.md"><strong>Optional review guide</strong><span>Five bounded questions; no endorsement or collaboration requested.</span></a>
         </nav>
       </section>
@@ -118,7 +125,7 @@
         <p class="section-number">05 · QUANTITATIVE PATH</p>
         <h2 id="next">What would turn the map into a heat-budget study?</h2>
         <div class="next-grid">
-          <article><span>1</span><h3>Resolve vertical structure</h3><p>Add gridded Argo temperature and salinity with depth, uncertainty, and coverage.</p></article>
+          <article><span>1</span><h3>Resolve vertical structure</h3><p>Extend the first 700 dbar Argo anomaly across pressure levels and salinity, with uncertainty and coverage.</p></article>
           <article><span>2</span><h3>Diagnose transport</h3><p>Define sections and integrate velocity-weighted heat flux using a dynamically consistent state estimate.</p></article>
           <article><span>3</span><h3>Test gates and barriers</h3><p>Add bathymetry, sea ice, fronts, and controlled perturbations rather than inferring barriers from color.</p></article>
           <article><span>4</span><h3>Compare budgets</h3><p>Close regional storage, advection, mixing, and surface-flux terms with propagated uncertainty.</p></article>

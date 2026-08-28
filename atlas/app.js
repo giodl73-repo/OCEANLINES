@@ -68,17 +68,26 @@ function renderObservedField(data, colorFunction) {
   const canvas = document.querySelector("#sst-canvas");
   const context = canvas.getContext("2d");
   const [rows, columns] = data.shape;
-  const cellWidth = canvas.width / columns;
-  const cellHeight = canvas.height / rows;
-  context.fillStyle = "#c8bda5";
+  const cellWidth = Math.abs(data.longitude.step) / 360 * canvas.width;
+  const cellHeight = Math.abs(data.latitude.step) / 180 * canvas.height;
+  context.fillStyle = "#30454b";
   context.fillRect(0, 0, canvas.width, canvas.height);
+  const domainNorth = data.latitude.start + (rows - 1) * data.latitude.step + Math.abs(data.latitude.step) / 2;
+  const domainSouth = data.latitude.start - Math.abs(data.latitude.step) / 2;
+  context.fillStyle = "#c8bda5";
+  context.fillRect(0, (90 - domainNorth) / 180 * canvas.height, canvas.width, (domainNorth - domainSouth) / 180 * canvas.height);
   data.values_c_hundredths.forEach((encoded, index) => {
     if (encoded === null) return;
     const row = Math.floor(index / columns);
     const column = index % columns;
-    const shiftedColumn = (column + columns / 2) % columns;
+    const longitude = normalizedLongitude(data.longitude.start + column * data.longitude.step);
+    const latitude = data.latitude.start + row * data.latitude.step;
+    const x = (longitude + 180) / 360 * canvas.width - cellWidth / 2;
+    const y = (90 - latitude) / 180 * canvas.height - cellHeight / 2;
     context.fillStyle = colorFunction(encoded / 100);
-    context.fillRect(shiftedColumn * cellWidth, (rows - row - 1) * cellHeight, Math.ceil(cellWidth), Math.ceil(cellHeight));
+    context.fillRect(x, y, Math.ceil(cellWidth), Math.ceil(cellHeight));
+    if (x < 0) context.fillRect(x + canvas.width, y, Math.ceil(cellWidth), Math.ceil(cellHeight));
+    if (x + cellWidth > canvas.width) context.fillRect(x - canvas.width, y, Math.ceil(cellWidth), Math.ceil(cellHeight));
   });
   context.strokeStyle = "rgba(255,255,255,.24)";
   context.lineWidth = 1;
@@ -88,19 +97,21 @@ function renderObservedField(data, colorFunction) {
   for (let latitude = 30; latitude < 180; latitude += 30) {
     context.beginPath(); context.moveTo(0, latitude / 180 * canvas.height); context.lineTo(canvas.width, latitude / 180 * canvas.height); context.stroke();
   }
-  const rings = pairedRingRows(ringLatitude, data);
-  for (const [ring, color] of [[rings.north, "#5ee2d6"], [rings.south, "#ff6f61"]]) {
-    const y = (rows - ring.row - 0.5) * cellHeight;
-    context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y);
-    context.strokeStyle = "#071b22"; context.lineWidth = 5; context.stroke();
-    context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y);
-    context.strokeStyle = color; context.lineWidth = 2; context.setLineDash([8, 5]); context.stroke();
-    context.setLineDash([]);
+  if (data.schema === "oceanlines.oisst.snapshot.v2") {
+    const rings = pairedRingRows(ringLatitude, data);
+    for (const [ring, color] of [[rings.north, "#5ee2d6"], [rings.south, "#ff6f61"]]) {
+      const y = (90 - ring.latitude) / 180 * canvas.height;
+      context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y);
+      context.strokeStyle = "#071b22"; context.lineWidth = 5; context.stroke();
+      context.beginPath(); context.moveTo(0, y); context.lineTo(canvas.width, y);
+      context.strokeStyle = color; context.lineWidth = 2; context.setLineDash([8, 5]); context.stroke();
+      context.setLineDash([]);
+    }
   }
   if (probeCell) {
-    const shiftedColumn = (probeCell.column + columns / 2) % columns;
-    const x = (shiftedColumn + 0.5) * cellWidth;
-    const y = (rows - probeCell.row - 0.5) * cellHeight;
+    const displayProbe = probeCellFromCoordinates(probeCell.latitude, probeCell.longitude, data);
+    const x = (displayProbe.longitude + 180) / 360 * canvas.width;
+    const y = (90 - displayProbe.latitude) / 180 * canvas.height;
     context.beginPath();
     context.arc(x, y, 7, 0, Math.PI * 2);
     context.strokeStyle = "#071b22";
@@ -123,24 +134,29 @@ function showObservedMetadata(data, mode) {
     maximum_c: Math.max(...valid) / 100
   };
   const anomaly = mode === "anomaly";
+  const subsurface = mode === "argo700";
   const error = mode === "error";
-  const fieldClass = anomaly ? "REFERENCE-BASED" : error ? "UNCERTAINTY" : "ABSOLUTE";
-  fields.index.textContent = `ATLAS 08 · ${fieldClass} SURFACE FIELD`;
-  fields.name.textContent = anomaly ? "SST Anomaly" : error ? "Estimated SST Analysis Error" : "Sea Surface Temperature";
-  fields.kind.textContent = `NOAA OISST V2.1 · ${data.date}`;
-  fields.summary.textContent = anomaly
+  const fieldClass = anomaly || subsurface ? "REFERENCE-BASED" : error ? "UNCERTAINTY" : "ABSOLUTE";
+  fields.index.textContent = `ATLAS 09 · ${fieldClass} ${subsurface ? "PRESSURE-LAYER" : "SURFACE"} FIELD`;
+  fields.name.textContent = subsurface ? "700 dbar Temperature Anomaly" : anomaly ? "SST Anomaly" : error ? "Estimated SST Analysis Error" : "Sea Surface Temperature";
+  fields.kind.textContent = subsurface ? `SCRIPPS RG ARGO · ${data.month}` : `NOAA OISST V2.1 · ${data.date}`;
+  fields.summary.textContent = subsurface
+    ? `Objectively mapped potential-temperature anomaly at ${data.pressure_dbar.toFixed(0)} dbar across ${summary.valid_ocean_cells.toLocaleString()} displayed cells. Range: ${summary.minimum_c.toFixed(2)}–${summary.maximum_c.toFixed(2)}°C.`
+    : anomaly
     ? `Departure from NOAA's 1971–2000 daily climatology across ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(1)}–${summary.maximum_c.toFixed(1)}°C.`
     : error
       ? `Time-matched estimated analysis error across ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(2)}–${summary.maximum_c.toFixed(2)}°C.`
     : `Absolute surface temperature across ${summary.valid_ocean_cells.toLocaleString()} displayed ocean cells. Range: ${summary.minimum_c.toFixed(1)}–${summary.maximum_c.toFixed(1)}°C.`;
-  fields.role.textContent = anomaly ? "surface departure from climatology" : error ? "estimated surface analysis uncertainty" : "absolute surface thermal field";
-  fields.depth.textContent = "sea surface · 0 m product level";
-  fields.clock.textContent = `one day · ${data.date}`;
-  fields.evidence.textContent = "observational analysis · D1";
+  fields.role.textContent = subsurface ? "subsurface departure from climatology" : anomaly ? "surface departure from climatology" : error ? "estimated surface analysis uncertainty" : "absolute surface thermal field";
+  fields.depth.textContent = subsurface ? `${data.pressure_dbar.toFixed(0)} dbar pressure surface · not a fixed geometric depth` : "sea surface · 0 m product level";
+  fields.clock.textContent = subsurface ? `monthly extension · ${data.month}` : `one day · ${data.date}`;
+  fields.evidence.textContent = subsurface ? "Argo-only objective analysis · D2" : "observational analysis · D1";
   fields.boundary.textContent = data.boundary;
-  fields.source.href = data.doi;
-  fields.source.textContent = "Open NOAA dataset record →";
-  document.querySelector("#map-insight").textContent = anomaly
+  fields.source.href = subsurface ? data.query_url : data.doi;
+  fields.source.textContent = subsurface ? "Open the fixed Scripps product →" : "Open NOAA dataset record →";
+  document.querySelector("#map-insight").textContent = subsurface
+    ? "This is the atlas's first look below the surface: July 2026 departure from the RG seasonal climatology at 700 dbar. It reveals depth-specific change, but not absolute warmth, water-column heat content, circulation, or delivery onto the Antarctic shelf."
+    : anomaly
     ? "This one-day surface map shows where temperature departed from the 1971–2000 daily baseline. It shows the pattern, not why it occurred or how much heat is stored below the surface."
     : error
       ? "This layer shows where the surface analysis carries higher or lower estimated error. It qualifies the mapped product; it is not forecast error or full-budget uncertainty."
@@ -156,7 +172,7 @@ const latitudeBands = [
 ];
 
 function valuePhrase(value, mode, includeSign = false) {
-  if (mode === "anomaly") {
+  if (mode === "anomaly" || mode === "argo700") {
     const sign = value > 0 ? "+" : value < 0 ? "−" : "";
     const direction = value > 0 ? "warmer" : value < 0 ? "cooler" : "at baseline";
     return `${sign}${Math.abs(value).toFixed(2)}°C ${direction}`;
@@ -191,8 +207,8 @@ function renderTextSummary(data, mode) {
     });
     table.append(row);
   }
-  const fieldName = mode === "anomaly" ? "SST anomaly relative to 1971–2000" : mode === "error" ? "estimated SST analysis error" : "absolute sea surface temperature";
-  document.querySelector("#map-a11y-summary").textContent = `Text equivalent for ${fieldName} on ${data.date}: five latitude-band rows report mean, range, and valid-cell count. Missing and land cells are excluded.`;
+  const fieldName = mode === "argo700" ? "700 dbar potential-temperature anomaly relative to the RG 2019 climatology" : mode === "anomaly" ? "SST anomaly relative to 1971–2000" : mode === "error" ? "estimated SST analysis error" : "absolute sea surface temperature";
+  document.querySelector("#map-a11y-summary").textContent = `Text equivalent for ${fieldName} on ${data.date || data.month}: five latitude-band rows report mean, range, and valid-cell count. Missing and land cells are excluded.`;
   document.querySelector("#summary-caption").textContent = `Latitude-band statistics for ${fieldName}; values are not area-weighted.`;
 }
 
@@ -261,9 +277,12 @@ function renderRingStrip(canvas, data, statistics, colorFunction) {
   context.fillRect(0, 0, canvas.width, canvas.height);
   statistics.encoded.forEach((value, column) => {
     if (value === null) return;
-    const shiftedColumn = (column + columns / 2) % columns;
+    const longitude = normalizedLongitude(data.longitude.start + column * data.longitude.step);
+    const x = (longitude + 180) / 360 * canvas.width - width / 2;
     context.fillStyle = colorFunction(value / 100);
-    context.fillRect(shiftedColumn * width, 0, Math.ceil(width), canvas.height);
+    context.fillRect(x, 0, Math.ceil(width), canvas.height);
+    if (x < 0) context.fillRect(x + canvas.width, 0, Math.ceil(width), canvas.height);
+    if (x + width > canvas.width) context.fillRect(x - canvas.width, 0, Math.ceil(width), canvas.height);
   });
   context.strokeStyle = "rgba(255,255,255,.45)";
   for (let longitude = 60; longitude < 360; longitude += 60) {
@@ -482,13 +501,15 @@ function coordinatePhrase(value, positive, negative) {
   return `${Math.abs(value).toFixed(2)}°${value > 0 ? positive : negative}`;
 }
 
-function probeValue(data, cell, mode) {
+function probeValue(data, latitude, longitude, mode) {
+  const cell = probeCellFromCoordinates(latitude, longitude, data);
   const encoded = data.values_c_hundredths[cell.row * data.shape[1] + cell.column];
   if (encoded === null) return "land or missing";
   return valuePhrase(encoded / 100, mode);
 }
 
 function activeObservedField() {
+  if (currentMode === "argo700") return [window.OCEANLINES_ARGO_TEMPERATURE_ANOMALY, anomalyColor];
   if (currentMode === "anomaly") return [window.OCEANLINES_OISST_ANOMALY, anomalyColor];
   if (currentMode === "error") return [window.OCEANLINES_OISST_ERROR, errorColor];
   return [window.OCEANLINES_OISST, temperatureColor];
@@ -519,21 +540,23 @@ function setRingLatitude(latitude, updateUrl = true) {
   if (currentMode !== "conceptual") {
     const [data, colorFunction] = activeObservedField();
     renderObservedField(data, colorFunction);
-    renderRingComparison(data, currentMode, colorFunction);
+    if (currentMode !== "argo700") renderRingComparison(data, currentMode, colorFunction);
   }
   if (updateUrl) updateAtlasUrl();
 }
 
 function inspectCoordinates(latitude, longitude, updateUrl = true) {
   if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
-  probeCell = probeCellFromCoordinates(latitude, longitude);
+  const [activeData] = activeObservedField();
+  probeCell = probeCellFromCoordinates(latitude, longitude, activeData);
   document.querySelector("#probe-lat").value = probeCell.latitude.toFixed(3);
   document.querySelector("#probe-lon").value = probeCell.longitude.toFixed(3);
   const location = `${coordinatePhrase(probeCell.latitude, "N", "S")}, ${coordinatePhrase(probeCell.longitude, "E", "W")}`;
-  const sst = probeValue(window.OCEANLINES_OISST, probeCell, "sst");
-  const anomaly = probeValue(window.OCEANLINES_OISST_ANOMALY, probeCell, "anomaly");
-  const error = probeValue(window.OCEANLINES_OISST_ERROR, probeCell, "error");
-  document.querySelector("#probe-result").textContent = `Nearest 2° display cell · ${location}. SST: ${sst}. Anomaly: ${anomaly}. Estimated analysis error: ${error}. Surface product values; not heat content or transport.`;
+  const sst = probeValue(window.OCEANLINES_OISST, probeCell.latitude, probeCell.longitude, "sst");
+  const anomaly = probeValue(window.OCEANLINES_OISST_ANOMALY, probeCell.latitude, probeCell.longitude, "anomaly");
+  const error = probeValue(window.OCEANLINES_OISST_ERROR, probeCell.latitude, probeCell.longitude, "error");
+  const argo = probeValue(window.OCEANLINES_ARGO_TEMPERATURE_ANOMALY, probeCell.latitude, probeCell.longitude, "argo700");
+  document.querySelector("#probe-result").textContent = `Nearest active display cell · ${location}. SST: ${sst}. SST anomaly: ${anomaly}. Estimated analysis error: ${error}. 700 dbar Argo anomaly: ${argo}. Products are sampled on their own grids; none is heat content or transport.`;
   const [data, colorFunction] = activeObservedField();
   renderObservedField(data, colorFunction);
   if (updateUrl) updateAtlasUrl();
@@ -543,9 +566,10 @@ function setMapMode(mode) {
   if (mode === "observed") mode = "sst";
   const observed = mode !== "conceptual";
   const anomaly = mode === "anomaly";
+  const subsurface = mode === "argo700";
   const error = mode === "error";
   currentMode = mode;
-  const data = anomaly ? window.OCEANLINES_OISST_ANOMALY : error ? window.OCEANLINES_OISST_ERROR : window.OCEANLINES_OISST;
+  const data = subsurface ? window.OCEANLINES_ARGO_TEMPERATURE_ANOMALY : anomaly ? window.OCEANLINES_OISST_ANOMALY : error ? window.OCEANLINES_OISST_ERROR : window.OCEANLINES_OISST;
   document.querySelectorAll(".map-mode").forEach(button => {
     const active = button.dataset.mode === mode;
     button.classList.toggle("active", active);
@@ -555,8 +579,9 @@ function setMapMode(mode) {
   document.querySelector("#sst-canvas").hidden = !observed;
   document.querySelector("#observed-stamp").hidden = !observed;
   document.querySelector("#temperature-key").hidden = !observed;
-  document.querySelector("#temperature-key").classList.toggle("anomaly", anomaly);
+  document.querySelector("#temperature-key").classList.toggle("anomaly", anomaly || subsurface);
   document.querySelector("#temperature-key").classList.toggle("error", error);
+  document.querySelector("#ring-comparison").hidden = subsurface;
   document.querySelector("#map-data-summary").hidden = !observed;
   document.querySelector("#conceptual-actions").hidden = observed;
   document.querySelector("#map-reference-labels").hidden = !observed;
@@ -564,22 +589,22 @@ function setMapMode(mode) {
   markers.hidden = observed;
   document.querySelector("#map-stage").classList.toggle("observed", observed);
   document.querySelectorAll(".lens").forEach(button => { button.disabled = observed; });
-  document.querySelector("#observed-title").textContent = anomaly ? "OBSERVATIONAL · SURFACE ANOMALY" : error ? "OBSERVATIONAL · ESTIMATED ERROR" : "OBSERVATIONAL · ABSOLUTE SURFACE";
-  document.querySelector("#observed-status").textContent = anomaly ? "NOAA OISST v2.1 · 1971–2000 BASELINE" : error ? "NOAA OISST v2.1 · TIME-MATCHED ERROR" : "NOAA OISST v2.1 · FINAL · 2026-08-01";
-  document.querySelector("#scale-min").textContent = anomaly ? "−5°C cooler" : error ? "0.1°C lower" : "−2°C";
-  document.querySelector("#scale-mid").textContent = anomaly ? "0°C baseline" : error ? "0.35°C" : "15°C";
-  document.querySelector("#scale-max").textContent = anomaly ? "+5°C warmer" : error ? "0.6°C higher" : "32°C";
-  document.querySelector("#temperature-key").setAttribute("aria-label", anomaly ? "SST anomaly scale from five degrees cooler to five degrees warmer than baseline" : error ? "Estimated analysis error scale from lower to higher error" : "Absolute sea surface temperature color scale");
+  document.querySelector("#observed-title").textContent = subsurface ? "ARGO ANALYSIS · 700 DBAR ANOMALY" : anomaly ? "OBSERVATIONAL · SURFACE ANOMALY" : error ? "OBSERVATIONAL · ESTIMATED ERROR" : "OBSERVATIONAL · ABSOLUTE SURFACE";
+  document.querySelector("#observed-status").textContent = subsurface ? "SCRIPPS RG · JULY 2026 · 2004–2018 REFERENCE" : anomaly ? "NOAA OISST v2.1 · 1971–2000 BASELINE" : error ? "NOAA OISST v2.1 · TIME-MATCHED ERROR" : "NOAA OISST v2.1 · FINAL · 2026-08-01";
+  document.querySelector("#scale-min").textContent = anomaly || subsurface ? "−5°C cooler" : error ? "0.1°C lower" : "−2°C";
+  document.querySelector("#scale-mid").textContent = anomaly || subsurface ? "0°C baseline" : error ? "0.35°C" : "15°C";
+  document.querySelector("#scale-max").textContent = anomaly || subsurface ? "+5°C warmer" : error ? "0.6°C higher" : "32°C";
+  document.querySelector("#temperature-key").setAttribute("aria-label", subsurface ? "700 dbar temperature anomaly scale from five degrees cooler to five degrees warmer than the RG baseline" : anomaly ? "SST anomaly scale from five degrees cooler to five degrees warmer than baseline" : error ? "Estimated analysis error scale from lower to higher error" : "Absolute sea surface temperature color scale");
   const canvas = document.querySelector("#sst-canvas");
-  canvas.setAttribute("aria-label", anomaly ? "NOAA OISST anomaly for 1 August 2026 relative to 1971 to 2000, displayed on a two-degree equirectangular grid." : error ? "NOAA OISST estimated analysis error for 1 August 2026, displayed on a two-degree equirectangular grid." : "NOAA OISST absolute sea surface temperature for 1 August 2026, displayed on a two-degree equirectangular grid.");
+  canvas.setAttribute("aria-label", subsurface ? "Scripps RG Argo potential-temperature anomaly at 700 dbar for July 2026, displayed on a two-degree equirectangular grid from 64.5 degrees south to 79.5 degrees north." : anomaly ? "NOAA OISST anomaly for 1 August 2026 relative to 1971 to 2000, displayed on a two-degree equirectangular grid." : error ? "NOAA OISST estimated analysis error for 1 August 2026, displayed on a two-degree equirectangular grid." : "NOAA OISST absolute sea surface temperature for 1 August 2026, displayed on a two-degree equirectangular grid.");
   document.querySelector("#map-note").innerHTML = observed
-    ? `<span></span> ${anomaly ? "SST anomaly · 1971–2000 reference · symmetric ±5°C display clamp" : error ? "estimated analysis error · 0.1–0.6°C display clamp" : "absolute SST"} · equirectangular · antimeridian seam · 2° display stride`
+    ? `<span></span> ${subsurface ? "700 dbar anomaly · RG 2019 seasonal reference · July 2026 · symmetric ±5°C display clamp · 64.5°S–79.5°N · slate outside source domain" : anomaly ? "SST anomaly · 1971–2000 reference · symmetric ±5°C display clamp" : error ? "estimated analysis error · 0.1–0.6°C display clamp" : "absolute SST"} · equirectangular · antimeridian seam · 2° display stride`
     : "<span></span> Schematic, permeable, moving regions · not fixed boundaries · not a live analysis";
   if (observed) {
-    renderObservedField(data, anomaly ? anomalyColor : error ? errorColor : temperatureColor);
+    renderObservedField(data, anomaly || subsurface ? anomalyColor : error ? errorColor : temperatureColor);
     showObservedMetadata(data, mode);
     renderTextSummary(data, mode);
-    renderRingComparison(data, mode, anomaly ? anomalyColor : error ? errorColor : temperatureColor);
+    if (!subsurface) renderRingComparison(data, mode, anomaly ? anomalyColor : error ? errorColor : temperatureColor);
     if (probeCell) inspectCoordinates(probeCell.latitude, probeCell.longitude, false);
   } else selectZone(selectedZone);
   updateAtlasUrl();
@@ -648,7 +673,7 @@ selectZone(zones[0]);
 const requestedParameters = new URLSearchParams(window.location.search);
 const requestedMode = requestedParameters.get("mode");
 if (requestedParameters.has("ring")) setRingLatitude(Number(requestedParameters.get("ring")), false);
-if (["observed", "sst", "anomaly", "error"].includes(requestedMode)) setMapMode(requestedMode);
+if (["observed", "sst", "anomaly", "argo700", "error"].includes(requestedMode)) setMapMode(requestedMode);
 if (currentMode !== "conceptual" && requestedParameters.has("lat") && requestedParameters.has("lon")) {
   inspectCoordinates(Number(requestedParameters.get("lat")), Number(requestedParameters.get("lon")));
 }

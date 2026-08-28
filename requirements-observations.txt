@@ -1,2 +1,2 @@
-# Required for the NOAA NCSS/NetCDF backend and its deterministic local fixture.
+# Required for NOAA NCSS and RG Argo NetCDF pipelines and local fixtures.
 netCDF4==1.7.4

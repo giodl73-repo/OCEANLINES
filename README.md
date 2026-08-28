@@ -6,7 +6,7 @@
 
 ## Enter OCEANLINES
 
-**[Explore the interactive Atlas 08 preview →](atlas/)**
+**[Explore the interactive Atlas 09 depth preview →](atlas/)**
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
 [Read the field guide](HEATMASS.md) ·
@@ -28,13 +28,14 @@
 | Inspect evidence, limitations, and provenance | [Atlas method](atlas/README.md) and [source register](SOURCE-REGISTER.md) |
 
 The currently published site still serves
-[Atlas 07](https://giodl73-repo.github.io/OCEANLINES/atlas/); Atlas 08 remains a
-private review preview.
+[Atlas 07](https://giodl73-repo.github.io/OCEANLINES/atlas/). Atlas 08 remains
+the approved private review preview; Atlas 09 is the unpromoted depth-layer
+work on this branch.
 
-> **Atlas 08 review preview:** this branch contains a presentation candidate
-> that puts the surface-map conclusion first, adds geographic reference and a
-> three-tick scale, and progressively discloses advanced diagnostics. Atlas 07
-> remains the released public atlas until the preview is approved.
+> **Atlas 09 depth preview:** this branch adds a fixed July 2026 Scripps RG Argo
+> temperature anomaly at 700 dbar to the reviewed Atlas 08 presentation. The
+> pressure-layer view is not absolute temperature, heat content, transport, or
+> Antarctic shelf delivery. Atlas 07 remains the released public atlas.
 
 ![OCEANLINES fluid geography](figures/oceanlines-fluid-geography.svg)
 
@@ -87,9 +88,9 @@ quantitative.
 
 ## Continue through the study
 
-1. Explore the private [ATLAS 08 preview](atlas/) for conceptual zones, co-located
-   inspection, paired polar rings, the latitude ladder, and aligned polar-cap
-   mirrors.
+1. Explore the private [ATLAS 09 depth preview](atlas/) for conceptual zones,
+   surface observations, the first 700 dbar anomaly layer, paired polar rings,
+   the latitude ladder, and aligned polar-cap mirrors.
 2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
 4. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
@@ -133,9 +134,10 @@ continuity scan plus aligned north/south polar-cap mirrors. It is not a live
 ocean analysis or present-day forecast. The observed modes declare their
 projections and include non-color regional, cell-level, ring-level, and
 full-scan summaries; uncertainty remains product- and surface-specific.
-This branch adds the private Atlas 08 presentation, researcher note,
-claim-level literature spine, citation export, review guide, and deterministic
-research tables without changing the underlying OISST evidence. See the
+This branch retains the approved private Atlas 08 presentation, researcher
+note, claim-level literature spine, citation export, review guide, and
+deterministic research tables. Atlas 09 adds a separately receipted Argo-only
+700 dbar anomaly without changing the underlying OISST evidence. See the
 [preview status](PREVIEW-STATUS.md) for the reviewed component commits and
 remaining promotion decisions.
 The abyssal-heat research design defines a reproducible transport-test
@@ -159,6 +161,7 @@ fixture job on the approved Atlas 03 history.
 | 06 | `df78415` | Atlas 05 plus a 45-pair latitude-continuity ladder | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-06-latitude-ladder-roles-check-2026-08-21.md) |
 | 07 | `666c2b3` | Atlas 06 plus aligned northern/southern polar-cap mirrors | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-07-polar-mirrors-roles-check-2026-08-21.md) |
 | 08 preview | `4f6e9a2` | Ocean-first presentation plus researcher evidence and export surfaces; underlying OISST unchanged | 2026-08-01 | **APPROVED FOR PRIVATE PREVIEW** · [status](PREVIEW-STATUS.md) |
+| 09 draft | working tree | Atlas 08 plus Scripps RG Argo potential-temperature anomaly at 700 dbar | 2026-07 | **UNREVIEWED WORKING DRAFT** · [status](PREVIEW-STATUS.md) |
 
 ## License
 

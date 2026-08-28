@@ -1,17 +1,27 @@
-# Atlas 08 review preview
+# Atlas 09 depth preview
 
 **Researcher route:** begin with the concise [research note](../research/), then
 use this document for transformations, thresholds, caveats, and rebuild commands.
 
-Atlas 08 is a review-only presentation pass over the Atlas 07 evidence. It
-separates four views: the conceptual twelve-zone geography, absolute
-NOAA OISST v2.1 sea surface temperature, NOAA's published SST anomaly, and its
-time-matched estimated analysis error for 1 August 2026. It adds a coordinate
-probe that reports all three observed fields at the nearest display-grid cell
+Atlas 09 extends the private Atlas 08 presentation with the first depth-resolved
+observational layer. It separates five views: the conceptual twelve-zone
+geography, absolute NOAA OISST v2.1 sea surface temperature, NOAA's published
+SST anomaly, its time-matched estimated analysis error for 1 August 2026, and
+the Scripps RG Argo July 2026 potential-temperature anomaly at 700 dbar. Its
+coordinate probe samples each product on its own nearest display-grid cell
+and reports all four fields
 and a paired latitude-ring comparison that exposes analyzed-water continuity
 north and south at one requested latitude magnitude. A latitude ladder extends
 that comparison across 45 paired requests from 0° through 88°, while aligned
 polar-cap mirrors show the active field in two dimensions.
+
+The depth layer is explicitly an anomaly relative to the RG 2019 mean and
+annual cycle derived from 2004–2018 Argo data. It is not absolute subsurface
+temperature or vertically integrated heat content. The source grid ends at
+64.5°S and therefore does not reach the Antarctic shelf or ice cavities. Slate
+polar bands mark locations outside the source domain; beige combines land and
+missing cells within it. The anomaly palette is centered on zero and clamped
+symmetrically at ±5°C while the text summary retains the sampled source range.
 
 The preview adds geographic reference labels and a three-tick scale, states a
 plain-language conclusion before the controls, keeps polar and full-latitude
@@ -59,8 +69,9 @@ small reviewed contract rather than inferred from page prose.
 
 Every displayed footprint and marker in the conceptual view is schematic. A
 zone record declares its role, depth, clock, evidence class, source, and
-inferential boundary. The observed views are fixed daily surface analyses.
-Neither is a live product or a full-depth heat-content map. The anomaly is
+inferential boundary. The surface views are fixed daily analyses and the Argo
+view is a fixed monthly objective analysis at one pressure level. None is a
+live product or a full-depth heat-content map. The SST anomaly is
 relative to NOAA's 1971–2000 climatology; it is not absolute temperature.
 The anomaly palette is centered at zero and clamped symmetrically at ±5°C;
 the details panel reports the unclamped sampled range.
@@ -143,7 +154,7 @@ They are not native-resolution coastlines, bathymetry, sea-ice maps, current
 vectors, full-depth heat content, or heat transport. The ring table and
 latitude ladder remain the quantitative and non-color alternatives.
 
-## Rebuild the observed layer
+## Rebuild the observed layers
 
 The committed layer is a 2-degree display sampling of NOAA's native 0.25-degree
 final product. Temperatures retain 0.01°C precision; land and missing cells are
@@ -174,6 +185,13 @@ python analysis/fetch_oisst_snapshot.py `
   --stride 8 `
   --retrieved-at 2026-08-21T14:00:00Z `
   --output atlas/data/oisst-error-2026-08-01.js
+
+python analysis/fetch_argo_snapshot.py `
+  --month 2026-07 `
+  --pressure-dbar 700 `
+  --stride 2 `
+  --retrieved-at 2026-08-28T19:02:31Z `
+  --output atlas/data/argo-temperature-anomaly-700dbar-2026-07.js
 ```
 
 | Layer | Candidate source | What it may show | What it may not establish |
@@ -181,7 +199,7 @@ python analysis/fetch_oisst_snapshot.py `
 | surface temperature | NOAA OISST v2.1 | **implemented:** spatially complete daily SST field | full-depth heat content |
 | surface anomaly | NOAA OISST v2.1 | **implemented:** departure from 1971–2000 daily climatology | absolute temperature, heat content, or cause |
 | estimated analysis error | NOAA OISST v2.1 | **implemented:** spatial variation in time-matched surface analysis uncertainty | forecast error, confidence interval, or full-budget uncertainty |
-| subsurface temperature/salinity | Argo gridded products | vertical water-column structure | unsampled fine-scale pathways |
+| subsurface temperature anomaly | Scripps RG Argo Climatology | **implemented:** July 2026 departure at 700 dbar relative to the RG seasonal climatology | absolute temperature, heat content, transport, fine-scale pathways, or Antarctic shelf delivery |
 | surface current | NASA PO.DAAC OSCAR | mixed-layer velocity estimate | full-depth heat transport |
 | dynamically consistent state | ECCO v4r4 | modeled/assimilated budgets and transports | observation-only truth |
 | bathymetry and gates | GEBCO grid | geometric constraints and section context | circulation by itself |
@@ -191,3 +209,7 @@ Any observational release must name the product version, retrieval date,
 temporal aggregation, depth support, baseline, transformation code, and license.
 All three committed OISST artifacts conform to
 `oceanlines.oisst.snapshot.v2` and retain source-response SHA-256 checksums.
+The committed Argo artifact conforms to
+`oceanlines.argo.pressure-anomaly.v1`; it records the July 2026 product URL,
+retrieval timestamp, 700 dbar selection, 2-degree stride, and SHA-256 checksum
+`5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c`.

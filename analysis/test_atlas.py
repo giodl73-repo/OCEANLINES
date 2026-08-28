@@ -12,7 +12,7 @@ REFERENCES = ROOT / "REFERENCES.bib"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", ROOT / "atlas" / "data" / "argo-temperature-anomaly-700dbar-2026-07.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -30,13 +30,13 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 08 · REVIEW PREVIEW", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 09 · DEPTH PREVIEW", "not a live analysis"):
             self.assertIn(token, source)
 
     def test_readme_and_atlas_expose_clear_entry_routes(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         html = HTML.read_text(encoding="utf-8")
-        for token in ("## Enter OCEANLINES", "Explore the interactive Atlas 08 preview", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
+        for token in ("## Enter OCEANLINES", "Explore the interactive Atlas 09 depth preview", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
             self.assertIn(token, readme)
         for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
             self.assertIn(f'href="{target}"', html)
@@ -44,7 +44,7 @@ class AtlasTests(unittest.TestCase):
     def test_research_note_separates_claims_and_records_data_receipts(self):
         source = RESEARCH_HTML.read_text(encoding="utf-8")
         styles = (ROOT / "research" / "styles.css").read_text(encoding="utf-8")
-        for token in ("What can be concluded now?", "Does not establish", "What exact bytes are displayed?", "Which papers carry the argument?", "England et al. (2017)", "Goldner, Herold &amp; Huber (2014)", "10.25921/RE9P-PT57", "54fde8766119da6856fff827b64946626eae3f61959792f962f296efb5baacd3", "a6756b88ecfe5e3c0307b7566ba142e3f9ddb8ebaa8823a5d08f9d3a3a1529e2", "24ae585b4b591b19d7b360fe8df3f9620e28f9754e8aa3e21bcb0860bc864ba6", "does not replace external scientific peer review"):
+        for token in ("What can be concluded now?", "Does not establish", "What exact bytes are displayed?", "Which papers carry the argument?", "England et al. (2017)", "Goldner, Herold &amp; Huber (2014)", "Roemmich &amp; Gilson (2009)", "10.25921/RE9P-PT57", "54fde8766119da6856fff827b64946626eae3f61959792f962f296efb5baacd3", "a6756b88ecfe5e3c0307b7566ba142e3f9ddb8ebaa8823a5d08f9d3a3a1529e2", "24ae585b4b591b19d7b360fe8df3f9620e28f9754e8aa3e21bcb0860bc864ba6", "5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c", "does not replace external scientific peer review"):
             self.assertIn(token, source)
         for target in re.findall(r'(?:href|src)="(\.\.?/[^"#]+)"', source):
             self.assertTrue((RESEARCH_HTML.parent / target).resolve().exists(), target)
@@ -63,10 +63,10 @@ class AtlasTests(unittest.TestCase):
         review = (ROOT / "REVIEW-GUIDE.md").read_text(encoding="utf-8")
         entries = re.findall(r"^@article\{([^,]+),", bibliography, re.MULTILINE)
         dois = re.findall(r"^  doi\s+= \{([^}]+)\}", bibliography, re.MULTILINE)
-        self.assertEqual(15, len(entries))
-        self.assertEqual(15, len(set(entries)))
-        self.assertEqual(15, len(dois))
-        self.assertEqual(15, len(set(value.lower() for value in dois)))
+        self.assertEqual(16, len(entries))
+        self.assertEqual(16, len(set(entries)))
+        self.assertEqual(16, len(dois))
+        self.assertEqual(16, len(set(value.lower() for value in dois)))
         self.assertIn('href="../REFERENCES.bib" download', RESEARCH_HTML.read_text(encoding="utf-8"))
         for token in ("no expectation of endorsement", "not requesting public association", "Any one of these is enough"):
             self.assertIn(token, review)
@@ -107,7 +107,7 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(token, html)
         for token in ('document.querySelector("#zone-directory-list").append(item)', "scrollIntoView"):
             self.assertIn(token, app)
-        self.assertIn("OCEANLINES Atlas 08 Preview", html)
+        self.assertIn("OCEANLINES Atlas 09 Preview", html)
         self.assertIn(".lens[data-lens=\"all\"]", app)
         self.assertIn(".atlas-shell.observed-mode .zone-panel", css)
 
@@ -173,6 +173,23 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("TIME-MATCHED ERROR", app)
         self.assertIn("not forecast error", (ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js").read_text(encoding="utf-8"))
 
+    def test_depth_mode_is_explicitly_anomaly_not_heat_content(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        data = (ROOT / "atlas" / "data" / "argo-temperature-anomaly-700dbar-2026-07.js").read_text(encoding="utf-8")
+        self.assertIn('data-mode="argo700"', html)
+        self.assertIn("ARGO ANALYSIS · 700 DBAR ANOMALY", app)
+        self.assertIn("64.5°S–79.5°N", app)
+        self.assertIn("not absolute temperature", data)
+        self.assertIn("Antarctic shelf", data)
+
+    def test_depth_probe_samples_each_product_on_its_own_grid(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        self.assertIn("samples each product on its own nearest display cell", html)
+        self.assertIn("OCEANLINES_ARGO_TEMPERATURE_ANOMALY", app)
+        self.assertIn("Products are sampled on their own grids", app)
+
     def test_oceanbelts_is_labeled_as_reading_lens(self):
         source = HTML.read_text(encoding="utf-8")
         self.assertIn("HEATMASS <small>reservoirs + anomalies</small>", source)
@@ -184,12 +201,12 @@ class AtlasTests(unittest.TestCase):
         app = APP.read_text(encoding="utf-8")
         for token in ('id="coordinate-probe"', 'id="probe-lat"', 'id="probe-lon"', 'id="probe-result"', 'aria-live="polite"'):
             self.assertIn(token, html)
-        for token in ("probeCellFromCoordinates", "inspectCoordinates", 'addEventListener("click"', 'addEventListener("submit"', "Nearest 2° display cell"):
+        for token in ("probeCellFromCoordinates", "inspectCoordinates", 'addEventListener("click"', 'addEventListener("submit"', "Nearest active display cell"):
             self.assertIn(token, app)
 
     def test_coordinate_probe_is_bookmarkable_and_reports_all_fields(self):
         source = APP.read_text(encoding="utf-8")
-        for token in ('searchParams.set("mode"', 'searchParams.set("lat"', 'searchParams.set("lon"', 'searchParams.delete("mode"', "OCEANLINES_OISST_ANOMALY", "OCEANLINES_OISST_ERROR", "not heat content or transport"):
+        for token in ('searchParams.set("mode"', 'searchParams.set("lat"', 'searchParams.set("lon"', 'searchParams.delete("mode"', "OCEANLINES_OISST_ANOMALY", "OCEANLINES_OISST_ERROR", "OCEANLINES_ARGO_TEMPERATURE_ANOMALY", "none is heat content or transport"):
             self.assertIn(token, source)
 
     def test_polar_rings_have_visual_text_and_keyboard_paths(self):
