@@ -101,6 +101,8 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("Atlas 09 RG Argo 700 dbar anomaly", status)
         self.assertIn("ef6662e", status)
         self.assertIn("owner visual review open", status.lower())
+        self.assertIn("Atlas 10 RG Argo depth ladder", status)
+        self.assertIn("2756f1e", status)
 
     def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
         html = HTML.read_text(encoding="utf-8")

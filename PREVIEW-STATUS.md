@@ -1,4 +1,4 @@
-# Atlas 08–09 approvals and Atlas 10 working status
+# Atlas 08–10 private-preview status
 
 Atlas 08 is a private review branch. It has not replaced the released Atlas 07,
 has not been pushed from this branch, and is not represented as a new version in
@@ -8,9 +8,9 @@ Atlas 09 is the current native-role-approved working draft on top of that
 approved private preview. It adds one fixed Scripps RG Argo pressure-layer
 anomaly. Owner visual approval and any public promotion remain open.
 
-Atlas 10 is the current unreviewed working tree. It extends that exact monthly
-source into a four-level 10/300/700/1000 dbar anomaly ladder and must not inherit
-Atlas 09's approval by implication.
+Atlas 10 is the current native-role-approved working draft. It extends that
+exact monthly source into a four-level 10/300/700/1000 dbar anomaly ladder.
+Owner visual approval and public promotion remain open.
 
 ## Reviewed components
 
@@ -21,6 +21,7 @@ Atlas 09's approval by implication.
 | Claim-level fifteen-source literature spine | `a93999f` | APPROVED for private preview | [literature-spine review](signals/roles/check/claim-level-literature-spine-roles-check-2026-08-28.md) |
 | Machine-readable zone and claims exports | `7d673df` | APPROVED for private preview | [research-export review](signals/roles/check/machine-readable-research-exports-roles-check-2026-08-28.md) |
 | Atlas 09 RG Argo 700 dbar anomaly | `ef6662e` | APPROVED by native roles; owner visual review open | [Atlas 09 depth review](signals/roles/check/atlas-09-argo-700dbar-roles-check-2026-08-28.md) |
+| Atlas 10 RG Argo depth ladder | `2756f1e` | APPROVED by native roles; owner visual review open | [Atlas 10 depth-ladder review](signals/roles/check/atlas-10-argo-depth-ladder-roles-check-2026-08-28.md) |
 
 The review commits that record those verdicts follow their source commits in
 Git history. Each approval is scoped to a private preview and does not replace
@@ -34,7 +35,7 @@ external scientific peer review.
   temperature anomaly at 700 dbar, sampled to a 2-degree display grid. It is
   an objectively mapped anomaly, not absolute temperature or heat content, and
   its 64.5°S limit excludes the Antarctic shelf and ice cavities.
-- **New unreviewed depth-ladder extension:** same-source anomalies at 10, 300,
+- **New reviewed depth-ladder extension:** same-source anomalies at 10, 300,
   and 1000 dbar, pressure controls, bookmark state, and four-level probe output.
 - **New presentation layer:** pinned Natural Earth coastline geometry,
   redesigned conceptual overlays, clearer evidence modes, and researcher routes.
@@ -68,7 +69,7 @@ the default offline gate.
 5. Which quantitative layer should follow: absolute vertical structure,
    bathymetry/sea ice, or dynamically consistent heat transport.
 6. Whether Atlas 10's pressure ladder should replace the single-level Atlas 09
-   preview after native-role and owner visual review.
+   preview after owner visual review.
 
 Until those decisions are made, repository links may expose Atlas 10 on this
 branch while public URLs and citation metadata continue to describe Atlas 07.

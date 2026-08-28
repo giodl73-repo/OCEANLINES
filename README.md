@@ -30,7 +30,7 @@
 The currently published site still serves
 [Atlas 07](https://giodl73-repo.github.io/OCEANLINES/atlas/). Atlas 08 remains
 the approved private review preview, Atlas 09 is the approved first depth
-layer, and Atlas 10 is the unreviewed pressure-ladder work on this branch.
+layer, and Atlas 10 is the native-role-approved pressure ladder on this branch.
 
 > **Atlas 10 depth ladder:** this branch compares fixed July 2026 Scripps RG
 > Argo temperature anomalies at 10, 300, 700, and 1000 dbar. The pressure-level
@@ -163,7 +163,7 @@ fixture job on the approved Atlas 03 history.
 | 07 | `666c2b3` | Atlas 06 plus aligned northern/southern polar-cap mirrors | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-07-polar-mirrors-roles-check-2026-08-21.md) |
 | 08 preview | `4f6e9a2` | Ocean-first presentation plus researcher evidence and export surfaces; underlying OISST unchanged | 2026-08-01 | **APPROVED FOR PRIVATE PREVIEW** · [status](PREVIEW-STATUS.md) |
 | 09 preview | `ef6662e` | Atlas 08 plus Scripps RG Argo potential-temperature anomaly at 700 dbar | 2026-07 | **NATIVE ROLES APPROVED; OWNER VISUAL REVIEW OPEN** · [review](signals/roles/check/atlas-09-argo-700dbar-roles-check-2026-08-28.md) |
-| 10 draft | working tree | Atlas 09 plus same-source anomaly levels at 10, 300, and 1000 dbar | 2026-07 | **UNREVIEWED WORKING DRAFT** · [status](PREVIEW-STATUS.md) |
+| 10 preview | `2756f1e` | Atlas 09 plus same-source anomaly levels at 10, 300, and 1000 dbar | 2026-07 | **NATIVE ROLES APPROVED; OWNER VISUAL REVIEW OPEN** · [review](signals/roles/check/atlas-10-argo-depth-ladder-roles-check-2026-08-28.md) |
 
 ## License
 
