@@ -4,7 +4,26 @@
 
 [![validate](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml/badge.svg)](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml)
 
-**[Explore the live Atlas 07 →](https://giodl73-repo.github.io/OCEANLINES/atlas/)**
+## Enter OCEANLINES
+
+**[Explore the interactive Atlas 08 preview →](atlas/)**
+
+[Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
+[Read the field guide](HEATMASS.md) ·
+[See how the Atlas is built](atlas/README.md) ·
+[Check every source](SOURCE-REGISTER.md)
+
+| If you want to… | Go here |
+|---|---|
+| See the idea in one image | [Full fluid-geography map](figures/oceanlines-fluid-geography.svg) |
+| Explore regions and observational layers | [Interactive Atlas](atlas/) |
+| Understand reservoirs, anomalies, pathways, and gates | [HEATMASS field guide](HEATMASS.md) |
+| Follow the Antarctic and Arctic mechanisms | [OCEANREALMS](OCEANREALMS.md) |
+| Inspect evidence, limitations, and provenance | [Atlas method](atlas/README.md) and [source register](SOURCE-REGISTER.md) |
+
+The currently published site still serves
+[Atlas 07](https://giodl73-repo.github.io/OCEANLINES/atlas/); Atlas 08 remains a
+private review preview.
 
 > **Atlas 08 review preview:** this branch contains a presentation candidate
 > that puts the surface-map conclusion first, adds geographic reference and a
@@ -60,7 +79,7 @@ A beautiful surface-temperature map cannot establish a full-depth heat budget.
 Every figure states whether it is conceptual, observational, modeled, or
 quantitative.
 
-## Start here
+## Continue through the study
 
 1. Explore [ATLAS 07](atlas/) for conceptual zones, co-located
    inspection, paired polar rings, the latitude ladder, and aligned polar-cap

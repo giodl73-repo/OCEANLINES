@@ -11,7 +11,10 @@ a { color: inherit; } button { font: inherit; }
 .masthead { min-height: 74px; padding: 0 4vw; display: flex; align-items: center; gap: 24px; border-bottom: 1px solid var(--line); }
 .wordmark { color: var(--cyan); font-size: 1rem; font-weight: 900; letter-spacing: .18em; text-decoration: none; }
 .masthead p { margin: 0; color: var(--muted); font-size: .82rem; }
-.edition { margin-left: auto; color: var(--warm); font: 700 .68rem/1 ui-monospace, monospace; letter-spacing: .12em; }
+.project-nav { display: flex; gap: 1rem; margin-left: auto; }
+.project-nav a { min-height: 38px; display: inline-flex; align-items: center; color: var(--muted); font: 750 .64rem/1 ui-monospace, monospace; letter-spacing: .06em; text-decoration: none; text-transform: uppercase; }
+.project-nav a:hover, .project-nav a:focus-visible { color: var(--cyan); text-decoration: underline; text-underline-offset: .3rem; }
+.edition { color: var(--warm); font: 700 .68rem/1 ui-monospace, monospace; letter-spacing: .12em; }
 main { width: min(1500px, 94vw); margin: auto; }
 .hero { min-height: 390px; display: flex; align-items: end; justify-content: space-between; gap: 4rem; padding: 5rem 0 3rem; }
 .eyebrow { margin: 0 0 1.1rem; color: var(--cyan); font: 800 .72rem/1 ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; }
@@ -174,7 +177,7 @@ footer strong { color: var(--cyan); letter-spacing: .15em; } footer a { margin-l
   .grammar-grid article { border-bottom: 1px solid var(--line); }
 }
 @media (max-width: 650px) {
-  .masthead p, .edition { display: none; } .hero { padding-top: 4rem; } h1 { font-size: 3.3rem; }
+  .masthead { gap: 14px; } .masthead p, .edition { display: none; } .project-nav { gap: .7rem; } .project-nav .method-link { display: none; } .project-nav a { font-size: .56rem; } .hero { padding-top: 4rem; } h1 { font-size: 3.3rem; }
   .lenses { grid-template-columns: 1fr 1fr; } .lens:nth-child(2) { border-right: 0; } .lens:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .marker { width: 25px; height: 25px; } .grammar, .firewall { padding: 5rem 0; }
   .firewall-grid { grid-template-columns: 1fr 1fr; } footer { align-items: flex-start; flex-direction: column; } footer a { margin-left: 0; }

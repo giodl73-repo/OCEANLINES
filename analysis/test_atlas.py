@@ -30,6 +30,14 @@ class AtlasTests(unittest.TestCase):
         for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 08 · REVIEW PREVIEW", "not a live analysis"):
             self.assertIn(token, source)
 
+    def test_readme_and_atlas_expose_clear_entry_routes(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        html = HTML.read_text(encoding="utf-8")
+        for token in ("## Enter OCEANLINES", "Explore the interactive Atlas 08 preview", "Open the full annotated map", "Read the field guide", "Check every source"):
+            self.assertIn(token, readme)
+        for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "README.md", "../SOURCE-REGISTER.md"):
+            self.assertIn(f'href="{target}"', html)
+
     def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
         html = HTML.read_text(encoding="utf-8")
         app = APP.read_text(encoding="utf-8")
