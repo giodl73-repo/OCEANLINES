@@ -7,10 +7,11 @@ APP = ROOT / "atlas" / "app.js"
 HTML = ROOT / "atlas" / "index.html"
 CSS = ROOT / "atlas" / "styles.css"
 RESEARCH_HTML = ROOT / "research" / "index.html"
+REFERENCES = ROOT / "REFERENCES.bib"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, RESEARCH_HTML, ROOT / "research" / "styles.css", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "research" / "styles.css", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -52,6 +53,19 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(token, source_register)
         for stale in ("Hutchinson et al. 2017", "Touzeau et al. 2021", "Jenkins 2025"):
             self.assertNotIn(stale, source_register)
+
+    def test_bibliography_and_optional_review_handoff_are_complete(self):
+        bibliography = REFERENCES.read_text(encoding="utf-8")
+        review = (ROOT / "REVIEW-GUIDE.md").read_text(encoding="utf-8")
+        entries = re.findall(r"^@article\{([^,]+),", bibliography, re.MULTILINE)
+        dois = re.findall(r"^  doi\s+= \{([^}]+)\}", bibliography, re.MULTILINE)
+        self.assertEqual(15, len(entries))
+        self.assertEqual(15, len(set(entries)))
+        self.assertEqual(15, len(dois))
+        self.assertEqual(15, len(set(value.lower() for value in dois)))
+        self.assertIn('href="../REFERENCES.bib" download', RESEARCH_HTML.read_text(encoding="utf-8"))
+        for token in ("no expectation of endorsement", "not requesting public association", "Any one of these is enough"):
+            self.assertIn(token, review)
 
     def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
         html = HTML.read_text(encoding="utf-8")

@@ -55,6 +55,11 @@ code { color: #d9ccff; font: .78rem/1.4 ui-monospace, monospace; }
 .literature-grid h3 { margin: 2.2rem 0 .6rem; font-size: 1rem; line-height: 1.35; }
 .literature-grid h3 a { color: var(--warm); }
 .literature-grid span { color: var(--muted); font-size: .82rem; line-height: 1.5; }
+.downloads { display: flex; gap: 1px; margin-top: 2rem; padding: 1px; background: var(--line); }
+.downloads a { flex: 1; min-height: 92px; padding: 1rem 1.2rem; background: #0a2027; text-decoration: none; }
+.downloads strong, .downloads span { display: block; }
+.downloads strong { color: var(--cyan); }
+.downloads span { margin-top: .55rem; color: var(--muted); font-size: .75rem; line-height: 1.4; }
 .next-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin: 2.5rem 0; padding: 1px; background: var(--line); }
 .next-grid article { min-height: 210px; padding: 1.5rem; background: var(--panel); }
 .next-grid span { color: var(--cyan); font: 800 .7rem ui-monospace, monospace; }
@@ -70,6 +75,7 @@ footer p { max-width: 850px; }
 @media (max-width: 760px) {
   .topbar { gap: 1rem; } .topbar > span { display: none; } .topbar nav { gap: .7rem; } .topbar nav a:nth-child(3) { display: none; }
   .status-grid, .questions, .literature-grid, .next-grid, .routes { grid-template-columns: 1fr; }
+  .downloads { flex-direction: column; }
   .status-grid { grid-template-columns: 1fr 1fr; }
   h1 { font-size: clamp(3.2rem, 15vw, 5.2rem); }
 }
