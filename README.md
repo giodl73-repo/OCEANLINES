@@ -6,7 +6,7 @@
 
 ## Enter OCEANLINES
 
-**[Explore the interactive Atlas 09 depth preview →](atlas/)**
+**[Explore the interactive Atlas 10 depth ladder →](atlas/)**
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
 [Read the field guide](HEATMASS.md) ·
@@ -29,13 +29,13 @@
 
 The currently published site still serves
 [Atlas 07](https://giodl73-repo.github.io/OCEANLINES/atlas/). Atlas 08 remains
-the approved private review preview; Atlas 09 is the unpromoted depth-layer
-work on this branch.
+the approved private review preview, Atlas 09 is the approved first depth
+layer, and Atlas 10 is the unreviewed pressure-ladder work on this branch.
 
-> **Atlas 09 depth preview:** this branch adds a fixed July 2026 Scripps RG Argo
-> temperature anomaly at 700 dbar to the reviewed Atlas 08 presentation. The
-> pressure-layer view is not absolute temperature, heat content, transport, or
-> Antarctic shelf delivery. Atlas 07 remains the released public atlas.
+> **Atlas 10 depth ladder:** this branch compares fixed July 2026 Scripps RG
+> Argo temperature anomalies at 10, 300, 700, and 1000 dbar. The pressure-level
+> views are not absolute temperature, vertically integrated heat content,
+> transport, or Antarctic shelf delivery. Atlas 07 remains publicly released.
 
 ![OCEANLINES fluid geography](figures/oceanlines-fluid-geography.svg)
 
@@ -88,9 +88,9 @@ quantitative.
 
 ## Continue through the study
 
-1. Explore the private [ATLAS 09 depth preview](atlas/) for conceptual zones,
-   surface observations, the first 700 dbar anomaly layer, paired polar rings,
-   the latitude ladder, and aligned polar-cap mirrors.
+1. Explore the private [ATLAS 10 depth ladder](atlas/) for conceptual zones,
+   surface observations, four Argo pressure levels, paired polar rings, the
+   latitude ladder, and aligned polar-cap mirrors.
 2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
 4. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
@@ -136,8 +136,9 @@ projections and include non-color regional, cell-level, ring-level, and
 full-scan summaries; uncertainty remains product- and surface-specific.
 This branch retains the approved private Atlas 08 presentation, researcher
 note, claim-level literature spine, citation export, review guide, and
-deterministic research tables. Atlas 09 adds a separately receipted Argo-only
-700 dbar anomaly without changing the underlying OISST evidence. See the
+deterministic research tables. Atlas 09 added a separately receipted Argo-only
+700 dbar anomaly; Atlas 10 extends it to a same-source four-level ladder without
+changing the underlying OISST evidence. See the
 [preview status](PREVIEW-STATUS.md) for the reviewed component commits and
 remaining promotion decisions.
 The abyssal-heat research design defines a reproducible transport-test
@@ -162,6 +163,7 @@ fixture job on the approved Atlas 03 history.
 | 07 | `666c2b3` | Atlas 06 plus aligned northern/southern polar-cap mirrors | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-07-polar-mirrors-roles-check-2026-08-21.md) |
 | 08 preview | `4f6e9a2` | Ocean-first presentation plus researcher evidence and export surfaces; underlying OISST unchanged | 2026-08-01 | **APPROVED FOR PRIVATE PREVIEW** · [status](PREVIEW-STATUS.md) |
 | 09 preview | `ef6662e` | Atlas 08 plus Scripps RG Argo potential-temperature anomaly at 700 dbar | 2026-07 | **NATIVE ROLES APPROVED; OWNER VISUAL REVIEW OPEN** · [review](signals/roles/check/atlas-09-argo-700dbar-roles-check-2026-08-28.md) |
+| 10 draft | working tree | Atlas 09 plus same-source anomaly levels at 10, 300, and 1000 dbar | 2026-07 | **UNREVIEWED WORKING DRAFT** · [status](PREVIEW-STATUS.md) |
 
 ## License
 

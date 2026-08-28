@@ -51,6 +51,11 @@ class ArgoSnapshotTests(unittest.TestCase):
             MODULE.build_url("2026-07"),
         )
 
+    def test_window_name_is_pressure_specific(self):
+        self.assertEqual("OCEANLINES_ARGO_TEMPERATURE_ANOMALY_700DBAR", MODULE.window_name(700))
+        with self.assertRaisesRegex(ValueError, "integer pressure"):
+            MODULE.window_name(462.5)
+
     def test_fixture_selects_exact_pressure_stride_and_mask(self):
         result = MODULE.parse_layer(self.make_fixture(), 700, 2)
         self.assertEqual(700.0, result["pressure_dbar"])
@@ -81,12 +86,23 @@ class ArgoSnapshotTests(unittest.TestCase):
     def test_committed_layer_has_fixed_provenance(self):
         artifact = MODULE_PATH.parents[1] / "atlas" / "data" / "argo-temperature-anomaly-700dbar-2026-07.js"
         lines = artifact.read_text(encoding="utf-8").splitlines()
-        payload = json.loads(lines[1].removeprefix(f"window.{MODULE.WINDOW}=").removesuffix(";"))
+        payload = json.loads(lines[1].removeprefix(f"window.{MODULE.window_name(700)}=").removesuffix(";"))
         self.assertEqual("2026-07", payload["month"])
         self.assertEqual(700.0, payload["pressure_dbar"])
         self.assertEqual([73, 180], payload["shape"])
         self.assertEqual("5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c", payload["source_sha256"])
         self.assertGreater(payload["summary"]["valid_ocean_cells"], 7000)
+
+    def test_committed_depth_ladder_shares_one_source_contract(self):
+        root = MODULE_PATH.parents[1] / "atlas" / "data"
+        payloads = []
+        for pressure in (10, 300, 700, 1000):
+            artifact = root / f"argo-temperature-anomaly-{pressure}dbar-2026-07.js"
+            line = artifact.read_text(encoding="utf-8").splitlines()[1]
+            payloads.append(json.loads(line.removeprefix(f"window.{MODULE.window_name(pressure)}=").removesuffix(";")))
+        self.assertEqual([10.0, 300.0, 700.0, 1000.0], [payload["pressure_dbar"] for payload in payloads])
+        for field in ("month", "baseline", "source_sha256", "shape", "latitude", "longitude"):
+            self.assertEqual(1, len({json.dumps(payload[field], sort_keys=True) for payload in payloads}), field)
 
 
 if __name__ == "__main__":

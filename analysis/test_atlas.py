@@ -12,7 +12,7 @@ REFERENCES = ROOT / "REFERENCES.bib"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", ROOT / "atlas" / "data" / "argo-temperature-anomaly-700dbar-2026-07.js"):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", *(ROOT / "atlas" / "data" / f"argo-temperature-anomaly-{pressure}dbar-2026-07.js" for pressure in (10, 300, 700, 1000))):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -30,13 +30,13 @@ class AtlasTests(unittest.TestCase):
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 09 · DEPTH PREVIEW", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 10 · DEPTH LADDER", "not a live analysis"):
             self.assertIn(token, source)
 
     def test_readme_and_atlas_expose_clear_entry_routes(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         html = HTML.read_text(encoding="utf-8")
-        for token in ("## Enter OCEANLINES", "Explore the interactive Atlas 09 depth preview", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
+        for token in ("## Enter OCEANLINES", "Explore the interactive Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
             self.assertIn(token, readme)
         for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
             self.assertIn(f'href="{target}"', html)
@@ -110,7 +110,7 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(token, html)
         for token in ('document.querySelector("#zone-directory-list").append(item)', "scrollIntoView"):
             self.assertIn(token, app)
-        self.assertIn("OCEANLINES Atlas 09 Preview", html)
+        self.assertIn("OCEANLINES Atlas 10 Preview", html)
         self.assertIn(".lens[data-lens=\"all\"]", app)
         self.assertIn(".atlas-shell.observed-mode .zone-panel", css)
 
@@ -181,7 +181,7 @@ class AtlasTests(unittest.TestCase):
         app = APP.read_text(encoding="utf-8")
         data = (ROOT / "atlas" / "data" / "argo-temperature-anomaly-700dbar-2026-07.js").read_text(encoding="utf-8")
         self.assertIn('data-mode="argo700"', html)
-        self.assertIn("ARGO ANALYSIS · 700 DBAR ANOMALY", app)
+        self.assertIn("ARGO ANALYSIS · ${data.pressure_dbar.toFixed(0)} DBAR ANOMALY", app)
         self.assertIn("64.5°S–79.5°N", app)
         self.assertIn("not absolute temperature", data)
         self.assertIn("Antarctic shelf", data)
@@ -192,6 +192,14 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("samples each product on its own nearest display cell", html)
         self.assertIn("OCEANLINES_ARGO_TEMPERATURE_ANOMALY", app)
         self.assertIn("Products are sampled on their own grids", app)
+
+    def test_argo_depth_ladder_is_accessible_and_bookmarkable(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        for token in ('id="argo-depths"', 'aria-label="Argo pressure level"', 'data-pressure="10"', 'data-pressure="300"', 'data-pressure="700"', 'data-pressure="1000"'):
+            self.assertIn(token, html)
+        for token in ("argoLayers", "setArgoPressure", 'searchParams.set("pressure"', "outside source domain", "Argo anomaly profile"):
+            self.assertIn(token, app)
 
     def test_oceanbelts_is_labeled_as_reading_lens(self):
         source = HTML.read_text(encoding="utf-8")

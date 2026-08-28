@@ -45,23 +45,25 @@ python fetch_oisst_snapshot.py --backend ncss --variable err `
 ## RG Argo pressure-layer pipeline
 
 `fetch_argo_snapshot.py` packages one exact pressure level from a fixed monthly
-Scripps RG Argo extension. The first committed layer is July 2026 potential-
-temperature anomaly at 700 dbar, sampled from the native 1-degree grid at a
-2-degree display stride. It preserves the compressed source checksum, product
-version, baseline, grid extent, and missing values.
+Scripps RG Argo extension. Atlas 10 commits July 2026 potential-temperature
+anomalies at 10, 300, 700, and 1000 dbar, each sampled from the native 1-degree
+grid at a 2-degree display stride. Every artifact preserves the same compressed
+source checksum, product version, baseline, grid extent, and missing values.
 
 ```powershell
-python fetch_argo_snapshot.py `
-  --month 2026-07 `
-  --pressure-dbar 700 `
-  --stride 2 `
-  --retrieved-at 2026-08-28T19:02:31Z `
-  --output ../atlas/data/argo-temperature-anomaly-700dbar-2026-07.js
+foreach ($pressure in 10, 300, 700, 1000) {
+  python fetch_argo_snapshot.py `
+    --month 2026-07 `
+    --pressure-dbar $pressure `
+    --stride 2 `
+    --retrieved-at 2026-08-28T19:02:31Z `
+    --output "../atlas/data/argo-temperature-anomaly-${pressure}dbar-2026-07.js"
+}
 
 python -m unittest test_argo_snapshot.py
 ```
 
-This is an objectively mapped anomaly at one pressure surface. It is not raw
-float coverage, absolute temperature, water-column heat content, or transport.
+These are objectively mapped anomalies at four pressure surfaces. They are not
+raw-float coverage, absolute temperature, water-column heat content, or transport.
 The product grid ends at 64.5°S, so it cannot diagnose Antarctic shelf or
 ice-cavity heat delivery.

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Atlas 09 research preview: an interactive atlas of ocean heat geography with surface observations, a depth-resolved Argo anomaly, and optional polar diagnostics.">
-  <title>OCEANLINES Atlas 09 Preview — Mapping Earth's Hidden Waterworld</title>
+  <meta name="description" content="Atlas 10 research preview: an interactive atlas of ocean heat geography with surface observations, a four-level Argo anomaly ladder, and optional polar diagnostics.">
+  <title>OCEANLINES Atlas 10 Preview — Mapping Earth's Hidden Waterworld</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23071b22'/%3E%3Cpath d='M10 34c8-10 15-10 23 0s15 10 21 0' fill='none' stroke='%235ee2d6' stroke-width='7'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -19,7 +19,7 @@
       <a class="method-link" href="README.md">Method</a>
       <a href="../SOURCE-REGISTER.md">Sources</a>
     </nav>
-    <span class="edition">ATLAS 09 · DEPTH PREVIEW</span>
+    <span class="edition">ATLAS 10 · DEPTH LADDER</span>
   </header>
   <main>
     <section class="hero" aria-labelledby="atlas-title">
@@ -47,8 +47,15 @@
           <button class="map-mode active" data-mode="conceptual" aria-pressed="true">Conceptual geography</button>
           <button class="map-mode" data-mode="sst" aria-pressed="false">Observed SST</button>
           <button class="map-mode" data-mode="anomaly" aria-pressed="false">SST anomaly</button>
-          <button class="map-mode" data-mode="argo700" aria-pressed="false">700 dbar anomaly</button>
+          <button class="map-mode" data-mode="argo700" aria-pressed="false">Argo depth anomaly</button>
           <button class="map-mode" data-mode="error" aria-pressed="false">Estimated error</button>
+        </div>
+        <div class="argo-depths" id="argo-depths" role="group" aria-label="Argo pressure level" hidden>
+          <span>PRESSURE LADDER</span>
+          <button type="button" data-pressure="10" aria-pressed="false">10 dbar <small>near surface</small></button>
+          <button type="button" data-pressure="300" aria-pressed="false">300 dbar <small>upper thermocline</small></button>
+          <button type="button" data-pressure="700" aria-pressed="true">700 dbar <small>intermediate</small></button>
+          <button type="button" data-pressure="1000" aria-pressed="false">1000 dbar <small>deep</small></button>
         </div>
         <div class="map-stage" id="map-stage">
           <img id="conceptual-map" src="../figures/oceanlines-fluid-geography-interactive.svg"
@@ -93,7 +100,7 @@
           <form class="coordinate-probe" id="coordinate-probe">
             <fieldset>
               <legend>Inspect one display cell</legend>
-              <p>Click the observed map or enter coordinates. The probe samples each product on its own nearest display cell and reports the three surface fields plus the 700 dbar Argo anomaly.</p>
+              <p>Click the observed map or enter coordinates. The probe samples each product on its own nearest display cell and reports the surface fields plus the four-level Argo anomaly profile.</p>
               <div class="probe-controls">
                 <label for="probe-lat">Latitude
                   <input id="probe-lat" name="lat" type="number" min="-90" max="90" step="any" inputmode="decimal" value="0" required>
@@ -221,12 +228,15 @@
       </div>
     </section>
   </main>
-  <footer><strong>OCEANLINES</strong><p>Atlas 09 crosses the surface for the first time; the 700 dbar view is a mapped anomaly, not heat content or Antarctic shelf delivery. Polar mirrors remain a geometry comparison, not physical equivalence.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
+  <footer><strong>OCEANLINES</strong><p>Atlas 10 compares four pressure-level anomalies from one Argo product; the ladder is not heat content, transport, or Antarctic shelf delivery. Polar mirrors remain a geometry comparison, not physical equivalence.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
   <noscript>This atlas requires JavaScript for zone selection. The complete map remains visible above.</noscript>
   <script src="data/oisst-2026-08-01.js" defer></script>
   <script src="data/oisst-anomaly-2026-08-01.js" defer></script>
   <script src="data/oisst-error-2026-08-01.js" defer></script>
+  <script src="data/argo-temperature-anomaly-10dbar-2026-07.js" defer></script>
+  <script src="data/argo-temperature-anomaly-300dbar-2026-07.js" defer></script>
   <script src="data/argo-temperature-anomaly-700dbar-2026-07.js" defer></script>
+  <script src="data/argo-temperature-anomaly-1000dbar-2026-07.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# Atlas 08 approval and Atlas 09 working status
+# Atlas 08–09 approvals and Atlas 10 working status
 
 Atlas 08 is a private review branch. It has not replaced the released Atlas 07,
 has not been pushed from this branch, and is not represented as a new version in
@@ -7,6 +7,10 @@ has not been pushed from this branch, and is not represented as a new version in
 Atlas 09 is the current native-role-approved working draft on top of that
 approved private preview. It adds one fixed Scripps RG Argo pressure-layer
 anomaly. Owner visual approval and any public promotion remain open.
+
+Atlas 10 is the current unreviewed working tree. It extends that exact monthly
+source into a four-level 10/300/700/1000 dbar anomaly ladder and must not inherit
+Atlas 09's approval by implication.
 
 ## Reviewed components
 
@@ -30,6 +34,8 @@ external scientific peer review.
   temperature anomaly at 700 dbar, sampled to a 2-degree display grid. It is
   an objectively mapped anomaly, not absolute temperature or heat content, and
   its 64.5°S limit excludes the Antarctic shelf and ice cavities.
+- **New unreviewed depth-ladder extension:** same-source anomalies at 10, 300,
+  and 1000 dbar, pressure controls, bookmark state, and four-level probe output.
 - **New presentation layer:** pinned Natural Earth coastline geometry,
   redesigned conceptual overlays, clearer evidence modes, and researcher routes.
 - **New research handoff:** bounded claims, exact source-response receipts,
@@ -61,6 +67,8 @@ the default offline gate.
    visual review.
 5. Which quantitative layer should follow: absolute vertical structure,
    bathymetry/sea ice, or dynamically consistent heat transport.
+6. Whether Atlas 10's pressure ladder should replace the single-level Atlas 09
+   preview after native-role and owner visual review.
 
-Until those decisions are made, repository links may expose Atlas 09 on this
+Until those decisions are made, repository links may expose Atlas 10 on this
 branch while public URLs and citation metadata continue to describe Atlas 07.

@@ -74,9 +74,9 @@
           are sampled every eighth cell onto a 90 × 180, 2° display grid. Missing and
           land values remain explicit. Dataset DOI:
           <a href="https://doi.org/10.25921/RE9P-PT57">10.25921/RE9P-PT57</a>.</p>
-        <p>The depth layer is the July 2026 Scripps RG Argo monthly extension,
+        <p>The depth ladder is the July 2026 Scripps RG Argo monthly extension,
           retrieved 2026-08-28 19:02:31 UTC. It samples the native 1° potential-
-          temperature anomaly at 700 dbar every second grid cell. Its climatological
+          temperature anomaly at 10, 300, 700, and 1000 dbar every second grid cell. Its climatological
           reference is the RG 2019 mean and annual cycle derived from 2004–2018 Argo
           data. The 64.5°S limit excludes the Antarctic shelf and ice cavities.</p>
         <div class="table-wrap">
@@ -86,7 +86,10 @@
               <tr><td><code>sst</code> · °C</td><td>Absolute surface temperature</td><td><code class="hash">54fde8766119da6856fff827b64946626eae3f61959792f962f296efb5baacd3</code></td><td><a href="../atlas/data/oisst-2026-08-01.js">snapshot</a></td></tr>
               <tr><td><code>anom</code> · °C</td><td>1971–2000 climatological mean</td><td><code class="hash">a6756b88ecfe5e3c0307b7566ba142e3f9ddb8ebaa8823a5d08f9d3a3a1529e2</code></td><td><a href="../atlas/data/oisst-anomaly-2026-08-01.js">snapshot</a></td></tr>
               <tr><td><code>err</code> · °C</td><td>Product-estimated analysis error</td><td><code class="hash">24ae585b4b591b19d7b360fe8df3f9620e28f9754e8aa3e21bcb0860bc864ba6</code></td><td><a href="../atlas/data/oisst-error-2026-08-01.js">snapshot</a></td></tr>
-              <tr><td><code>ARGO_TEMPERATURE_ANOMALY</code> · °C · 700 dbar</td><td>RG 2019 mean and annual cycle from 2004–2018</td><td><code class="hash">5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c</code></td><td><a href="../atlas/data/argo-temperature-anomaly-700dbar-2026-07.js">snapshot</a></td></tr>
+              <tr><td><code>ARGO_TEMPERATURE_ANOMALY</code> · °C · 10 dbar</td><td>RG 2019 mean and annual cycle from 2004–2018</td><td><code class="hash">5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c</code></td><td><a href="../atlas/data/argo-temperature-anomaly-10dbar-2026-07.js">snapshot</a></td></tr>
+              <tr><td><code>ARGO_TEMPERATURE_ANOMALY</code> · °C · 300 dbar</td><td>same RG reference and source bytes</td><td><code class="hash">5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c</code></td><td><a href="../atlas/data/argo-temperature-anomaly-300dbar-2026-07.js">snapshot</a></td></tr>
+              <tr><td><code>ARGO_TEMPERATURE_ANOMALY</code> · °C · 700 dbar</td><td>same RG reference and source bytes</td><td><code class="hash">5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c</code></td><td><a href="../atlas/data/argo-temperature-anomaly-700dbar-2026-07.js">snapshot</a></td></tr>
+              <tr><td><code>ARGO_TEMPERATURE_ANOMALY</code> · °C · 1000 dbar</td><td>same RG reference and source bytes</td><td><code class="hash">5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c</code></td><td><a href="../atlas/data/argo-temperature-anomaly-1000dbar-2026-07.js">snapshot</a></td></tr>
             </tbody>
           </table>
         </div>
@@ -125,7 +128,7 @@
         <p class="section-number">05 · QUANTITATIVE PATH</p>
         <h2 id="next">What would turn the map into a heat-budget study?</h2>
         <div class="next-grid">
-          <article><span>1</span><h3>Resolve vertical structure</h3><p>Extend the first 700 dbar Argo anomaly across pressure levels and salinity, with uncertainty and coverage.</p></article>
+          <article><span>1</span><h3>Resolve vertical structure</h3><p>Extend the four-level anomaly ladder toward a full profile and salinity, with uncertainty and coverage.</p></article>
           <article><span>2</span><h3>Diagnose transport</h3><p>Define sections and integrate velocity-weighted heat flux using a dynamically consistent state estimate.</p></article>
           <article><span>3</span><h3>Test gates and barriers</h3><p>Add bathymetry, sea ice, fronts, and controlled perturbations rather than inferring barriers from color.</p></article>
           <article><span>4</span><h3>Compare budgets</h3><p>Close regional storage, advection, mixing, and surface-flux terms with propagated uncertainty.</p></article>
