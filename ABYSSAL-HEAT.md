@@ -2,10 +2,10 @@
 
 ## Status
 
-This is a source-qualified collaboration case, not a replication. It records
-an open test suggested by Stephanie Buchanan's public research log and defines
-what OCEANLINES would need to map and check it independently. No focal input
-fields, solver outputs, or derived masks have been imported into OCEANLINES.
+This is a source-qualified research design, not a reported result. It defines
+what OCEANLINES would need to map and test abyssal source-versus-transport
+hypotheses. No focal input fields, solver outputs, or derived masks have been
+imported into OCEANLINES.
 
 ## The question
 
@@ -32,40 +32,19 @@ Temperature tendency, integrated heat content, source power, boundary heat
 flux, and the fraction of a tagged source delivered to a target are different
 quantities. OCEANLINES will not substitute one for another.
 
-## What the public research log reports
+## Observational anchor and competing mechanisms
 
-Buchanan's 20 August 2026 article compares an observed abyssal-warming
-acceleration footprint with inferred seafloor heat-source fields. The values
-below are **author-reported and have not been independently reproduced by
-OCEANLINES**.
-
-| Reported diagnostic | Conductive field | Broader lithospheric estimate | Hydrothermal residual |
-|---|---:|---:|---:|
-| Approximate global power | 16.8 TW | 28.9 TW | 12.2 TW |
-| Available/required power under the positive-warming footprint | 0.25 | 0.33 | 0.08 |
-| Spatial correlation with warming acceleration | 0.026 | 0.026 | 0.019 |
-| Required change in delivered-source fraction | 0.496 | 0.288 | 0.683 |
-
-The article also reports:
-
-- a bottom-intensification contrast of about `-4.60e-5 K yr^-2`, opposite the
-  sign expected from a simple bottom-up geothermal fingerprint;
-- temperature/salinity compensation in 99.97% of paired cells;
-- 721 InterRidge vent fields, including 666 classified as active or inferred
-  active, and optimistic opportunity-cover fractions near 8%; and
-- a remaining actual-circulation-versus-repeating-climatology transport test
-  that was still in progress when the article was published.
-
-These reported diagnostics weaken a simple claim that the mapped warming is
-dominated by local geothermal input. They do not eliminate circulation-driven
-redistribution, unresolved sources, observation error, or alternative
-definitions of the target volume.
-
-The independent observational anchor is Johnson (2026), which estimates that
+Johnson (2026) estimates that
 globally averaged 4000–6000 dbar warming rose from `5.4 ± 4.9 TW` in 1988 to
 `20.2 ± 3.9 TW` in 2018. The 2000–4000 dbar layer did not show a statistically
 significant acceleration in that analysis. Those are sparse-hydrography,
 globally averaged estimates—not a causal map of geothermal influence.
+
+Conductive heat-flow estimates, crustal age, spreading context, and known vent
+fields provide candidate source and opportunity layers. Testing a mechanism
+requires more than spatial overlap: the warming field should be examined for
+bottom intensification and water-mass structure, while a transport experiment
+tests whether changing circulation alters delivery into the declared target.
 
 ## The clean transport experiment
 
@@ -102,7 +81,7 @@ It must be accompanied by, rather than substituted for:
   sensitivity tests; and
 - uncertainty inherited from the observations and source construction.
 
-## Evidence needed for an independent OCEANLINES result
+## Evidence needed for an OCEANLINES result
 
 To turn this case into maps or a reproduced result, OCEANLINES needs:
 
@@ -118,8 +97,8 @@ To turn this case into maps or a reproduced result, OCEANLINES needs:
 6. matched actual and climatological outputs sufficient to recompute every
    plotted diagnostic.
 
-Without those artifacts, OCEANLINES can faithfully map the question and the
-reported claims, but it cannot label a figure as reproduced.
+Without those artifacts, OCEANLINES can map the question and candidate source
+geography, but it cannot label a figure as a reproduced transport result.
 
 ## What OCEANLINES can contribute
 
@@ -131,9 +110,6 @@ reported claims, but it cannot label a figure as reproduced.
 - deterministic remap, conservation, and metric checks; and
 - accessible maps that state what each view shows and cannot show.
 
-The immediate handoff and questions are in
-[Stephanie Buchanan collaboration note](STEPHANIE-BUCHANAN-COLLABORATION.md).
-
 ## Stop conditions
 
 OCEANLINES will pause causal interpretation if the compared experiments differ
@@ -143,7 +119,6 @@ if the result cannot be regenerated from shareable inputs and configuration.
 
 ## Sources
 
-- [Buchanan (2026), *Can Heat From Below Explain the Abyssal Warming Acceleration?*](https://stephanieskystory.com/research-log/geothermal-hydrothermal-mechanism-part1) (accessed 2026-08-28)
 - [Johnson (2026), *Observed Multi-Decadal Acceleration of Globally Averaged Abyssal Ocean Warming*](https://doi.org/10.1029/2026GL124104)
 - [Desbruyeres et al. (2016), *Deep and abyssal ocean warming from 35 years of repeat hydrography*](https://doi.org/10.1002/2016GL070413)
 - [Davies (2013), *Global map of solid Earth surface heat flow*](https://doi.org/10.1002/ggge.20271)

@@ -37,9 +37,9 @@ changing heat from below or by changing circulation-mediated delivery. It
 keeps observed warming, estimated seafloor source power, lithosphere and vent
 opportunity, and modeled transport in four separate layers.
 
-This is a source-qualified research intake, not an OCEANLINES replication. A
-short [collaboration note and email draft](STEPHANIE-BUCHANAN-COLLABORATION.md)
-states what artifacts would make independent mapping and validation possible.
+This is a source-qualified research design, not an OCEANLINES transport
+result. It states what artifacts would make independent mapping and validation
+possible.
 
 ## The measurement firewall
 
@@ -103,9 +103,8 @@ continuity scan plus aligned north/south polar-cap mirrors. It is not a live
 ocean analysis or present-day forecast. The observed modes declare their
 projections and include non-color regional, cell-level, ring-level, and
 full-scan summaries; uncertainty remains product- and surface-specific.
-The abyssal-heat collaboration case registers an external research question
-and a reproducible transport-test contract; no focal fields or solver outputs
-have been imported.
+The abyssal-heat research design defines a reproducible transport-test
+contract; no focal fields or solver outputs have been imported.
 
 Public repository: [github.com/giodl73-repo/OCEANLINES](https://github.com/giodl73-repo/OCEANLINES).
 Live atlas: [giodl73-repo.github.io/OCEANLINES/atlas/](https://giodl73-repo.github.io/OCEANLINES/atlas/).
