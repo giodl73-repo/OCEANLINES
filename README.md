@@ -87,7 +87,7 @@ quantitative.
 
 ## Continue through the study
 
-1. Explore [ATLAS 07](atlas/) for conceptual zones, co-located
+1. Explore the private [ATLAS 08 preview](atlas/) for conceptual zones, co-located
    inspection, paired polar rings, the latitude ladder, and aligned polar-cap
    mirrors.
 2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
@@ -126,13 +126,18 @@ The calculator uses only the Python standard library.
 ## Project status
 
 OCEANLINES is an early observation-class research and visual-atlas project.
-Atlas 07 combines conceptual SVG geography with fixed NOAA OISST
+The released Atlas 07 combines conceptual SVG geography with fixed NOAA OISST
 absolute, anomaly, and estimated-error surface layers, a bookmarkable
 coordinate probe, symmetric latitude-ring comparisons, and a 45-pair latitude
 continuity scan plus aligned north/south polar-cap mirrors. It is not a live
 ocean analysis or present-day forecast. The observed modes declare their
 projections and include non-color regional, cell-level, ring-level, and
 full-scan summaries; uncertainty remains product- and surface-specific.
+This branch adds the private Atlas 08 presentation, researcher note,
+claim-level literature spine, citation export, review guide, and deterministic
+research tables without changing the underlying OISST evidence. See the
+[preview status](PREVIEW-STATUS.md) for the reviewed component commits and
+remaining promotion decisions.
 The abyssal-heat research design defines a reproducible transport-test
 contract; no focal fields or solver outputs have been imported.
 
@@ -153,6 +158,7 @@ fixture job on the approved Atlas 03 history.
 | 05 | `10daeee` | Atlas 04 plus paired northern/southern latitude-ring geometry | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-05-polar-rings-roles-check-2026-08-21.md) |
 | 06 | `df78415` | Atlas 05 plus a 45-pair latitude-continuity ladder | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-06-latitude-ladder-roles-check-2026-08-21.md) |
 | 07 | `666c2b3` | Atlas 06 plus aligned northern/southern polar-cap mirrors | 2026-08-01 | **APPROVED** · [review](signals/roles/check/atlas-07-polar-mirrors-roles-check-2026-08-21.md) |
+| 08 preview | `4f6e9a2` | Ocean-first presentation plus researcher evidence and export surfaces; underlying OISST unchanged | 2026-08-01 | **APPROVED FOR PRIVATE PREVIEW** · [status](PREVIEW-STATUS.md) |
 
 ## License
 

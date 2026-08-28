@@ -12,7 +12,7 @@ REFERENCES = ROOT / "REFERENCES.bib"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js"):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -83,6 +83,18 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(["C1", "C2", "C3", "C4"], [claim["claim_id"] for claim in claims])
         self.assertTrue(all(claim["does_not_establish"] and claim["references"] for claim in claims))
         self.assertIn("gateway-only causation", claims[-1]["does_not_establish"])
+
+    def test_preview_status_distinguishes_private_branch_from_public_release(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        status = (ROOT / "PREVIEW-STATUS.md").read_text(encoding="utf-8")
+        checklist = (ROOT / "PUBLICATION-CHECKLIST.md").read_text(encoding="utf-8")
+        self.assertIn("released Atlas 07", readme)
+        self.assertIn("private Atlas 08", readme)
+        self.assertIn("APPROVED FOR PRIVATE PREVIEW", readme)
+        for token in ("has not replaced the released Atlas 07", "has not been pushed from this branch", "Still not present", "Decisions deliberately still open"):
+            self.assertIn(token, status)
+        self.assertIn("- [ ] Obtain owner visual approval", checklist)
+        self.assertIn("- [ ] Decide whether to promote", checklist)
 
     def test_preview_has_progressive_disclosure_and_mobile_zone_directory(self):
         html = HTML.read_text(encoding="utf-8")

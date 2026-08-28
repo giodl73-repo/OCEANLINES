@@ -45,6 +45,11 @@
 - [x] Replace schematic land silhouettes with pinned Natural Earth coastlines
 - [x] Generate separate annotated and interaction-ready conceptual SVGs
 - [x] Align all twelve interactive markers to the redesigned geographic anchors
+- [x] Add a researcher-facing claims, receipts, limitations, and literature note
+- [x] Audit fifteen primary/review sources and correct three source attributions
+- [x] Add a validated BibTeX export and optional bounded review guide
+- [x] Add deterministic twelve-zone and four-claim CSV exports
+- [x] Record reviewed Atlas 08 components without representing the preview as released
 - [ ] Obtain owner visual approval of the private preview
 - [ ] Decide whether to promote the preview to the released atlas
 
