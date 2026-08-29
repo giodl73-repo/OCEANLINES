@@ -22,7 +22,7 @@ Owner visual approval and public promotion remain open.
 | Machine-readable zone and claims exports | `7d673df` | APPROVED for private preview | [research-export review](signals/roles/check/machine-readable-research-exports-roles-check-2026-08-28.md) |
 | Atlas 09 RG Argo 700 dbar anomaly | `ef6662e` | APPROVED by native roles; owner visual review open | [Atlas 09 depth review](signals/roles/check/atlas-09-argo-700dbar-roles-check-2026-08-28.md) |
 | Atlas 10 RG Argo depth ladder | `2756f1e` | APPROVED by native roles; owner visual review open | [Atlas 10 depth-ladder review](signals/roles/check/atlas-10-argo-depth-ladder-roles-check-2026-08-28.md) |
-| PELAGOS projection laboratory | `92345ec` | APPROVED as a private experiment; default-atlas adoption open | [PELAGOS native-role review](signals/roles/check/pelagos-projection-laboratory-roles-check-2026-08-29.md) |
+| PELAGOS projection laboratory | `92345ec`, `dbe8165` | APPROVED as a private experiment; default-atlas adoption open | [PELAGOS native-role review](signals/roles/check/pelagos-projection-laboratory-roles-check-2026-08-29.md) |
 
 The review commits that record those verdicts follow their source commits in
 Git history. Each approval is scoped to a private preview and does not replace

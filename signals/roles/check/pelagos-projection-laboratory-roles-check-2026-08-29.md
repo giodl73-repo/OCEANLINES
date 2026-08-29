@@ -9,7 +9,8 @@ verdict: APPROVED
 
 # PELAGOS projection laboratory native-role review
 
-Source commit: `92345ec` (`Add PELAGOS projection laboratory`)
+Source commits: `92345ec` (`Add PELAGOS projection laboratory`) and
+`dbe8165` (`Project defined heatmass areas in bakeoff`)
 
 ## Artifact identification
 
@@ -119,3 +120,24 @@ The highest-severity findings are non-blocking P3 hardening opportunities:
    resampling before integrating PELAGOS into the primary atlas map modes.
 3. Treat any OCEANBELTS reuse as a new mechanism comparison, not an automatic
    consequence of the circular projection.
+
+## Owner-feedback amendment — defined areas
+
+Owner review found that the first projection bakeoff encoded heatmasses as
+wide centerline strokes rather than defined areas. Commit `dbe8165` replaces
+that shortcut with shared irregular geographic polygons and inset shelf
+contours. A focused recheck through all eight native lenses found:
+
+| Role | Recheck | Severity |
+|---|---|---|
+| CURRENT | Polygon boundaries remain explicitly schematic and do not become fronts, walls, heat content, or transport. | P3 |
+| SOUNDER | The change adds no observational data and leaves the pinned coastline and evidence classes intact. | P3 |
+| CHART | Area-preserving candidates now compare actual filled areas; Spilhaus visibly exposes its areal distortion. | P3 |
+| BEACON | “Defined area” no longer conflicts with a ribbon mark, and the method states that boundaries are not observed thresholds. | P3 |
+| HARBOR | Filled silhouette, solid edge, and dashed inset shelf provide redundant non-color structure. | P3 |
+| KEEL | Tests require three polygons and shelves in every candidate and reject the former 45-pixel stroke encoding. | P3 |
+| LOGBOOK | The corrective source commit is named here and in `PREVIEW-STATUS.md`; experiment status is unchanged. | P3 |
+| ORBIT | The correction changes Earth-side cartographic grammar only and adds no planetary mechanism claim. | P3 |
+
+Focused verdict: **APPROVED** with 0 P1 and 0 P2 findings. The original
+24-finding review and its promotion conditions otherwise remain in force.

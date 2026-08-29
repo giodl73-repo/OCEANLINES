@@ -11,7 +11,8 @@ domain_roles_active: [Ocean Cartographer and Geodesist, Physical Oceanographer, 
 
 # PELAGOS projection laboratory design review
 
-Source commit: `92345ec` (`Add PELAGOS projection laboratory`)
+Source commits: `92345ec` (`Add PELAGOS projection laboratory`) and
+`dbe8165` (`Project defined heatmass areas in bakeoff`)
 
 ## BLOCK 0 — CONTENT SIGNAL CATALOGUE
 
@@ -190,3 +191,26 @@ Strongest signal:
 3. Specify an interactive PELAGOS contract before using it in the primary
    Atlas, including hit testing, labels, antimeridian behavior, keyboard
    access, and equivalence with the equirectangular observational products.
+
+## Owner-feedback amendment — defined areas
+
+The initial source commit projected heatmass centerlines as wide orange
+strokes. Owner review correctly identified that those marks tested route
+continuity but did not preserve the atlas's defined-area grammar. Follow-up
+commit `dbe8165` replaces them with three shared irregular geographic polygons
+and three inset shelf contours before projection.
+
+- The same polygon coordinates are used in all candidates, so Spilhaus now
+  visibly demonstrates areal distortion while Goode and PELAGOS preserve
+  relative area.
+- Transient anomalies and pathways retain their distinct round and linear
+  grammar.
+- Documentation states that the polygon edges are schematic rather than
+  observed thresholds.
+- A regression test requires at least three heatmass polygons and three shelf
+  contours in every artifact and rejects the former 45-pixel stroke encoding.
+- All 65 tests, Python compilation, JavaScript syntax, and diff checks pass;
+  all three corrected SVGs were inspected in Edge.
+
+Focused verdict: **APPROVED**. The amendment resolves a visual-semantic defect
+without changing projection mathematics, evidence class, or release status.
