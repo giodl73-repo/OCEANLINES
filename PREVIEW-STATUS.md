@@ -24,6 +24,7 @@ Owner visual approval and public promotion remain open.
 | Atlas 10 RG Argo depth ladder | `2756f1e` | APPROVED by native roles; owner visual review open | [Atlas 10 depth-ladder review](signals/roles/check/atlas-10-argo-depth-ladder-roles-check-2026-08-28.md) |
 | PELAGOS projection laboratory | `92345ec`, `dbe8165` | APPROVED as a private experiment; default-atlas adoption open | [PELAGOS native-role review](signals/roles/check/pelagos-projection-laboratory-roles-check-2026-08-29.md) |
 | Equal Earth and HEATPLATES shape atlas | `e91e67a` | APPROVED as additive private experiments | [HEATPLATES native-role review](signals/roles/check/heatplates-shape-atlas-roles-check-2026-08-29.md) |
+| Six-lens ocean geography and 36-feature catalog | `aa91cb8` | APPROVED as an additive private-preview expansion | [ocean-geography native-role review](signals/roles/check/ocean-geography-expansion-roles-check-2026-08-29.md) |
 
 The review commits that record those verdicts follow their source commits in
 Git history. Each approval is scoped to a private preview and does not replace
@@ -41,7 +42,9 @@ external scientific peer review.
   and 1000 dbar, pressure controls, bookmark state, and four-level probe output.
 - **New presentation layer:** pinned Natural Earth coastline geometry,
   redesigned conceptual overlays, land-reference and water-first treatments,
-  clearer evidence modes, researcher routes, a four-candidate ocean-first
+  seven basin labels, six selectable ocean-geography lenses, a 36-feature
+  catalog with depth/property/clock facets, clearer evidence modes, researcher
+  routes, a four-candidate ocean-first
   projection laboratory, and a six-panel HEATPLATES shape directory. PELAGOS
   remains an experimental equal-area aspect, not the default atlas projection;
   HEATPLATES uses panel-specific zoom and cannot compare footprint area.
