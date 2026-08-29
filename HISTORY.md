@@ -76,6 +76,13 @@ can be read without leaving the 56-state system. Every province is selectable,
 keyboard operable, URL-addressable, and zoomable; changing views preserves the
 selected geographic frame.
 
+`96c2b91` replaced the 36 numbered point markers with selectable geographic
+shapes. Established OCEANLINES artwork supplies the first heatmasses, currents,
+gates, and buried waters; mechanism-specific regions, loops, seams, and seafloor
+paths complete the catalog. The shapes remain declared schematic indexes—not
+observed boundaries—but the map can now show what kind of ocean object crosses
+each province instead of reducing every object to the same dot.
+
 The durable interaction principle is:
 
 > Select a province as the place. Then change the view to ask what waters,
