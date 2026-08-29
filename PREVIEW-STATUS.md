@@ -25,6 +25,7 @@ Owner visual approval and public promotion remain open.
 | PELAGOS projection laboratory | `92345ec`, `dbe8165` | APPROVED as a private experiment; default-atlas adoption open | [PELAGOS native-role review](signals/roles/check/pelagos-projection-laboratory-roles-check-2026-08-29.md) |
 | Equal Earth and HEATPLATES shape atlas | `e91e67a` | APPROVED as additive private experiments | [HEATPLATES native-role review](signals/roles/check/heatplates-shape-atlas-roles-check-2026-08-29.md) |
 | Six-lens ocean geography and 36-feature catalog | `aa91cb8` | APPROVED as an additive private-preview expansion | [ocean-geography native-role review](signals/roles/check/ocean-geography-expansion-roles-check-2026-08-29.md) |
+| Classic 56-province reference cartogram | `9df16e7` | APPROVED as an additive private experiment; owner visual review open | [Province Atlas native-role review](signals/roles/check/province-atlas-cartogram-roles-check-2026-08-29.md) |
 
 The review commits that record those verdicts follow their source commits in
 Git history. Each approval is scoped to a private preview and does not replace
@@ -47,7 +48,9 @@ external scientific peer review.
   routes, a four-candidate ocean-first
   projection laboratory, and a six-panel HEATPLATES shape directory. PELAGOS
   remains an experimental equal-area aspect, not the default atlas projection;
-  HEATPLATES uses panel-specific zoom and cannot compare footprint area.
+  HEATPLATES uses panel-specific zoom and cannot compare footprint area. The
+  Province Atlas adds an original, non-metric cartogram and 56-row classic
+  Longhurst reference directory; it is not geographic boundary data.
 - **New research handoff:** bounded claims, exact source-response receipts,
   primary-literature mapping, BibTeX, optional review prompts, and CSV exports.
 - **Still not present:** depth-integrated heat content, section heat transport,
@@ -83,6 +86,8 @@ the default offline gate.
    distortion diagnostics, or become an interactive atlas option.
 8. Whether HEATPLATES should remain a conceptual shape directory or gain a
    common-scale companion after observed feature boundaries are defined.
+9. Whether the Province Atlas should receive owner visual approval, a styled
+   HTML directory, and a separately versioned 54-province switch.
 
 Until those decisions are made, repository links may expose Atlas 10 on this
 branch while public URLs and citation metadata continue to describe Atlas 07.
