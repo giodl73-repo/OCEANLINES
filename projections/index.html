@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="OCEANLINES projection laboratory comparing Spilhaus, Oceanic Goode, and the experimental PELAGOS ocean-first equal-area aspect.">
+  <meta name="description" content="OCEANLINES projection laboratory comparing Spilhaus, Oceanic Goode, Equal Earth, experimental PELAGOS, and local HEATPLATES.">
   <title>Projection Laboratory · OCEANLINES</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -45,11 +45,26 @@
         <div class="verdict"><strong>What it proves</strong><p>Relative heatmass area can remain honest across the entire world.</p><strong>Where it fails this atlas</strong><p>Its lobes interrupt the ocean system—the very relationship OCEANLINES is trying to reveal.</p></div>
       </article>
 
+      <article>
+        <header><span>03</span><div><h2>Equal Earth</h2><p>Flat-world benchmark</p></div></header>
+        <a href="../figures/oceanlines-projection-equal-earth.svg" target="_blank" rel="noopener"><img src="../figures/oceanlines-projection-equal-earth.svg" alt="South-Pacific-centered Equal Earth projection showing the defined heatmass areas prominently on a flat equal-area world map."></a>
+        <div class="verdict"><strong>What it offers</strong><p>A familiar flat map with honest relative area and much clearer heatmass silhouettes.</p><strong>Where it fails this atlas</strong><p>The full-height seam through Africa still divides Arctic and Southern Ocean pathways.</p></div>
+      </article>
       <article class="leading">
-        <header><span>03</span><div><h2>Pelagos</h2><p>OCEANLINES experiment</p></div><em>LEADING</em></header>
+        <header><span>04</span><div><h2>Pelagos</h2><p>OCEANLINES global experiment</p></div><em>GLOBAL</em></header>
         <a href="../figures/oceanlines-projection-pelagos.svg" target="_blank" rel="noopener"><img src="../figures/oceanlines-projection-pelagos.svg" alt="PELAGOS equal-area circular projection centered in the South Pacific, showing tropical heat reservoirs across the middle and the Antarctic Circumpolar Current as a closed southern ring."></a>
         <div class="verdict"><strong>What it offers</strong><p>The Pacific heat reservoir leads, the ACC closes visibly around Antarctica, and the major ocean pathways stay away from the outer edge.</p><strong>Declared weakness</strong><p>Shape distortion increases toward Africa. The antipodal singular edge is placed at 20°N, 15°E in the Sahara.</p></div>
       </article>
+    </section>
+
+    <section class="heatplates" aria-labelledby="heatplates-title">
+      <div class="heatplates-copy">
+        <p class="eyebrow">EXPERIMENT 02 · SHAPE ATLAS</p>
+        <h2 id="heatplates-title">One ocean map cannot make every heatmass legible.</h2>
+        <p>HEATPLATES gives each reservoir or anomaly a local Lambert equal-area panel. The view preserves each silhouette and its nearby coastlines while surrendering one continuous world.</p>
+        <div class="heatplates-rule"><strong>Important</strong><p>Every panel has its own zoom because the current boundaries are schematic. Compare shape and context—not footprint area.</p></div>
+      </div>
+      <a class="heatplates-figure" href="../figures/oceanlines-heatplates.svg" target="_blank" rel="noopener"><img src="../figures/oceanlines-heatplates.svg" alt="HEATPLATES shape atlas with six separate flat local equal-area panels for the Indo-Pacific warm pool, Western warm pool, Northeast Pacific Blob, El Niño tongue, Atlantic Water in the Arctic, and Circumpolar Deep Water."></a>
     </section>
 
     <section class="scorecard" aria-labelledby="scorecard-title">
@@ -59,7 +74,9 @@
         <tbody>
           <tr><th>Spilhaus</th><td>No</td><td>Strong</td><td>Strong locally</td><td>Apparent scale</td></tr>
           <tr><th>Oceanic Goode</th><td>Yes</td><td>Interrupted</td><td>Moderate by lobe</td><td>Broken pathways</td></tr>
+          <tr><th>Equal Earth</th><td>Yes</td><td>One vertical seam</td><td>Readable globally</td><td>Split polar paths</td></tr>
           <tr class="selected"><th>PELAGOS</th><td>Yes</td><td>Interior ocean</td><td>Best near center</td><td>African edge</td></tr>
+          <tr><th>HEATPLATES</th><td>Local equal-area</td><td>Not a world map</td><td>Best per object</td><td>Panel zoom varies</td></tr>
         </tbody>
       </table></div>
     </section>
@@ -70,8 +87,8 @@
         <p>PELAGOS is an experimental <strong>aspect and cut policy</strong>, not a newly derived projection equation. It uses spherical Lambert azimuthal equal-area centered at 20°S, 165°W:</p>
         <code>+proj=laea +lat_0=-20 +lon_0=-165 +R=1</code>
         <p>Its antipode—and unavoidable singular boundary—is 20°N, 15°E. Placing that point in the Sahara moves the projection's greatest failure away from the Pacific warm pool, the Southern Ocean ring, and most major exchange pathways.</p>
-        <p>All three maps use the same irregular geographic heat polygons, inset shelf contours, transient anomaly, pathways, gates, and checksum-pinned Natural Earth 1:110m coastlines. The polygon boundaries are schematic—not observed thresholds. These are projection tests, not heat observations or transport calculations.</p>
-        <p class="sources">Technical grounding: <a href="https://doi.org/10.1038/s41597-023-02309-6">Spilhaus ocean-science study</a> · <a href="https://proj.org/en/stable/operations/projections/igh_o.html">Oceanic Goode specification</a> · <a href="https://proj.org/en/stable/operations/projections/laea.html">Lambert equal-area specification</a></p>
+        <p>All four global maps use the same irregular geographic heat polygons, inset shelf contours, transient anomaly, pathways, gates, and checksum-pinned Natural Earth 1:110m coastlines. The polygon boundaries are schematic—not observed thresholds. These are projection tests, not heat observations or transport calculations.</p>
+        <p class="sources">Technical grounding: <a href="https://doi.org/10.1038/s41597-023-02309-6">Spilhaus ocean-science study</a> · <a href="https://proj.org/en/stable/operations/projections/igh_o.html">Oceanic Goode specification</a> · <a href="https://proj.org/en/stable/operations/projections/eqearth.html">Equal Earth specification</a> · <a href="https://proj.org/en/stable/operations/projections/laea.html">Lambert equal-area specification</a></p>
       </div>
     </section>
   </main>

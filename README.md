@@ -93,7 +93,7 @@ quantitative.
 1. Explore the private [ATLAS 10 depth ladder](atlas/) for conceptual zones,
    surface observations, four Argo pressure levels, paired polar rings, the
    latitude ladder, and aligned polar-cap mirrors.
-2. Compare Spilhaus, Oceanic Goode, and experimental [PELAGOS](projections/).
+2. Compare Spilhaus, Oceanic Goode, Equal Earth, and experimental PELAGOS—or inspect each feature in the local [HEATPLATES shape atlas](projections/).
 3. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 4. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
 5. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).

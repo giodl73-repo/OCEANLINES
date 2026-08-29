@@ -185,12 +185,12 @@ class AtlasTests(unittest.TestCase):
         page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")
         builder = (ROOT / "analysis" / "build_projection_bakeoff.py").read_text(encoding="utf-8")
         source_register = (ROOT / "SOURCE-REGISTER.md").read_text(encoding="utf-8")
-        figures = [(ROOT / "figures" / f"oceanlines-projection-{slug}.svg").read_text(encoding="utf-8") for slug in ("spilhaus", "oceanic-goode", "pelagos")]
-        for token in ("Spilhaus", "Oceanic Goode", "PELAGOS", "not a newly derived projection equation", "+proj=laea +lat_0=-20 +lon_0=-165 +R=1"):
+        figures = [(ROOT / "figures" / f"oceanlines-projection-{slug}.svg").read_text(encoding="utf-8") for slug in ("spilhaus", "oceanic-goode", "equal-earth", "pelagos")]
+        for token in ("Spilhaus", "Oceanic Goode", "Equal Earth", "PELAGOS", "HEATPLATES", "not a newly derived projection equation", "+proj=laea +lat_0=-20 +lon_0=-165 +R=1"):
             self.assertIn(token, page)
-        for token in ("adams_ws2", "+proj=igh_o +lon_0=-160", "+proj=laea +lat_0=-20 +lon_0=-165", "EXPECTED_SOURCE_SHA256"):
+        for token in ("adams_ws2", "+proj=igh_o +lon_0=-160", "+proj=eqearth +lon_0=-165", "+proj=laea +lat_0=-20 +lon_0=-165", "EXPECTED_SOURCE_SHA256"):
             self.assertIn(token, builder)
-        for token in ("P1", "P2", "P3", "new center-and-edge policy"):
+        for token in ("P1", "P2", "P3", "P4", "new center-and-edge policy"):
             self.assertIn(token, source_register)
         for figure in figures:
             self.assertIn("9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9", figure)
@@ -199,6 +199,21 @@ class AtlasTests(unittest.TestCase):
             self.assertGreaterEqual(figure.count('class="heatmass"'), 3)
             self.assertGreaterEqual(figure.count('class="shelf"'), 3)
             self.assertNotIn("stroke-width:45", figure)
+
+    def test_heatplates_prioritize_shape_without_implying_cross_panel_area(self):
+        page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")
+        figure_path = ROOT / "figures" / "oceanlines-heatplates.svg"
+        equal_earth_path = ROOT / "figures" / "oceanlines-projection-equal-earth.svg"
+        self.assertTrue(figure_path.is_file())
+        self.assertTrue(equal_earth_path.is_file())
+        figure = figure_path.read_text(encoding="utf-8")
+        # Six panels; the dateline-crossing Indo-Pacific footprint is emitted as
+        # two clipped paths, so region-path count is intentionally greater.
+        self.assertGreaterEqual(figure.count('class="plate-region'), 6)
+        for token in ("HEATPLATES", "PANEL-SPECIFIC ZOOM", "DO NOT COMPARE FOOTPRINT AREA ACROSS PANELS", "not observed thresholds"):
+            self.assertIn(token.lower(), (figure + page).lower())
+        for title in ("INDO-PACIFIC WARM POOL", "WESTERN WARM POOL", "NORTHEAST PACIFIC BLOB", "EL NIÑO TONGUE", "ATLANTIC WATER / ARCTIC", "CIRCUMPOLAR DEEP WATER"):
+            self.assertIn(title, figure)
 
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")

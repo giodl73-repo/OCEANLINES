@@ -71,8 +71,10 @@ ice-cavity heat delivery.
 ## Projection bakeoff
 
 `build_projection_bakeoff.py` projects one schematic fluid overlay and the
-checksum-pinned Natural Earth coastline geometry into three candidates:
-Spilhaus, Oceanic Interrupted Goode Homolosine, and experimental PELAGOS.
+checksum-pinned Natural Earth coastline geometry into four global candidates:
+Spilhaus, Oceanic Interrupted Goode Homolosine, South-Pacific-centered Equal
+Earth, and experimental PELAGOS. It also builds HEATPLATES, a six-panel local
+Lambert equal-area shape directory.
 PELAGOS uses established spherical Lambert azimuthal equal-area mathematics
 centered at 20°S, 165°W, placing its antipodal singular boundary at 20°N,
 15°E in the Sahara. It is a proposed aspect and cut policy, not a new equation.
@@ -84,8 +86,10 @@ python build_projection_bakeoff.py `
   --output-dir ../figures
 ```
 
-The three outputs use identical schematic heatmass polygons with inset shelf
-contours, anomalies, currents, buried Arctic inflow, gates, and ACC. Polygon
-boundaries are illustrative rather than observed thresholds. The figures
-compare projection behavior; they are not observational heat fields or
-transport calculations.
+The four global outputs use identical schematic heatmass polygons with inset
+shelf contours, anomalies, currents, buried Arctic inflow, gates, and ACC.
+HEATPLATES uses panel-specific zoom so each object remains legible; footprint
+area must not be compared across its panels. All polygon boundaries are
+illustrative rather than observed thresholds. The figures compare projection
+and shape-atlas behavior; they are not observational heat fields or transport
+calculations.
