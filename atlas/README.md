@@ -128,6 +128,10 @@ Future observed, diagnosed, or modeled feature geometry must enter through
 license decision, checksums, CRS, longitude convention, depth/time/baseline,
 transform, and review status. The current 36 entries remain draft illustrative
 geometry; the admission path is a gate, not an evidence promotion.
+The relationship engine and evidence badge describe Earth features only. They
+do not transfer province membership or evidentiary status to Jupiter, Saturn,
+or any other planetary analogy; that would require a separately reviewed
+mechanism-level correspondence contract.
 
 Serve the repository root locally so relative links resolve:
 
