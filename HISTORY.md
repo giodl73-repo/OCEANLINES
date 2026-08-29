@@ -28,6 +28,9 @@ The owner recognized this as a hallmark moment. The central analogy became:
 - `495ec4b` replaced decorative land seams with horizontally compressed,
   checksum-pinned Natural Earth coastlines—real continental fingerprints that
   orient the viewer without returning visual control to land.
+- `2327cec` made the inversion literal in a monochrome state-map study:
+  continents became negative-space holes cut directly from the unified province
+  field, while the earlier four-biome plate remained preserved.
 
 ### What the first map means
 
@@ -50,4 +53,3 @@ The mature Province Atlas should hold two complementary truths:
 The intended hook is a stable code and color system that can move between those
 views. The static Longhurst reference is only the beginning: natural ecological
 boundaries move seasonally and interannually.
-
