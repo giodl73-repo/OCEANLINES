@@ -26,21 +26,34 @@
       <div class="hero-copy">
         <p class="eyebrow">A fluid geography</p>
         <h1 id="atlas-title">The ocean has continents,<br>rivers, islands, and gates.</h1>
-        <p class="dek">Not of land—of stored heat, moving water, temporary anomalies,
-          submerged layers, and the narrow passages that rearrange them.</p>
+        <p class="dek">Not one geography but six overlapping ones: named waters,
+          flows, edges, seafloor, living chemistry, and temporary events.</p>
       </div>
       <div class="readout" aria-label="Atlas scope">
-        <span><strong id="visible-count">12</strong> named zones</span>
-        <span><strong>4</strong> evidence classes</span>
+        <span><strong id="visible-count">12</strong> matching features</span>
+        <span><strong>36</strong> curated records</span>
         <span><strong>Limits</strong> stated beside every view</span>
       </div>
     </section>
-    <nav class="lenses" aria-label="Atlas lens">
-      <button class="lens active" data-lens="all" aria-pressed="true"><span>00</span> All lines</button>
-      <button class="lens" data-lens="heatmass" aria-pressed="false"><span>01</span> HEATMASS <small>reservoirs + anomalies</small></button>
-      <button class="lens" data-lens="oceanrealms" aria-pressed="false"><span>02</span> OCEANREALMS <small>currents + gates</small></button>
-      <button class="lens" data-lens="oceanbelts" aria-pressed="false"><span>03</span> OCEANBELTS <small>planetary reading lens</small></button>
+    <nav class="lenses" aria-label="Ocean geography lens">
+      <button class="lens" data-lens="all" aria-pressed="false"><span>00</span> ALL FEATURES</button>
+      <button class="lens active" data-lens="waters" aria-pressed="true"><span>01</span> WATERS <small>masses + reservoirs</small></button>
+      <button class="lens" data-lens="flows" aria-pressed="false"><span>02</span> FLOWS <small>currents + gyres</small></button>
+      <button class="lens" data-lens="edges" aria-pressed="false"><span>03</span> EDGES <small>fronts + gates</small></button>
+      <button class="lens" data-lens="floor" aria-pressed="false"><span>04</span> FLOOR <small>ridges + trenches</small></button>
+      <button class="lens" data-lens="life" aria-pressed="false"><span>05</span> LIFE <small>oxygen + productivity</small></button>
+      <button class="lens" data-lens="events" aria-pressed="false"><span>06</span> EVENTS <small>temporary anomalies</small></button>
     </nav>
+    <form class="geography-filters" id="geography-filters">
+      <p><strong>CURATED OCEAN GEOGRAPHY</strong><span>Overlapping lenses—not exclusive countries.</span></p>
+      <label>Depth<select id="filter-depth"><option value="all">All depths</option><option value="surface">Surface</option><option value="upper">Upper ocean</option><option value="intermediate">Intermediate</option><option value="deep">Deep</option><option value="bottom">Bottom</option><option value="full-column">Full column</option><option value="seabed">Seabed</option></select></label>
+      <label>Property<select id="filter-property"><option value="all">All properties</option><option value="warm">Warm</option><option value="cold">Cold</option><option value="fresh">Fresh</option><option value="salty">Salty</option><option value="dynamic">Dynamic</option><option value="low-oxygen">Low oxygen</option><option value="nutrient-rich">Nutrient rich</option><option value="nutrient-poor">Nutrient poor</option><option value="relief">Seafloor relief</option></select></label>
+      <label>Clock<select id="filter-clock"><option value="all">All clocks</option><option value="persistent">Persistent</option><option value="seasonal">Seasonal</option><option value="interannual">Interannual</option><option value="episodic">Episodic</option><option value="geologic">Geologic</option></select></label>
+      <button type="reset">Reset to waters</button>
+      <output id="filter-status" aria-live="polite">12 matching water features.</output>
+    </form>
+    <nav class="legacy-studies" aria-label="Original OCEANLINES studies">Original studies: <a href="../HEATMASS.md">HEATMASS</a><a href="../OCEANREALMS.md">OCEANREALMS</a><a href="../OCEANBELTS.md">OCEANBELTS</a></nav>
+    <div class="marker-legend" aria-label="Marker shape legend"><span data-lens="waters">WATERS</span><span data-lens="flows">FLOWS</span><span data-lens="edges">EDGES</span><span data-lens="floor">FLOOR</span><span data-lens="life">LIFE</span><span data-lens="events">EVENTS</span></div>
     <section class="atlas-shell" aria-label="Interactive ocean heat atlas">
       <div class="map-panel">
         <div class="map-modes" role="group" aria-label="Map evidence mode">
@@ -64,7 +77,8 @@
         </div>
         <div class="map-stage" id="map-stage">
           <img id="conceptual-map" src="../figures/oceanlines-fluid-geography-interactive.svg"
-            alt="Conceptual world map: irregular continent-like heat reservoirs, round dashed anomalies, current pathways, buried layers, and gates.">
+            alt="Conceptual world map with selectable index points for overlapping waters, flows, edges, seafloor, living chemistry, and events.">
+          <div class="ocean-basin-labels" id="ocean-basin-labels" aria-hidden="true"><span class="np">NORTH PACIFIC</span><span class="sp">SOUTH PACIFIC</span><span class="na">NORTH ATLANTIC</span><span class="sa">SOUTH ATLANTIC</span><span class="io">INDIAN OCEAN</span><span class="so">SOUTHERN OCEAN</span><span class="ao">ARCTIC OCEAN</span></div>
           <canvas id="sst-canvas" width="720" height="360" hidden
             aria-label="NOAA OISST surface field for 1 August 2026, displayed on a two-degree equirectangular grid."
             aria-describedby="map-a11y-summary projection-note"></canvas>
@@ -89,12 +103,12 @@
           <i></i>
           <div class="temperature-ticks"><span id="scale-min">−2°C</span><span id="scale-mid">15°C</span><span id="scale-max">32°C</span></div>
         </div>
-        <p class="map-note" id="map-note"><span></span> Schematic, permeable, moving regions · not fixed boundaries · not a live analysis</p>
+        <p class="map-note" id="map-note"><span></span> Markers are representative index points—not centroids or boundaries · conceptual, overlapping geography</p>
         <div class="conceptual-actions" id="conceptual-actions">
           <a id="full-size-conceptual-map" href="../figures/oceanlines-fluid-geography.svg" target="_blank" rel="noopener">Open the full-size map ↗</a>
           <a href="../projections/">Open projection laboratory →</a>
           <details class="zone-directory">
-            <summary>Browse all 12 zones as text</summary>
+            <summary id="directory-summary">Browse 12 matching features as text</summary>
             <ol id="zone-directory-list"></ol>
           </details>
         </div>
@@ -196,10 +210,13 @@
         <p class="zone-index" id="zone-index">SELECT A LINE</p>
         <h2 id="zone-name">Read the moving map</h2>
         <p class="zone-kind" id="zone-kind">Start with any numbered marker.</p>
-        <p class="zone-summary" id="zone-summary">Each zone is classified by role, depth,
+        <p class="zone-summary" id="zone-summary">Each feature is classified by lens, role, depth,
           persistence, and evidence—not by color alone.</p>
         <dl class="zone-facts">
+          <div><dt>LENS</dt><dd id="zone-lens">overlapping ocean geography</dd></div>
           <div><dt>ROLE</dt><dd id="zone-role">reservoir · pathway · anomaly · gate</dd></div>
+          <div><dt>BASIS</dt><dd id="zone-basis">how the feature is recognized</dd></div>
+          <div><dt>PROPERTY</dt><dd id="zone-property">temperature, salinity, motion, chemistry, or relief</dd></div>
           <div><dt>DEPTH</dt><dd id="zone-depth">declared for every zone</dd></div>
           <div><dt>CLOCK</dt><dd id="zone-clock">persistent or transient</dd></div>
           <div><dt>EVIDENCE</dt><dd id="zone-evidence">conceptual atlas</dd></div>
@@ -212,15 +229,14 @@
       </aside>
     </section>
     <section class="grammar" aria-labelledby="grammar-title">
-      <div><div><p class="eyebrow">The map grammar</p><h2 id="grammar-title">Seven shapes of ocean heat</h2></div></div>
+      <div><div><p class="eyebrow">The map grammar</p><h2 id="grammar-title">Six overlapping geographies of the ocean</h2><p class="dek">The same coordinate may belong to several at once. <a href="../HEATMASS.md">The original seven-shape heat grammar remains available.</a></p></div></div>
       <div class="grammar-grid">
-        <article><b>01</b><h3>CONTINENT</h3><p>Persistent or seasonal reservoir</p></article>
-        <article><b>02</b><h3>RIVER</h3><p>Current carrying water and energy</p></article>
-        <article><b>03</b><h3>ISLAND</h3><p>Moving warm-core ring or eddy</p></article>
-        <article><b>04</b><h3>BLOB</h3><p>Temporary regional anomaly</p></article>
-        <article><b>05</b><h3>TONGUE</h3><p>Basin-scale anomaly extending east</p></article>
-        <article><b>06</b><h3>BURIED</h3><p>Warm layer beneath a cold or fresh lid</p></article>
-        <article><b>07</b><h3>GATE</h3><p>Narrow section controlling exchange</p></article>
+        <article><b>01</b><h3>WATERS</h3><p>Three-dimensional masses and reservoirs</p></article>
+        <article><b>02</b><h3>FLOWS</h3><p>Currents, gyres, eddies, and overturning</p></article>
+        <article><b>03</b><h3>EDGES</h3><p>Fronts, seams, layer boundaries, and gates</p></article>
+        <article><b>04</b><h3>FLOOR</h3><p>Basins, ridges, trenches, and plateaus</p></article>
+        <article><b>05</b><h3>LIFE</h3><p>Oxygen, nutrients, productivity, and habitat</p></article>
+        <article><b>06</b><h3>EVENTS</h3><p>Heatwaves, cold tongues, plumes, and anomalies</p></article>
       </div>
     </section>
     <section class="firewall" aria-labelledby="firewall-title">

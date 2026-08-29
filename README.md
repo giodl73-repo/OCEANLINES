@@ -6,7 +6,7 @@
 
 ## Enter OCEANLINES
 
-**[Explore the interactive Atlas 10 depth ladder →](atlas/)**
+**[Explore 36 ocean features and the Atlas 10 depth ladder →](atlas/)**
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
 [Compare ocean-first projections](projections/) ·
@@ -21,7 +21,7 @@
 |---|---|
 | See the idea in one image | [Full fluid-geography map](figures/oceanlines-fluid-geography.svg) |
 | Compare ocean-first world geometries | [Projection laboratory](projections/) |
-| Explore regions and observational layers | [Interactive Atlas](atlas/) |
+| Explore waters, flows, edges, seafloor, life, events, and observational layers | [Interactive Atlas](atlas/) |
 | Understand reservoirs, anomalies, pathways, and gates | [HEATMASS field guide](HEATMASS.md) |
 | Evaluate claims, receipts, and next measurements | [Research note](research/) |
 | Reuse the framework in a spreadsheet | [Zone catalog](research/zone-catalog.csv) and [claims ledger](research/claims-ledger.csv) |

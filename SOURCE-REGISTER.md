@@ -50,3 +50,27 @@ support technical mechanisms and quantitative results.
 | J3 | [Fletcher et al. 2021](https://doi.org/10.1029/2021JE006858) | belt/zone contrast reversal near the 5–10 bar jovicline | microwave brightness is jointly sensitive to temperature and composition |
 | S1 | [García-Melendo et al. 2011](https://doi.org/10.1016/j.icarus.2011.07.005) | Saturn winds at wavelength-dependent levels and thermal-wind comparison | cloud tracers do not directly measure deep heat transport |
 | S2 | [Galanti et al. 2025](https://doi.org/10.1038/s41467-025-57790-x) | Saturn jet depth and gravity-inversion uncertainty | solution depends on interior structure and allowed wind profiles |
+## Ocean-geography catalog sources (OG01–OG24)
+
+These sources support the identity and interpretation of the new curated index
+records. Index points are not observed boundaries or centroids.
+
+| ID | Feature | Authority / source | Admitted use | Limitation |
+|---|---|---|---|---|
+| OG01 | Antarctic Bottom Water | [WHOI Antarctic circulation](https://divediscover.whoi.edu/polar-regions/antarctic-ocean-circulation/) | Cold bottom-water identity and abyssal spreading | Not a current boundary |
+| OG02 | North Atlantic Deep Water | [WHOI oceanography text](https://www.whoi.edu/science/PO/people/jprice/class/miscart/Stewart2006.pdf) | Named deep-water hydrography | Core tracing mixes source and mixing history |
+| OG03 | Antarctic Intermediate Water | [WHOI Antarctic circulation](https://divediscover.whoi.edu/polar-regions/antarctic-ocean-circulation/) | Cool, fresh intermediate-water identity | Depth and properties vary regionally |
+| OG04 | Subantarctic Mode Water | [GFDL-hosted Sarmiento et al.](https://www.gfdl.noaa.gov/bibliography/related_files/jls0401.pdf) | Southern Ocean formation and thermocline role | Not one uniform circumpolar body |
+| OG05 | North Pacific Intermediate Water | [GFDL-hosted Sarmiento et al.](https://www.gfdl.noaa.gov/bibliography/related_files/jls0401.pdf) | Named intermediate-water role | Not a mapped salinity-minimum contour |
+| OG06 | Labrador Sea Water | [WHOI oceanography text](https://www.whoi.edu/science/PO/people/jprice/class/miscart/Stewart2006.pdf) | Subpolar formation and deep-water context | Formation is strongly variable |
+| OG07 | Mediterranean Outflow Water | [NOAA GFDL mesoscale eddies](https://www.gfdl.noaa.gov/ocean-mesoscale-eddies/) | Salty subsurface lenses from Mediterranean outflow | Not a transport estimate |
+| OG08 | Red Sea Water | [NOAA World Ocean Atlas 2023](https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/) | Temperature/salinity/depth observational foundation | Catalog point is conceptual pending a diagnosed core |
+| OG09–OG13 | Five subtropical gyres | [NOAA definition and named list](https://oceanservice.noaa.gov/facts/gyre.html) | Five major rotating current systems | Gyres are heterogeneous and variable |
+| OG14 | Antarctic Polar Front | [Freeman & Lovenduski (2016)](https://doi.org/10.5194/essd-8-191-2016) | Front identity, variability, and mapped realizations | No single fixed circumpolar path |
+| OG15 | Subantarctic Front | [NOAA AOML AX25](https://www.aoml.noaa.gov/phod/goos/xbtscience/ax25_acc.php) | Major ACC-front identity and observations | One transect does not define the global path |
+| OG16 | Equatorial Pacific divergence | [NOAA upwelling explanation](https://oceanservice.noaa.gov/facts/upwelling.html) | Cold, nutrient-rich upward replacement process | No diagnosed rate or footprint |
+| OG17–OG20 | Ridges, trench, and plateau | [NOAA ocean-floor features](https://prod-01-alb-www-noaa.woc.noaa.gov/education/resource-collections/ocean-coasts/ocean-floor-features) | Seafloor-feature grammar | Index points omit full geometries; Kerguelen steering remains synthesis |
+| OG21 | Eastern Tropical North Pacific OMZ | [NOAA OMZ explanation](https://oceanexplorer.noaa.gov/ocean-fact/omz/) | Persistent low-oxygen subsurface layer | No threshold contour |
+| OG22 | Eastern Tropical South Pacific OMZ | [NOAA repository record](https://repository.library.noaa.gov/view/noaa/26936) | Regional circulation/oxygen context | No threshold contour |
+| OG23 | Arabian Sea OMZ | [NOAA OMZ explanation](https://oceanexplorer.noaa.gov/ocean-fact/omz/) | One of the major persistent OMZ settings | No threshold contour |
+| OG24 | Sargasso Sea | [NOAA Sargasso Sea page](https://prod-01-alb-www-noaa.woc.noaa.gov/gc-international-section/marine-protected-areas-mpas-sargasso-sea) | Current-bounded open-ocean ecosystem | “Oligotrophic” requires a declared field for mapping |

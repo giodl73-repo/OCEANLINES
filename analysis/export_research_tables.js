@@ -7,11 +7,12 @@ const vm = require("vm");
 const root = path.resolve(__dirname, "..");
 const appPath = path.join(root, "atlas", "app.js");
 const appSource = fs.readFileSync(appPath, "utf8");
-const zoneMatch = appSource.match(/const zones = (\[[\s\S]*?\n\]);/);
+const zoneMatch = appSource.match(/const legacyZones = [\s\S]*?\nconst markers =/);
 
 if (!zoneMatch) throw new Error("Could not locate the Atlas zone catalog");
 
-const zones = vm.runInNewContext(zoneMatch[1], Object.create(null), { timeout: 1000 });
+const catalogProgram = `${zoneMatch[0].replace(/\nconst markers =$/, "")}\nJSON.stringify(zones);`;
+const zones = JSON.parse(vm.runInNewContext(catalogProgram, Object.create(null), { timeout: 1000 }));
 
 function csvCell(value) {
   const text = Array.isArray(value) ? value.join(" | ") : String(value ?? "");
@@ -26,14 +27,14 @@ function csv(headers, rows) {
 
 const zoneHeaders = [
   "catalog_version", "number", "id", "name", "kind", "map_label", "role",
-  "depth", "persistence", "evidence_class", "source_ids", "families", "summary",
+  "lens", "depth_class", "properties", "basis", "depth", "persistence", "evidence_class", "source_ids", "families", "summary",
   "inferential_boundary", "primary_or_register_source"
 ];
 const zoneRows = zones.map(zone => {
   const [evidenceClass, sourceIds = ""] = zone.evidence.split(" · ");
   return [
     "atlas-08", zone.n, zone.id, zone.name, zone.kind, zone.label, zone.role,
-    zone.depth, zone.clock, evidenceClass, sourceIds, zone.families, zone.summary,
+    zone.lens, zone.depthClass, zone.properties, zone.basis, zone.depth, zone.clock, evidenceClass, sourceIds, zone.families, zone.summary,
     zone.boundary, zone.source
   ];
 });

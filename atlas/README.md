@@ -4,7 +4,7 @@
 use this document for transformations, thresholds, caveats, and rebuild commands.
 
 Atlas 10 extends the native-role-approved Atlas 09 depth preview with a
-four-level pressure ladder. It separates five top-level views: the conceptual twelve-zone
+four-level pressure ladder. It separates five top-level views: the conceptual 36-feature
 geography, absolute NOAA OISST v2.1 sea surface temperature, NOAA's published
 SST anomaly, its time-matched estimated analysis error for 1 August 2026, and
 the Scripps RG Argo July 2026 potential-temperature anomaly at selectable 10,

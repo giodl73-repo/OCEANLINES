@@ -1,4 +1,4 @@
-const zones = [
+const legacyZones = [
   { id: "indo-pacific-warm-pool", n: 1, name: "Indo-Pacific Warm Pool", kind: "reservoir", label: "Heat continent", role: "persistent reservoir", depth: "surface / upper ocean", clock: "persistent; seasonally breathing", evidence: "conceptual · O18", x: 85, y: 42.4, families: ["heatmass", "oceanbelts"], summary: "The largest persistent expanse of very warm surface water: a continent-like reservoir whose edge moves with threshold, season, and dataset.", boundary: "A warm surface footprint is not a full-depth heat-content integral, and its diagnostic boundary is not a material wall.", source: "https://www.climate.gov/news-features/featured-images/warm-pool-indo-pacific-ocean-has-almost-doubled-size-changing-global" },
   { id: "western-hemisphere-warm-pool", n: 2, name: "Western Hemisphere Warm Pool", kind: "reservoir", label: "Seasonal heat continent", role: "seasonal reservoir", depth: "surface / upper ocean", clock: "seasonal expansion", evidence: "conceptual · O19", x: 31.3, y: 41, families: ["heatmass"], summary: "A seasonally connected warm-water province spanning parts of the tropical eastern Pacific, Gulf of Mexico, Caribbean, and western tropical Atlantic.", boundary: "Central America divides the ocean basins even when a temperature threshold visually joins the warm regions.", source: "https://www.aoml.noaa.gov/phod/research/tav/awp/" },
   { id: "northeast-pacific-blob", n: 3, name: "Northeast Pacific Blob", kind: "transient", label: "Heat blob", role: "marine heatwave anomaly", depth: "surface with subsurface remnant", clock: "episodic / multi-year", evidence: "observational · O20–O21", x: 12.8, y: 27.1, families: ["heatmass"], summary: "A named marine heatwave demonstrates why a heat blob is an event relative to a baseline—not a permanent ocean province.", boundary: "Its surface expression does not determine its full-depth energy or prove a single cause.", source: "https://doi.org/10.1002/2016GL071039" },
@@ -13,10 +13,53 @@ const zones = [
   { id: "indonesian-throughflow", n: 12, name: "Indonesian Throughflow", kind: "gate", label: "Archipelagic heat gate", role: "inter-basin exchange", depth: "multiple constrained passages", clock: "persistent and variable", evidence: "conceptual", x: 80.5, y: 46.2, families: ["oceanrealms"], summary: "A branching tropical gate where land geometry constrains exchange between the Pacific and Indian oceans.", boundary: "A point marker hides multiple straits, vertical structure, tides, mixing, and seasonal reversals.", source: "../SOURCE-REGISTER.md" }
 ];
 
+const lensForLegacy = {
+  reservoir: "waters", buried: "waters", pathway: "flows", gate: "edges", transient: "events"
+};
+const depthClassForLegacy = { reservoir: "upper", buried: "deep", pathway: "full-column", gate: "full-column", transient: "surface" };
+const propertyForLegacy = { reservoir: ["warm"], buried: ["warm"], pathway: ["dynamic"], gate: ["dynamic"], transient: ["warm"] };
+const clockForLegacy = { reservoir: "seasonal", buried: "persistent", pathway: "persistent", gate: "persistent", transient: "episodic" };
+const zones = legacyZones.map(zone => ({
+  ...zone,
+  lens: lensForLegacy[zone.kind],
+  depthClass: depthClassForLegacy[zone.kind],
+  properties: propertyForLegacy[zone.kind],
+  clockClass: clockForLegacy[zone.kind],
+  basis: zone.role,
+  sourceId: zone.evidence.includes("·") ? zone.evidence.split("·").at(-1).trim() : "REGISTER",
+  legacyFamilies: zone.families
+})).concat([
+  { id: "antarctic-bottom-water", n: 13, name: "Antarctic Bottom Water", kind: "water-mass", label: "Cold bottom water", role: "dense abyssal water mass", depth: "bottom; formed around Antarctica", depthClass: "bottom", clock: "persistent", lens: "waters", properties: ["cold", "salty"], evidence: "synthesis · OG01", basis: "Very cold, dense water formed around Antarctic shelves and margins that spreads into abyssal basins.", x: 47, y: 75, families: ["waters"], legacyFamilies: [], summary: "The coldest major water mass occupies the deepest layer of much of the world ocean—an immense geography hidden from surface maps.", boundary: "This index point is not its boundary or a claim of uniform properties across every abyssal basin.", sourceId: "OG01", source: "https://divediscover.whoi.edu/polar-regions/antarctic-ocean-circulation/" },
+  { id: "north-atlantic-deep-water", n: 14, name: "North Atlantic Deep Water", kind: "water-mass", label: "Deep water mass", role: "deep overturning water", depth: "deep Atlantic; spreads southward", depthClass: "deep", clock: "persistent", lens: "waters", properties: ["cold", "salty"], evidence: "synthesis · OG02", basis: "Relatively salty deep water assembled from northern-source waters and traced by hydrographic properties.", x: 42, y: 39, families: ["waters"], legacyFamilies: [], summary: "A basin-spanning deep water mass demonstrates that major ocean countries can lie kilometers below the visible surface.", boundary: "Its hydrographic core is modified by mixing and does not define a sealed or uniformly moving parcel.", sourceId: "OG02", source: "https://www.whoi.edu/science/PO/people/jprice/class/miscart/Stewart2006.pdf" },
+  { id: "antarctic-intermediate-water", n: 15, name: "Antarctic Intermediate Water", kind: "water-mass", label: "Fresh intermediate water", role: "intermediate water mass", depth: "roughly 600–1000 m; basin dependent", depthClass: "intermediate", clock: "persistent", lens: "waters", properties: ["cold", "fresh"], evidence: "synthesis · OG03", basis: "Cool, relatively fresh Southern Ocean water subducted north of the polar domain and traced at intermediate depth.", x: 38, y: 61, families: ["waters"], legacyFamilies: [], summary: "A cool, fresh intermediate layer spreads northward beneath warmer surface waters in several basins.", boundary: "One marker cannot show its branching cores, mixing, or basin-specific definitions.", sourceId: "OG03", source: "https://divediscover.whoi.edu/polar-regions/antarctic-ocean-circulation/" },
+  { id: "subantarctic-mode-water", n: 16, name: "Subantarctic Mode Water", kind: "water-mass", label: "Mode-water belt", role: "ventilated thermocline water", depth: "deep winter mixed layer / upper thermocline", depthClass: "upper", clock: "seasonal", lens: "waters", properties: ["cold", "fresh"], evidence: "synthesis · OG04", basis: "Thick, weakly stratified water formed by winter mixing north of the Subantarctic Front.", x: 68, y: 62, families: ["waters"], legacyFamilies: [], summary: "A broad Southern Hemisphere mode-water family ventilates the thermocline rather than forming a surface continent.", boundary: "Formation properties and geographic definitions vary by basin and year.", sourceId: "OG04", source: "https://www.gfdl.noaa.gov/bibliography/related_files/jls0401.pdf" },
+  { id: "north-pacific-intermediate-water", n: 17, name: "North Pacific Intermediate Water", kind: "water-mass", label: "Fresh intermediate water", role: "North Pacific ventilation layer", depth: "intermediate North Pacific", depthClass: "intermediate", clock: "persistent", lens: "waters", properties: ["cold", "fresh"], evidence: "synthesis · OG05", basis: "A North Pacific salinity-minimum layer formed and transformed in the subpolar–subtropical transition.", x: 88, y: 25, families: ["waters"], legacyFamilies: [], summary: "The North Pacific contains a recognizable intermediate layer even where the surface belongs to a warm gyre.", boundary: "The salinity-minimum core is not a fixed-edged body or a direct velocity measurement.", sourceId: "OG05", source: "https://www.gfdl.noaa.gov/bibliography/related_files/jls0401.pdf" },
+  { id: "labrador-sea-water", n: 18, name: "Labrador Sea Water", kind: "water-mass", label: "Ventilated deep water", role: "subpolar mode / deep water", depth: "intermediate to deep North Atlantic", depthClass: "deep", clock: "seasonal", lens: "waters", properties: ["cold", "fresh"], evidence: "synthesis · OG06", basis: "Weakly stratified water renewed by variable deep winter convection in the Labrador Sea.", x: 37, y: 19, families: ["waters"], legacyFamilies: [], summary: "A named subpolar water mass records formation history and ventilation below the surface.", boundary: "A representative point does not show variable formation extent or downstream pathways.", sourceId: "OG06", source: "https://www.whoi.edu/science/PO/people/jprice/class/miscart/Stewart2006.pdf" },
+  { id: "mediterranean-outflow-water", n: 19, name: "Mediterranean Outflow Water", kind: "water-mass", label: "Salty outflow layer", role: "marginal-sea source water", depth: "intermediate eastern North Atlantic", depthClass: "intermediate", clock: "persistent", lens: "waters", properties: ["warm", "salty"], evidence: "synthesis · OG07", basis: "Warm, saline Mediterranean-origin water exits Gibraltar and forms an intermediate salinity maximum.", x: 48, y: 32, families: ["waters"], legacyFamilies: [], summary: "A narrow gate seeds a much larger salty subsurface signature in the Atlantic.", boundary: "The marker does not show mixing, meddies, or a measured outflow transport.", sourceId: "OG07", source: "https://www.gfdl.noaa.gov/ocean-mesoscale-eddies/" },
+  { id: "red-sea-water", n: 20, name: "Red Sea Water", kind: "water-mass", label: "Warm salty source water", role: "marginal-sea outflow water", depth: "intermediate western Indian Ocean", depthClass: "intermediate", clock: "persistent", lens: "waters", properties: ["warm", "salty"], evidence: "synthesis · OG08", basis: "Warm, highly saline water formed by strong evaporation and exported through Bab el-Mandeb.", x: 56, y: 40, families: ["waters"], legacyFamilies: [], summary: "A small marginal sea leaves a traceable intermediate-water signature far beyond its gate.", boundary: "The index point is not the full outflow plume or a transport estimate.", sourceId: "OG08", source: "https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/" },
+  { id: "north-pacific-subtropical-gyre", n: 21, name: "North Pacific Subtropical Gyre", kind: "gyre", label: "Rotating current system", role: "subtropical gyre", depth: "surface-intensified circulation", depthClass: "upper", clock: "persistent", lens: "flows", properties: ["dynamic"], evidence: "conceptual · OG09", basis: "A basin-scale wind-driven system of rotating currents surrounding the subtropical interior.", x: 8, y: 35, families: ["flows"], legacyFamilies: [], summary: "The largest gyre makes an enormous moving province out of water that a heat-only atlas leaves blank.", boundary: "A gyre is a current system, not homogeneous water or a plastic island.", sourceId: "OG09", source: "https://oceanservice.noaa.gov/facts/gyre.html" },
+  { id: "south-pacific-subtropical-gyre", n: 22, name: "South Pacific Subtropical Gyre", kind: "gyre", label: "Rotating current system", role: "subtropical gyre", depth: "surface-intensified circulation", depthClass: "upper", clock: "persistent", lens: "flows", properties: ["dynamic"], evidence: "conceptual · OG10", basis: "A Southern Hemisphere wind-driven current circuit around the subtropical Pacific interior.", x: 14, y: 59, families: ["flows"], legacyFamilies: [], summary: "A vast circulation realm occupies the South Pacific even without a famous thermal nickname.", boundary: "Its edges shift and do not define a uniform water mass.", sourceId: "OG10", source: "https://oceanservice.noaa.gov/facts/gyre.html" },
+  { id: "north-atlantic-subtropical-gyre", n: 23, name: "North Atlantic Subtropical Gyre", kind: "gyre", label: "Rotating current system", role: "subtropical gyre", depth: "surface-intensified circulation", depthClass: "upper", clock: "persistent", lens: "flows", properties: ["dynamic"], evidence: "conceptual · OG11", basis: "A wind-driven current circuit containing the Sargasso Sea and bounded by major currents.", x: 42, y: 33, families: ["flows"], legacyFamilies: [], summary: "Currents organize the North Atlantic interior into a recognizable rotating realm.", boundary: "The index point is not a fixed gyre center or edge.", sourceId: "OG11", source: "https://oceanservice.noaa.gov/facts/gyre.html" },
+  { id: "south-atlantic-subtropical-gyre", n: 24, name: "South Atlantic Subtropical Gyre", kind: "gyre", label: "Rotating current system", role: "subtropical gyre", depth: "surface-intensified circulation", depthClass: "upper", clock: "persistent", lens: "flows", properties: ["dynamic"], evidence: "conceptual · OG12", basis: "A wind-driven clockwise current circuit spanning the subtropical South Atlantic.", x: 43, y: 57, families: ["flows"], legacyFamilies: [], summary: "The basin interior belongs to a circulation system even where no single current line dominates the map.", boundary: "The gyre is variable and internally heterogeneous.", sourceId: "OG12", source: "https://oceanservice.noaa.gov/facts/gyre.html" },
+  { id: "indian-ocean-subtropical-gyre", n: 25, name: "Indian Ocean Subtropical Gyre", kind: "gyre", label: "Rotating current system", role: "subtropical gyre", depth: "surface-intensified circulation", depthClass: "upper", clock: "persistent", lens: "flows", properties: ["dynamic"], evidence: "conceptual · OG13", basis: "A Southern Hemisphere wind-driven current circuit shaped by the Indian basin and monsoon influence.", x: 68, y: 58, families: ["flows"], legacyFamilies: [], summary: "A fifth major subtropical gyre fills much of the Indian Ocean's apparently unlabeled interior.", boundary: "Seasonal monsoon circulation complicates any static outline.", sourceId: "OG13", source: "https://oceanservice.noaa.gov/facts/gyre.html" },
+  { id: "antarctic-polar-front", n: 26, name: "Antarctic Polar Front", kind: "front", label: "Water-mass boundary", role: "deep-reaching ACC front", depth: "surface expression and deep structure", depthClass: "full-column", clock: "persistent", lens: "edges", properties: ["dynamic", "cold"], evidence: "observational · OG14", basis: "A circumpolar hydrographic front separating Antarctic and subantarctic waters, with multiple diagnostic definitions.", x: 61, y: 68, families: ["edges"], legacyFamilies: [], summary: "A front gives the Southern Ocean an edge, but it meanders, branches, and leaks rather than forming a wall.", boundary: "This point cannot represent the front's changing circumpolar path.", sourceId: "OG14", source: "https://doi.org/10.5194/essd-8-191-2016" },
+  { id: "subantarctic-front", n: 27, name: "Subantarctic Front", kind: "front", label: "Water-mass boundary", role: "northern major ACC front", depth: "surface expression and deep structure", depthClass: "full-column", clock: "persistent", lens: "edges", properties: ["dynamic"], evidence: "observational · OG15", basis: "A major ACC-associated front bounding the Polar Frontal Zone to the north.", x: 78, y: 63, families: ["edges"], legacyFamilies: [], summary: "Another circumpolar edge shows why the Southern Ocean is a stack of belts rather than one cold ring.", boundary: "Its surface expression can be weak and its position varies regionally.", sourceId: "OG15", source: "https://www.aoml.noaa.gov/phod/goos/xbtscience/ax25_acc.php" },
+  { id: "equatorial-pacific-divergence", n: 28, name: "Equatorial Pacific Divergence", kind: "upwelling", label: "Cold nutrient-rich seam", role: "equatorial upwelling zone", depth: "surface / upper thermocline", depthClass: "upper", clock: "persistent", lens: "edges", properties: ["cold", "nutrient-rich", "dynamic"], evidence: "synthesis · OG16", basis: "Wind-driven divergence draws cooler, nutrient-rich subsurface water toward the equatorial surface.", x: 11, y: 49, families: ["edges"], legacyFamilies: [], summary: "Some ocean geography is a seam where water rises, not a mass sitting still.", boundary: "A marker does not diagnose upwelling rate or the changing cold-tongue footprint.", sourceId: "OG16", source: "https://oceanservice.noaa.gov/facts/upwelling.html" },
+  { id: "mid-atlantic-ridge", n: 29, name: "Mid-Atlantic Ridge", kind: "seafloor", label: "Submerged mountain range", role: "divergent plate boundary", depth: "seabed", depthClass: "seabed", clock: "geologic", lens: "floor", properties: ["relief"], evidence: "observational · OG17", basis: "A long volcanic ridge formed at a divergent plate boundary along the Atlantic basin floor.", x: 48, y: 48, families: ["floor"], legacyFamilies: [], summary: "The Atlantic has a mountain spine beneath the water that helps organize basins and deep pathways.", boundary: "A single point cannot show ridge segmentation, transform faults, or water-column effects.", sourceId: "OG17", source: "https://prod-01-alb-www-noaa.woc.noaa.gov/education/resource-collections/ocean-coasts/ocean-floor-features" },
+  { id: "east-pacific-rise", n: 30, name: "East Pacific Rise", kind: "seafloor", label: "Fast-spreading ridge", role: "divergent plate boundary", depth: "seabed", depthClass: "seabed", clock: "geologic", lens: "floor", properties: ["relief"], evidence: "observational · OG18", basis: "A fast-spreading mid-ocean ridge system forming new Pacific seafloor.", x: 24, y: 57, families: ["floor"], legacyFamilies: [], summary: "A second submerged mountain system gives the Pacific a hidden structural spine.", boundary: "The point is only an index to a long segmented ridge system.", sourceId: "OG18", source: "https://prod-01-alb-www-noaa.woc.noaa.gov/education/resource-collections/ocean-coasts/ocean-floor-features" },
+  { id: "mariana-trench", n: 31, name: "Mariana Trench", kind: "seafloor", label: "Ocean trench", role: "subduction trench", depth: "seabed / hadal", depthClass: "seabed", clock: "geologic", lens: "floor", properties: ["relief"], evidence: "observational · OG19", basis: "A very deep, narrow depression formed where one tectonic plate subducts beneath another.", x: 89, y: 39, families: ["floor"], legacyFamilies: [], summary: "The deepest ocean geography is a hadal trench—not a surface color or current.", boundary: "The marker does not represent the trench's full arc or habitat variability.", sourceId: "OG19", source: "https://prod-01-alb-www-noaa.woc.noaa.gov/education/resource-collections/ocean-coasts/ocean-floor-features" },
+  { id: "kerguelen-plateau", n: 32, name: "Kerguelen Plateau", kind: "seafloor", label: "Submerged plateau", role: "large igneous province / bathymetric obstacle", depth: "seabed; rises into deep water column", depthClass: "seabed", clock: "geologic", lens: "floor", properties: ["relief"], evidence: "synthesis · OG20", basis: "A broad elevated seafloor province in the southern Indian Ocean that steers deep and circumpolar flows.", x: 69, y: 68, families: ["floor"], legacyFamilies: [], summary: "Submerged plateaus can redirect fronts and currents even though they are invisible at the surface.", boundary: "The point does not quantify bathymetric steering or delimit the plateau.", sourceId: "OG20", source: "https://prod-01-alb-www-noaa.woc.noaa.gov/education/resource-collections/ocean-coasts/ocean-floor-features" },
+  { id: "etnp-oxygen-minimum-zone", n: 33, name: "Eastern Tropical North Pacific OMZ", kind: "biogeochemical", label: "Low-oxygen layer", role: "oxygen-minimum zone", depth: "roughly 100–1500 m; regional", depthClass: "intermediate", clock: "persistent", lens: "life", properties: ["low-oxygen"], evidence: "observational synthesis · OG21", basis: "A persistent subsurface region where oxygen consumption and weak ventilation maintain low concentrations.", x: 19, y: 43, families: ["life"], legacyFamilies: [], summary: "A vast subsurface oxygen geography exists beneath tropical surface waters.", boundary: "This point is not a hypoxia threshold contour, habitat forecast, or current measurement.", sourceId: "OG21", source: "https://oceanexplorer.noaa.gov/ocean-fact/omz/" },
+  { id: "etsp-oxygen-minimum-zone", n: 34, name: "Eastern Tropical South Pacific OMZ", kind: "biogeochemical", label: "Low-oxygen layer", role: "oxygen-minimum zone", depth: "subsurface eastern tropical Pacific", depthClass: "intermediate", clock: "persistent", lens: "life", properties: ["low-oxygen"], evidence: "observational synthesis · OG22", basis: "Low ventilation and biogeochemical oxygen consumption sustain a major eastern tropical subsurface minimum.", x: 24, y: 54, families: ["life"], legacyFamilies: [], summary: "The southeast Pacific contains a major low-oxygen province layered beneath productive surface waters.", boundary: "The marker does not encode oxygen concentration, threshold, or vertical extent.", sourceId: "OG22", source: "https://repository.library.noaa.gov/view/noaa/26936" },
+  { id: "arabian-sea-oxygen-minimum-zone", n: 35, name: "Arabian Sea OMZ", kind: "biogeochemical", label: "Low-oxygen layer", role: "oxygen-minimum zone", depth: "subsurface Arabian Sea", depthClass: "intermediate", clock: "persistent", lens: "life", properties: ["low-oxygen"], evidence: "observational synthesis · OG23", basis: "High productivity, respiration, stratification, and circulation combine to maintain low subsurface oxygen.", x: 62, y: 40, families: ["life"], legacyFamilies: [], summary: "The Arabian Sea is a named chemical province as well as a geographic sea.", boundary: "The point is not an oxygen contour and does not imply uniform ecological effects.", sourceId: "OG23", source: "https://oceanexplorer.noaa.gov/ocean-fact/omz/" },
+  { id: "sargasso-sea", n: 36, name: "Sargasso Sea", kind: "biogeochemical", label: "Oligotrophic gyre province", role: "low-nutrient open-ocean ecosystem", depth: "surface / upper ocean", depthClass: "upper", clock: "persistent", lens: "life", properties: ["nutrient-poor"], evidence: "observational synthesis · OG24", basis: "A clear, nutrient-limited ecosystem within the North Atlantic subtropical gyre, bounded by currents rather than land.", x: 44, y: 31, families: ["life"], legacyFamilies: [], summary: "The Sargasso Sea proves that an ocean sea can be geographically real without a coastline.", boundary: "The marker does not delimit a fixed ecosystem boundary or uniform productivity.", sourceId: "OG24", source: "https://prod-01-alb-www-noaa.woc.noaa.gov/gc-international-section/marine-protected-areas-mpas-sargasso-sea" }
+]).map(zone => ({ ...zone, clockClass: zone.clockClass || zone.clock }));
+
 const markers = document.querySelector("#markers");
 const count = document.querySelector("#visible-count");
-const fields = Object.fromEntries(["index", "name", "kind", "summary", "role", "depth", "clock", "evidence", "boundary", "source"].map(key => [key, document.querySelector(`#zone-${key}`)]));
+const fields = Object.fromEntries(["index", "name", "kind", "summary", "lens", "role", "basis", "property", "depth", "clock", "evidence", "boundary", "source"].map(key => [key, document.querySelector(`#zone-${key}`)]));
 let selectedZone = zones[0];
+let currentLens = "waters";
 let currentMode = "conceptual";
 let currentConceptualView = "reference";
 let probeCell = null;
@@ -35,6 +78,9 @@ function selectZone(zone) {
   fields.index.textContent = `ZONE ${String(zone.n).padStart(2, "0")} · ${zone.label.toUpperCase()}`;
   fields.name.textContent = zone.name;
   fields.kind.textContent = zone.families.map(name => name.toUpperCase()).join(" · ");
+  fields.lens.textContent = zone.lens.toUpperCase();
+  fields.basis.textContent = zone.basis;
+  fields.property.textContent = zone.properties.join(" · ").toUpperCase();
   for (const key of ["summary", "role", "depth", "clock", "evidence", "boundary"]) fields[key].textContent = zone[key];
   fields.source.href = zone.source;
   fields.source.textContent = zone.source.startsWith("../") ? "Open the source register →" : "Open primary source →";
@@ -537,6 +583,11 @@ function updateAtlasUrl() {
     url.searchParams.delete("pressure");
     if (currentConceptualView === "water-first") url.searchParams.set("view", "water-first");
     else url.searchParams.delete("view");
+    if (currentLens !== "waters") url.searchParams.set("lens", currentLens); else url.searchParams.delete("lens");
+    for (const [parameter, selector] of [["depth", "#filter-depth"], ["property", "#filter-property"], ["clock", "#filter-clock"]]) {
+      const value = document.querySelector(selector).value;
+      if (value === "all") url.searchParams.delete(parameter); else url.searchParams.set(parameter, value);
+    }
   } else {
     url.searchParams.set("mode", currentMode);
     url.searchParams.set("ring", ringLatitude.toFixed(3));
@@ -547,13 +598,14 @@ function updateAtlasUrl() {
     if (currentMode === "argo700") url.searchParams.set("pressure", String(currentArgoPressure));
     else url.searchParams.delete("pressure");
     url.searchParams.delete("view");
+    for (const parameter of ["lens", "depth", "property", "clock"]) url.searchParams.delete(parameter);
   }
   window.history.replaceState({}, "", url);
 }
 
 function conceptualMapNote() {
   const view = currentConceptualView === "water-first" ? "water-first · ghost coastlines · " : "land-reference · ";
-  return `<span></span> ${view}schematic, permeable, moving regions · not fixed boundaries · not a live analysis`;
+  return `<span></span> ${view}markers are representative index points—not centroids or boundaries · overlapping conceptual geography`;
 }
 
 function setConceptualView(view, updateUrl = true) {
@@ -565,8 +617,8 @@ function setConceptualView(view, updateUrl = true) {
     ? "../figures/oceanlines-fluid-geography-water-first-interactive.svg"
     : "../figures/oceanlines-fluid-geography-interactive.svg";
   map.alt = waterFirst
-    ? "Water-first conceptual world map: heat reservoirs, round dashed anomalies, current pathways, buried layers, and gates lead over ghosted land outlines."
-    : "Conceptual world map: irregular continent-like heat reservoirs, round dashed anomalies, current pathways, buried layers, and gates.";
+    ? "Water-first conceptual world map with ghosted coastlines and selectable index points for overlapping waters, flows, edges, seafloor, living chemistry, and events."
+    : "Conceptual world map with selectable index points for overlapping waters, flows, edges, seafloor, living chemistry, and events.";
   document.querySelector("#full-size-conceptual-map").href = waterFirst
     ? "../figures/oceanlines-fluid-geography-water-first.svg"
     : "../figures/oceanlines-fluid-geography.svg";
@@ -631,10 +683,12 @@ function setMapMode(mode) {
   document.querySelector("#conceptual-actions").hidden = observed;
   document.querySelector("#conceptual-views").hidden = observed;
   document.querySelector("#map-reference-labels").hidden = !observed;
+  document.querySelector("#ocean-basin-labels").hidden = observed;
   document.querySelector(".atlas-shell").classList.toggle("observed-mode", observed);
   markers.hidden = observed;
   document.querySelector("#map-stage").classList.toggle("observed", observed);
   document.querySelectorAll(".lens").forEach(button => { button.disabled = observed; });
+  document.querySelectorAll("#geography-filters select, #geography-filters button").forEach(control => { control.disabled = observed; });
   document.querySelector("#observed-title").textContent = subsurface ? `ARGO ANALYSIS · ${data.pressure_dbar.toFixed(0)} DBAR ANOMALY` : anomaly ? "OBSERVATIONAL · SURFACE ANOMALY" : error ? "OBSERVATIONAL · ESTIMATED ERROR" : "OBSERVATIONAL · ABSOLUTE SURFACE";
   document.querySelector("#observed-status").textContent = subsurface ? "SCRIPPS RG · JULY 2026 · 2004–2018 REFERENCE" : anomaly ? "NOAA OISST v2.1 · 1971–2000 BASELINE" : error ? "NOAA OISST v2.1 · TIME-MATCHED ERROR" : "NOAA OISST v2.1 · FINAL · 2026-08-01";
   document.querySelector("#scale-min").textContent = anomaly || subsurface ? "−5°C cooler" : error ? "0.1°C lower" : "−2°C";
@@ -661,25 +715,67 @@ for (const zone of zones) {
   button.className = "marker";
   button.dataset.id = zone.id;
   button.dataset.kind = zone.kind;
-  button.dataset.families = zone.families.join(" ");
-  button.style.left = `${zone.x}%`;
-  button.style.top = `${zone.y}%`;
+  button.dataset.lens = zone.lens;
+  button.style.left = `${zone.x + ((zone.n % 3) - 1) * .45}%`;
+  button.style.top = `${zone.y + ((zone.n % 2) ? -.3 : .3)}%`;
   button.textContent = String(zone.n).padStart(2, "0");
   button.setAttribute("aria-label", `${zone.name}: ${zone.label}`);
   button.addEventListener("click", () => selectZone(zone));
   markers.append(button);
+}
 
+function zoneMatches(zone, filters) {
+  return (filters.lens === "all" || zone.lens === filters.lens)
+    && (filters.depth === "all" || zone.depthClass === filters.depth)
+    && (filters.property === "all" || zone.properties.includes(filters.property))
+    && (filters.clock === "all" || zone.clockClass === filters.clock);
+}
+
+function activeGeographyFilters() {
+  return {
+    lens: currentLens,
+    depth: document.querySelector("#filter-depth").value,
+    property: document.querySelector("#filter-property").value,
+    clock: document.querySelector("#filter-clock").value
+  };
+}
+
+function rebuildDirectory(matching) {
+  const list = document.querySelector("#zone-directory-list");
+  list.replaceChildren();
+  for (const zone of matching) {
   const item = document.createElement("li");
+    item.dataset.lens = zone.lens;
   const directoryButton = document.createElement("button");
   directoryButton.type = "button";
-  directoryButton.innerHTML = `<span>${String(zone.n).padStart(2, "0")}</span> ${zone.name}`;
+    directoryButton.innerHTML = `<span>${String(zone.n).padStart(2, "0")} · ${zone.lens.toUpperCase()}</span> ${zone.name}`;
   directoryButton.addEventListener("click", () => {
-    document.querySelector('.lens[data-lens="all"]').click();
     selectZone(zone);
     document.querySelector("#zone-panel").scrollIntoView({ block: "start" });
   });
   item.append(directoryButton);
-  document.querySelector("#zone-directory-list").append(item);
+    list.append(item);
+  }
+}
+
+function applyGeographyFilters(updateUrl = true) {
+  const filters = activeGeographyFilters();
+  const matching = zones.filter(zone => zoneMatches(zone, filters));
+  const matchingIds = new Set(matching.map(zone => zone.id));
+  document.querySelectorAll(".marker").forEach(marker => {
+    const show = matchingIds.has(marker.dataset.id);
+    marker.classList.toggle("filtered", !show);
+    marker.hidden = !show;
+    marker.tabIndex = show ? 0 : -1;
+  });
+  count.textContent = matching.length;
+  const lensName = currentLens === "all" ? "curated" : currentLens;
+  const message = `${matching.length} matching ${lensName} feature${matching.length === 1 ? "" : "s"}. Markers are representative index points, not boundaries or centroids.`;
+  document.querySelector("#filter-status").textContent = message;
+  document.querySelector("#directory-summary").textContent = `Browse ${matching.length} matching features as text`;
+  rebuildDirectory(matching);
+  if (matching.length && !matchingIds.has(selectedZone.id)) selectZone(matching[0]);
+  if (updateUrl) updateAtlasUrl();
 }
 
 function setArgoPressure(pressure, updateUrl = true) {
@@ -694,19 +790,26 @@ function setArgoPressure(pressure, updateUrl = true) {
 
 document.querySelectorAll(".lens").forEach(button => {
   button.addEventListener("click", () => {
-    const lens = button.dataset.lens;
+    currentLens = button.dataset.lens;
     document.querySelectorAll(".lens").forEach(item => {
       const active = item === button;
       item.classList.toggle("active", active);
       item.setAttribute("aria-pressed", String(active));
     });
-    let visible = 0;
-    document.querySelectorAll(".marker").forEach(marker => {
-      const show = lens === "all" || marker.dataset.families.split(" ").includes(lens);
-      marker.classList.toggle("filtered", !show);
-      if (show) visible += 1;
+    applyGeographyFilters();
+  });
+});
+
+document.querySelectorAll("#geography-filters select").forEach(select => select.addEventListener("change", () => applyGeographyFilters()));
+document.querySelector("#geography-filters").addEventListener("reset", () => {
+  setTimeout(() => {
+    currentLens = "waters";
+    document.querySelectorAll(".lens").forEach(button => {
+      const active = button.dataset.lens === "waters";
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
     });
-    count.textContent = visible;
+    applyGeographyFilters();
   });
 });
 
@@ -727,9 +830,20 @@ document.querySelector("#sst-canvas").addEventListener("click", event => {
   const latitude = 90 - (event.clientY - rectangle.top) / rectangle.height * 180;
   inspectCoordinates(latitude, longitude);
 });
-selectZone(zones[0]);
 const requestedParameters = new URLSearchParams(window.location.search);
 const requestedMode = requestedParameters.get("mode");
+if (["all", "waters", "flows", "edges", "floor", "life", "events"].includes(requestedParameters.get("lens"))) currentLens = requestedParameters.get("lens");
+for (const [parameter, selector] of [["depth", "#filter-depth"], ["property", "#filter-property"], ["clock", "#filter-clock"]]) {
+  const value = requestedParameters.get(parameter);
+  if (value && [...document.querySelector(selector).options].some(option => option.value === value)) document.querySelector(selector).value = value;
+}
+document.querySelectorAll(".lens").forEach(button => {
+  const active = button.dataset.lens === currentLens;
+  button.classList.toggle("active", active);
+  button.setAttribute("aria-pressed", String(active));
+});
+applyGeographyFilters(false);
+selectZone(selectedZone);
 if (requestedParameters.get("view") === "water-first") setConceptualView("water-first", false);
 if (requestedParameters.has("pressure")) setArgoPressure(Number(requestedParameters.get("pressure")), false);
 if (requestedParameters.has("ring")) setRingLatitude(Number(requestedParameters.get("ring")), false);

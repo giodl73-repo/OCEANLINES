@@ -19,24 +19,24 @@ class AtlasTests(unittest.TestCase):
         source = APP.read_text(encoding="utf-8")
         ids = re.findall(r'id: "([a-z0-9-]+)"', source)
         numbers = [int(value) for value in re.findall(r'\bn: (\d+),', source)]
-        self.assertEqual(12, len(ids))
+        self.assertEqual(36, len(ids))
         self.assertEqual(len(ids), len(set(ids)))
-        self.assertEqual(list(range(1, 13)), numbers)
+        self.assertEqual(list(range(1, 37)), numbers)
 
     def test_zone_records_declare_measurement_boundaries(self):
         source = APP.read_text(encoding="utf-8")
         for field in ("boundary", "depth", "evidence", "source"):
-            self.assertEqual(12, len(re.findall(rf'\b{field}: "', source)), field)
+            self.assertEqual(36, len(re.findall(rf'\b{field}: "', source)), field)
 
     def test_html_has_accessibility_and_status_cues(self):
         source = HTML.read_text(encoding="utf-8")
-        for token in ('aria-live="polite"', 'aria-label="Atlas lens"', "ATLAS 10 · DEPTH LADDER", "not a live analysis"):
+        for token in ('aria-live="polite"', 'aria-label="Ocean geography lens"', "ATLAS 10 · DEPTH LADDER", "conceptual, overlapping geography"):
             self.assertIn(token, source)
 
     def test_readme_and_atlas_expose_clear_entry_routes(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         html = HTML.read_text(encoding="utf-8")
-        for token in ("## Enter OCEANLINES", "Explore the interactive Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
+        for token in ("## Enter OCEANLINES", "Explore 36 ocean features and the Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
             self.assertIn(token, readme)
         for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
             self.assertIn(f'href="{target}"', html)
@@ -79,7 +79,8 @@ class AtlasTests(unittest.TestCase):
         app = APP.read_text(encoding="utf-8")
         app_pairs = re.findall(r'id: "([a-z0-9-]+)", n: \d+, name: "([^"]+)"', app)
         self.assertEqual(app_pairs, [(zone["id"], zone["name"]) for zone in zones])
-        self.assertEqual([str(value) for value in range(1, 13)], [zone["number"] for zone in zones])
+        self.assertEqual([str(value) for value in range(1, 37)], [zone["number"] for zone in zones])
+        self.assertTrue(all(zone["lens"] and zone["depth_class"] and zone["properties"] and zone["basis"] for zone in zones))
         self.assertTrue(all(zone["inferential_boundary"] and zone["primary_or_register_source"] for zone in zones))
         self.assertTrue(all("·" not in zone["evidence_class"] for zone in zones))
         self.assertEqual("O18", zones[0]["source_ids"])
@@ -110,10 +111,10 @@ class AtlasTests(unittest.TestCase):
         css = CSS.read_text(encoding="utf-8")
         for token in ('id="map-insight"', 'class="ring-workbench"', 'class="advanced-diagnostics"', "Inspect the paired rings", "Open polar mirrors and the latitude continuity ladder", 'id="zone-directory-list"', "Open the full-size map"):
             self.assertIn(token, html)
-        for token in ('document.querySelector("#zone-directory-list").append(item)', "scrollIntoView"):
+        for token in ("list.append(item)", "scrollIntoView"):
             self.assertIn(token, app)
         self.assertIn("OCEANLINES Atlas 10 Preview", html)
-        self.assertIn(".lens[data-lens=\"all\"]", app)
+        self.assertIn("zoneMatches", app)
         self.assertIn(".atlas-shell.observed-mode .zone-panel", css)
 
     def test_observed_map_has_reference_labels_and_three_tick_legend(self):
@@ -144,7 +145,7 @@ class AtlasTests(unittest.TestCase):
     def test_conceptual_boundaries_are_explicitly_permeable(self):
         html = HTML.read_text(encoding="utf-8")
         figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
-        self.assertIn("Schematic, permeable, moving regions", html)
+        self.assertIn("representative index points", html)
         self.assertIn("schematic, permeable, and moving rather than measured boundaries", figure)
 
     def test_conceptual_map_uses_pinned_natural_earth_geometry(self):
@@ -260,11 +261,18 @@ class AtlasTests(unittest.TestCase):
         for token in ("argoLayers", "setArgoPressure", 'searchParams.set("pressure"', "outside source domain", "Argo anomaly profile"):
             self.assertIn(token, app)
 
-    def test_oceanbelts_is_labeled_as_reading_lens(self):
+    def test_legacy_studies_remain_linked_beneath_geography_lenses(self):
         source = HTML.read_text(encoding="utf-8")
-        self.assertIn("HEATMASS <small>reservoirs + anomalies</small>", source)
-        self.assertIn("OCEANREALMS <small>currents + gates</small>", source)
-        self.assertIn("OCEANBELTS <small>planetary reading lens</small>", source)
+        for target in ("../HEATMASS.md", "../OCEANREALMS.md", "../OCEANBELTS.md"):
+            self.assertIn(f'href="{target}"', source)
+
+    def test_ocean_geography_filters_are_overlapping_accessible_and_bookmarkable(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        for token in ("ALL FEATURES", "WATERS", "FLOWS", "EDGES", "FLOOR", "LIFE", "EVENTS", 'id="filter-status"', 'aria-live="polite"', "not centroids or boundaries"):
+            self.assertIn(token, html + app)
+        for token in ("zoneMatches", "applyGeographyFilters", 'searchParams.set("lens"', 'marker.hidden = !show', "marker.tabIndex = show ? 0 : -1"):
+            self.assertIn(token, app)
 
     def test_coordinate_probe_has_pointer_keyboard_and_text_paths(self):
         html = HTML.read_text(encoding="utf-8")
