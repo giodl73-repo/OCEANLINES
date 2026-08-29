@@ -12,6 +12,7 @@
 [Compare ocean-first projections](projections/) ·
 [See the ocean as 56 state-like provinces](figures/oceanlines-province-atlas.svg) ·
 [Download the 56-province directory](research/longhurst-province-reference.csv) ·
+[Read the project history](HISTORY.md) ·
 [Read the field guide](HEATMASS.md) ·
 [Open the research note](research/) ·
 [Import the bibliography](REFERENCES.bib) ·
@@ -22,6 +23,7 @@
 | If you want to… | Go here |
 |---|---|
 | See the idea in one image | [Full fluid-geography map](figures/oceanlines-fluid-geography.svg) |
+| Understand the Province Atlas breakthrough and its next promise | [Project history](HISTORY.md) and [shape-system plan](plans/province-atlas-shape-system.md) |
 | Compare ocean-first world geometries and the 56-province cartogram | [Projection laboratory](projections/) |
 | Explore waters, flows, edges, seafloor, life, events, and observational layers | [Interactive Atlas](atlas/) |
 | Understand reservoirs, anomalies, pathways, and gates | [HEATMASS field guide](HEATMASS.md) |

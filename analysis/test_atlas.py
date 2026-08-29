@@ -240,6 +240,16 @@ class AtlasTests(unittest.TestCase):
         self.assertTrue(all(row["edition"] == "classic 56-province reference" for row in rows))
         self.assertIn("Open the complete 56-row province directory", page)
 
+    def test_province_atlas_breakthrough_is_preserved_in_project_history(self):
+        history = (ROOT / "HISTORY.md").read_text(encoding="utf-8")
+        plan = (ROOT / "plans" / "province-atlas-shape-system.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        for token in ("The ocean becomes a place", "Equal voice", "True footprint", "495ec4b", "identity can be simplified; geometry must declare its truth"):
+            self.assertIn(token, history)
+        for token in ("One ocean. 56 provinces. Two truths.", "varied puzzle cartogram", "8–12%", "legally compatible"):
+            self.assertIn(token, plan)
+        self.assertIn("Read the project history", readme)
+
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")
         data = (ROOT / "atlas" / "data" / "oisst-2026-08-01.js").read_text(encoding="utf-8")
