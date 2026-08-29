@@ -1,8 +1,11 @@
 import csv
 import pathlib
 import re
+import tempfile
 import unittest
 import xml.etree.ElementTree as ET
+
+from validate_feature_geometry import validate_register
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 APP = ROOT / "atlas" / "app.js"
@@ -167,7 +170,7 @@ class AtlasTests(unittest.TestCase):
         css = CSS.read_text(encoding="utf-8")
         for token in ('id="province-select"', 'id="province-reset"', 'id="map-viewport"', "56 APPROXIMATE OCEAN STATES", 'aria-live="polite"'):
             self.assertIn(token, html)
-        for token in ("loadProvinceMap", "selectProvince", "applyProvinceZoom", "provinceFeatureMatches", 'url.searchParams.set("province"'):
+        for token in ("loadProvinceMap", "selectProvince", "applyMapZoom", "provinceFeatureMatches", 'url.searchParams.set("province"'):
             self.assertIn(token, app)
         for token in (".province-map-host.observed-overlay", ".feature-shape-host", ".map-viewport"):
             self.assertIn(token, css)
@@ -232,6 +235,10 @@ class AtlasTests(unittest.TestCase):
         self.assertNotIn("zone.x / 100 * 1600", app)
         for token in (".feature-shape.relation-muted", ".province.related", ".province.near-contact"):
             self.assertIn(token, css)
+        fixture = (ROOT / "atlas" / "data" / "relation-smoke-fixture.js").read_text(encoding="utf-8")
+        for token in ("gulf-stream", "GFST", "kuroshio", "KURO", "drake-passage", "FKLD", "antarctic-circumpolar-current", "ANTA"):
+            self.assertIn(token, fixture)
+        self.assertIn("verifyRelationSmokeFixture", app)
 
     def test_heat_continents_have_coastlike_shapes_distinct_from_blobs(self):
         builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
@@ -249,12 +256,58 @@ class AtlasTests(unittest.TestCase):
         reference = (ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg").read_text(encoding="utf-8")
         water_first = (ROOT / "figures" / "oceanlines-fluid-geography-water-first-interactive.svg").read_text(encoding="utf-8")
         self.assertIn('data-conceptual-view="water-first"', html)
-        self.assertIn('view", "water-first"', app)
+        self.assertIn('url.searchParams.set("view", currentConceptualView)', app)
         self.assertIn("WATER-FIRST", water_first)
         self.assertIn("fill:url(#ocean); stroke:#9ab8b8; stroke-opacity:.24", water_first)
         self.assertIn("fill:#182d31; stroke:#799395", reference)
         for feature in ('id="indo-pacific-heat-continent"', '<ellipse cx="205" cy="285"', 'class="current"', 'class="gate"'):
             self.assertEqual(reference.count(feature), water_first.count(feature), feature)
+
+    def test_three_conceptual_grounds_labels_zoom_and_evidence_are_explicit(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        css = CSS.read_text(encoding="utf-8")
+        for token in ('data-conceptual-view="reference"', 'data-conceptual-view="water-first"', 'data-conceptual-view="shape-first"', 'id="feature-zoom"', 'id="evidence-badge"', "Evidence type qualifies"):
+            self.assertIn(token, html)
+        for token in ("renderFeatureLabels", "featureMapName", "zoomToSelectedFeature", 'url.searchParams.set("feature"', "featureView"):
+            self.assertIn(token, app)
+        for token in (".province-map-host.shape-only", ".feature-label-leader", '.evidence-badge[data-evidence="modeled-mixed"]'):
+            self.assertIn(token, css)
+
+    def test_feature_overlay_declares_clearance_gate_exemptions_and_seams(self):
+        overlay = (ROOT / "figures" / "oceanlines-atlas-feature-shapes.svg").read_text(encoding="utf-8")
+        builder = (ROOT / "analysis" / "build_atlas_feature_overlay.py").read_text(encoding="utf-8")
+        self.assertIn('id="feature-ocean-gates"', overlay)
+        self.assertIn('stroke-width="10"', overlay)
+        self.assertIn('mask="url(#feature-ocean-gates)"', overlay)
+        self.assertEqual(7, overlay.count('data-seam="antimeridian"'))
+        self.assertEqual(7, overlay.count('class="seam-continuation"'))
+        for feature_id in ("drake-passage", "indonesian-throughflow", "mediterranean-outflow-water", "red-sea-water"):
+            self.assertIn(f'"{feature_id}"', builder)
+
+    def test_feature_geometry_admission_register_is_complete_and_rejects_promotion(self):
+        register = ROOT / "research" / "feature-geometry-register.csv"
+        schema = ROOT / "research" / "feature-geometry-contract.schema.json"
+        with register.open(encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        self.assertEqual(36, len(rows))
+        self.assertEqual([], validate_register(register))
+        self.assertIn('"geometry_basis"', schema.read_text(encoding="utf-8"))
+        rows[0]["feature_id"] = "unknown-feature"
+        rows[1]["license_id"] = ""
+        rows[2]["reviewer_status"] = "admitted"
+        with tempfile.NamedTemporaryFile("w", encoding="utf-8", newline="", suffix=".csv", delete=False) as handle:
+            writer = csv.DictWriter(handle, fieldnames=rows[0].keys())
+            writer.writeheader()
+            writer.writerows(rows)
+            candidate = pathlib.Path(handle.name)
+        try:
+            errors = validate_register(candidate)
+        finally:
+            candidate.unlink(missing_ok=True)
+        self.assertTrue(any("unknown feature ID" in error for error in errors))
+        self.assertTrue(any("missing license_id" in error for error in errors))
+        self.assertTrue(any("illustrative geometry cannot be admitted" in error for error in errors))
 
     def test_projection_lab_compares_one_overlay_and_declares_pelagos_status(self):
         page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")

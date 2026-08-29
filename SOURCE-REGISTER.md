@@ -41,6 +41,7 @@ support technical mechanisms and quantitative results.
 | D9 | [InterRidge Vents Database v3.4](https://doi.org/10.1594/PANGAEA.917894) | known and inferred vent-field opportunity layer | discovery coverage is incomplete and vent location alone does not specify discharge power |
 | D10 | [Seton et al. 2020 oceanic crustal age and spreading grids](https://doi.org/10.1029/2020GC009214) | candidate lithosphere and ridge-opportunity layers | converting crustal age or spreading setting to heat flux requires a separately declared model |
 | D11 | [Natural Earth 1:110m land vectors](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/) | public-domain coastline geometry beneath the conceptual fluid-geography map | coastlines provide geographic reference only; every heat reservoir, pathway, anomaly, buried layer, and gate remains a schematic OCEANLINES overlay |
+| D12 | [OCEANLINES feature-geometry register](research/feature-geometry-register.csv) | machine-validated provenance and license gate for any future observed, diagnosed, or modeled feature geometry | all current rows are draft illustrative geometry; registration does not validate the drawn footprint |
 | P1 | [Choi et al. 2023, *Ocean Sciences with the Spilhaus Projection*](https://doi.org/10.1038/s41597-023-02309-6) | technical construction and ocean-continuity use of the square Spilhaus projection | conformal continuity does not preserve relative heatmass area |
 | P2 | [PROJ Oceanic Interrupted Goode Homolosine specification](https://proj.org/en/stable/operations/projections/igh_o.html) | equal-area oceanic interruption benchmark and canonical `+lon_0=-160` aspect | multiple lobes interrupt some relationships and are not a continuous transport diagram |
 | P3 | [PROJ Lambert Azimuthal Equal Area specification](https://proj.org/en/stable/operations/projections/laea.html) | established equal-area mathematics beneath the experimental PELAGOS aspect | PELAGOS is a new center-and-edge policy, not a new projection equation; shape distortion grows toward its antipodal boundary |
@@ -54,7 +55,7 @@ support technical mechanisms and quantitative results.
 ## Ocean-geography catalog sources (OG01–OG24)
 
 These sources support the identity and interpretation of the new curated index
-records. Index points are not observed boundaries or centroids.
+records. Schematic shapes are not observed boundaries or diagnosed contours.
 
 | ID | Feature | Authority / source | Admitted use | Limitation |
 |---|---|---|---|---|
@@ -65,12 +66,12 @@ records. Index points are not observed boundaries or centroids.
 | OG05 | North Pacific Intermediate Water | [GFDL-hosted Sarmiento et al.](https://www.gfdl.noaa.gov/bibliography/related_files/jls0401.pdf) | Named intermediate-water role | Not a mapped salinity-minimum contour |
 | OG06 | Labrador Sea Water | [WHOI oceanography text](https://www.whoi.edu/science/PO/people/jprice/class/miscart/Stewart2006.pdf) | Subpolar formation and deep-water context | Formation is strongly variable |
 | OG07 | Mediterranean Outflow Water | [NOAA GFDL mesoscale eddies](https://www.gfdl.noaa.gov/ocean-mesoscale-eddies/) | Salty subsurface lenses from Mediterranean outflow | Not a transport estimate |
-| OG08 | Red Sea Water | [NOAA World Ocean Atlas 2023](https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/) | Temperature/salinity/depth observational foundation | Catalog point is conceptual pending a diagnosed core |
+| OG08 | Red Sea Water | [NOAA World Ocean Atlas 2023](https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/) | Temperature/salinity/depth observational foundation | Atlas shape is conceptual pending a diagnosed core |
 | OG09–OG13 | Five subtropical gyres | [NOAA definition and named list](https://oceanservice.noaa.gov/facts/gyre.html) | Five major rotating current systems | Gyres are heterogeneous and variable |
 | OG14 | Antarctic Polar Front | [Freeman & Lovenduski (2016)](https://doi.org/10.5194/essd-8-191-2016) | Front identity, variability, and mapped realizations | No single fixed circumpolar path |
 | OG15 | Subantarctic Front | [NOAA AOML AX25](https://www.aoml.noaa.gov/phod/goos/xbtscience/ax25_acc.php) | Major ACC-front identity and observations | One transect does not define the global path |
 | OG16 | Equatorial Pacific divergence | [NOAA upwelling explanation](https://oceanservice.noaa.gov/facts/upwelling.html) | Cold, nutrient-rich upward replacement process | No diagnosed rate or footprint |
-| OG17–OG20 | Ridges, trench, and plateau | [NOAA ocean-floor features](https://prod-01-alb-www-noaa.woc.noaa.gov/education/resource-collections/ocean-coasts/ocean-floor-features) | Seafloor-feature grammar | Index points omit full geometries; Kerguelen steering remains synthesis |
+| OG17–OG20 | Ridges, trench, and plateau | [NOAA ocean-floor features](https://prod-01-alb-www-noaa.woc.noaa.gov/education/resource-collections/ocean-coasts/ocean-floor-features) | Seafloor-feature grammar | Atlas shapes remain schematic; Kerguelen steering remains synthesis |
 | OG21 | Eastern Tropical North Pacific OMZ | [NOAA OMZ explanation](https://oceanexplorer.noaa.gov/ocean-fact/omz/) | Persistent low-oxygen subsurface layer | No threshold contour |
 | OG22 | Eastern Tropical South Pacific OMZ | [NOAA repository record](https://repository.library.noaa.gov/view/noaa/26936) | Regional circulation/oxygen context | No threshold contour |
 | OG23 | Arabian Sea OMZ | [NOAA OMZ explanation](https://oceanexplorer.noaa.gov/ocean-fact/omz/) | One of the major persistent OMZ settings | No threshold contour |

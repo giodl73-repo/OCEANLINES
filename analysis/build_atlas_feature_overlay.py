@@ -2,7 +2,7 @@
 
 The first twelve geometries preserve the established fluid-geography artwork.
 The remaining records receive geographically placed, mechanism-specific shapes
-instead of point markers. Water masses use source-fed tongues, gyres use
+instead of generic symbols. Water masses use source-fed tongues, gyres use
 asymmetric directional loops, fronts use paired seams, gates use section marks,
 and relief uses conventional ridge, trench, or plateau texture. They are
 conceptual index geometry, not observations.
@@ -55,6 +55,23 @@ FEATURES = [
     ("sargasso-sea", "Sargasso Sea", "life", '<path class="area sargasso" d="M600 333Q630 294 678 291L720 302Q757 318 774 354Q777 389 746 416Q706 440 659 423Q618 411 598 378Q585 356 600 333Z"/><path class="sargasso-boundary" d="M610 337Q638 306 680 305Q724 306 753 337Q768 367 745 397Q713 425 672 414Q630 407 610 377Q598 356 610 337Z"/><path class="sargasso-swirl" d="M651 353Q671 330 701 339Q726 349 716 372Q703 394 676 385Q654 378 659 360"/>'),
 ]
 
+COAST_CLEARANCE_EXEMPT = {
+    "drake-passage",
+    "indonesian-throughflow",
+    "mediterranean-outflow-water",
+    "red-sea-water",
+}
+
+SEAM_CONTINUATIONS = {
+    "indo-pacific-warm-pool": 448,
+    "el-nino-tongue": 462,
+    "antarctic-circumpolar-current": 690,
+    "circumpolar-deep-water": 700,
+    "antarctic-bottom-water": 790,
+    "antarctic-polar-front": 720,
+    "subantarctic-front": 672,
+}
+
 
 def load_land_path(province_map: Path) -> str:
     """Reuse the province ground's exact, checksum-receipted land geometry."""
@@ -69,12 +86,20 @@ def load_land_path(province_map: Path) -> str:
 
 def build_svg(land_path: str) -> str:
     groups = []
+    exempt_groups = []
     for feature_id, name, lens, geometry in FEATURES:
-        groups.append(
+        seam_y = SEAM_CONTINUATIONS.get(feature_id)
+        seam = ""
+        seam_attribute = ""
+        if seam_y is not None:
+            seam_attribute = ' data-seam="antimeridian"'
+            seam = f'<path class="seam-continuation" d="M60 {seam_y - 10}L76 {seam_y}L60 {seam_y + 10}M1540 {seam_y - 10}L1524 {seam_y}L1540 {seam_y + 10}"/>'
+        group = (
             f'<g id="shape-{feature_id}" class="feature-shape" data-id="{feature_id}" data-lens="{lens}" '
-            f'tabindex="0" role="button" aria-label="Select {html.escape(name, quote=True)}">'
-            f'<title>{html.escape(name)} · schematic {lens} geometry</title>{geometry}</g>'
+            f'tabindex="0" role="button"{seam_attribute} aria-label="Select {html.escape(name, quote=True)}">'
+            f'<title>{html.escape(name)} · schematic {lens} geometry</title>{geometry}{seam}</g>'
         )
+        (exempt_groups if feature_id in COAST_CLEARANCE_EXEMPT else groups).append(group)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
   <title id="title">OCEANLINES selectable fluid feature shapes</title>
   <desc id="desc">Thirty-six schematic, selectable ocean feature shapes aligned to the interactive province map. Shapes indicate geographic form and mechanism but are not observed boundaries, centroids, or measured footprints.</desc>
@@ -83,6 +108,10 @@ def build_svg(land_path: str) -> str:
     <pattern id="buried-pattern" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><rect width="14" height="14" fill="#8c7be7" fill-opacity=".19"/><path d="M0 0V14" stroke="#cfc6ff" stroke-width="3" stroke-opacity=".46"/></pattern>
     <pattern id="oxygen-pattern" width="13" height="13" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)"><rect width="13" height="13" fill="#72d389" fill-opacity=".13"/><path d="M0 0V13" stroke="#9bea9f" stroke-width="2.5" stroke-opacity=".42"/></pattern>
     <mask id="feature-ocean-only" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1050">
+      <rect x="60" y="90" width="1480" height="740" fill="white"/>
+      <path d="{html.escape(land_path, quote=True)}" fill="black" stroke="black" stroke-width="10" stroke-linejoin="round" fill-rule="evenodd"/>
+    </mask>
+    <mask id="feature-ocean-gates" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1050">
       <rect x="60" y="90" width="1480" height="740" fill="white"/>
       <path d="{html.escape(land_path, quote=True)}" fill="black" fill-rule="evenodd"/>
     </mask>
@@ -108,10 +137,12 @@ def build_svg(land_path: str) -> str:
     .plateau {{ fill:#a8bdba; fill-opacity:.22; stroke:#d5e0dc; stroke-width:4; }} .plateau-contour {{ fill:none; stroke:#e3ece8; stroke-width:2.5; opacity:.75; }} .plateau-contour.inner {{ stroke-dasharray:5 5; }}
     .oxygen-zone {{ fill:url(#oxygen-pattern); stroke:#9bea9f; }} .oxygen-core {{ fill:none; stroke:#d0ffd3; stroke-width:2.5; stroke-dasharray:4 7; }}
     .sargasso {{ fill:#72d389; fill-opacity:.16; stroke:#9bea9f; stroke-dasharray:14 8; }} .sargasso-boundary {{ fill:none; stroke:#c1f5bc; stroke-width:2.5; }} .sargasso-swirl {{ fill:none; stroke:#d7ffd2; stroke-width:3; }}
+    .seam-continuation {{ fill:none; stroke:#fff4d7; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; opacity:.85; }}
     .feature-shape:hover > :not(title):not(.hit),.feature-shape:focus > :not(title):not(.hit),.feature-shape.selected > :not(title):not(.hit) {{ filter:drop-shadow(0 0 7px #fff4d7); stroke:#fff4d7; }}
     .feature-shape[hidden] {{ display:none; }}
   </style>
   <g aria-label="Selectable conceptual feature shapes" mask="url(#feature-ocean-only)">{''.join(groups)}</g>
+  <g aria-label="Coastal gates exempt from visual clearance" mask="url(#feature-ocean-gates)">{''.join(exempt_groups)}</g>
 </svg>'''
 
 

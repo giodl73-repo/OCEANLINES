@@ -44,13 +44,33 @@ coastal province inherits the coast it reaches. Internal borders, areas,
 contacts, and point membership are schematic—not published Longhurst geometry.
 All fluid features remain schematic geographic shapes, not measured footprints.
 
-The conceptual atlas offers two treatments of the same province ground.
+The conceptual atlas offers three treatments of the same province ground.
 **Ocean states** uses the strongest monochrome borders and labels. **Quiet
-states** reduces their contrast so crossing feature shapes lead. The toggle
+states**, the default, reduces their contrast so crossing feature shapes lead.
+**Fluid shapes** removes province fills, borders, and codes while retaining a
+low-contrast ocean field and ghost coastlines. The toggle
 changes emphasis only; it does not change geometry, records, evidence, or
 interpretation. Selecting a province by map or dropdown zooms the entire
 geographic stack; the URL records that selection, and switching to SST,
 anomaly, Argo, or error retains the same view.
+
+## Read the relational map
+
+The conceptual view compares all 36 feature shapes with all 56 ocean states in
+a deterministic 2,016-pair matrix. This is **schematic rendered overlap**: the
+browser samples both SVG layers in their shared `1600 × 1050` coordinate space
+and reports `overlap`, resolution-dependent `near-contact`, or `none`. Catalog
+anchors position labels only and can never create a positive relationship.
+Selecting either a place or an object reveals the reciprocal list and a CSV
+export records the algorithm version, tolerances, input checksums, and all
+pairs. These display relationships are not observed membership, transport, or
+published Longhurst boundaries.
+
+Feature labels use reviewed names, deterministic displacement, and restrained
+leaders; the text directory remains the complete narrow-screen route. Feature
+zoom fits the selected rendered shape and stores a `feature=` URL parameter.
+Province and feature frames are mutually exclusive, and Return to whole ocean
+restores the shared view.
 
 Rebuild the province ground after acquiring the exact Natural Earth response:
 
@@ -94,8 +114,20 @@ The generator extracts the exact `land-outline` path from the committed
 interactive province ground and uses it as a negative SVG mask. Every feature
 is therefore cut cleanly at the same checksum-receipted Natural Earth
 coastline; the overlay does not maintain a second approximate land drawing.
-The land mask clips display geometry only—it does not make the remaining ocean
-footprint observational.
+The normal mask adds a fixed 10-SVG-unit offshore visual clearance. Drake
+Passage, the Indonesian passages, Gibraltar, and Bab el-Mandeb use an explicit
+gate exemption so their schematic sections may meet both banks. Circumpolar
+and Pacific-spanning shapes carry matched continuation chevrons at the
+antimeridian. That left/right cut is a projection seam, not a physical break.
+Masking and clearance change display geometry only—they do not make the
+remaining ocean footprint observational or define a physical buffer distance.
+
+Future observed, diagnosed, or modeled feature geometry must enter through
+`research/feature-geometry-register.csv`, which is checked offline with
+`python analysis/validate_feature_geometry.py`. The contract requires source,
+license decision, checksums, CRS, longitude convention, depth/time/baseline,
+transform, and review status. The current 36 entries remain draft illustrative
+geometry; the admission path is a gate, not an evidence promotion.
 
 Serve the repository root locally so relative links resolve:
 

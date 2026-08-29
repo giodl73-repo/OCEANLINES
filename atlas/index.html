@@ -56,6 +56,10 @@
     <div class="feature-legend" aria-label="Geographic feature legend"><span data-lens="waters">WATERS</span><span data-lens="flows">FLOWS</span><span data-lens="edges">EDGES</span><span data-lens="floor">FLOOR</span><span data-lens="life">LIFE</span><span data-lens="events">EVENTS</span></div>
     <section class="atlas-shell" aria-label="Interactive ocean heat atlas">
       <div class="map-panel">
+        <details class="how-explore">
+          <summary>How to explore this fluid map</summary>
+          <div><p><strong>Place first</strong> Select an ocean state to see which schematic objects overlap it.</p><p><strong>Object first</strong> Select a water, flow, edge, relief, life zone, or event to see the states it crosses.</p><p><strong>Shape first</strong> Choose Fluid shapes to remove the province puzzle while keeping dark land and ghost coastlines.</p></div>
+        </details>
         <div class="map-modes" role="group" aria-label="Map evidence mode">
           <button class="map-mode active" data-mode="conceptual" aria-pressed="true">Conceptual geography</button>
           <button class="map-mode" data-mode="sst" aria-pressed="false">Observed SST</button>
@@ -70,13 +74,14 @@
           <button type="button" data-pressure="700" aria-pressed="true">700 dbar <small>intermediate</small></button>
           <button type="button" data-pressure="1000" aria-pressed="false">1000 dbar <small>deep</small></button>
         </div>
-        <div class="conceptual-views" id="conceptual-views" role="group" aria-label="Conceptual map land emphasis">
+        <div class="conceptual-views" id="conceptual-views" role="group" aria-label="Conceptual map ground">
           <span>PROVINCE GROUND</span>
-          <button type="button" data-conceptual-view="reference" aria-pressed="true">Ocean states <small>coast-owned edges</small></button>
-          <button type="button" data-conceptual-view="water-first" aria-pressed="false">Quiet states <small>lighter boundaries</small></button>
+          <button type="button" data-conceptual-view="reference" aria-pressed="false">Ocean states <small>coast-owned edges</small></button>
+          <button type="button" data-conceptual-view="water-first" aria-pressed="true">Quiet states <small>feature-reading default</small></button>
+          <button type="button" data-conceptual-view="shape-first" aria-pressed="false">Fluid shapes <small>ghost coastlines only</small></button>
         </div>
         <div class="province-controls" id="province-controls">
-          <p><strong>56 APPROXIMATE OCEAN STATES</strong><span id="province-status" aria-live="polite">Select a province to inspect and zoom.</span></p>
+          <p><strong>56 APPROXIMATE OCEAN STATES</strong><span id="province-status" tabindex="-1" aria-live="polite">Select a province to inspect and zoom.</span></p>
           <label for="province-select">Province <select id="province-select"><option value="all">All 56 provinces</option></select></label>
           <button type="button" id="province-reset" disabled>Return to all 56</button>
         </div>
@@ -230,6 +235,11 @@
         <p class="zone-index" id="zone-index">SELECT A LINE</p>
         <h2 id="zone-name">Read the moving map</h2>
         <p class="zone-kind" id="zone-kind">Start with any geographic feature shape.</p>
+        <div class="zone-tools">
+          <span class="evidence-badge" id="evidence-badge" data-evidence="conceptual">CONCEPTUAL</span>
+          <button type="button" id="feature-zoom">Zoom to this shape</button>
+        </div>
+        <p class="evidence-note">Evidence type qualifies the named phenomenon—not the drawn footprint or a confidence score.</p>
         <p class="zone-summary" id="zone-summary">Each feature is classified by lens, role, depth,
           persistence, and evidence—not by color alone.</p>
         <dl class="zone-facts">
@@ -279,6 +289,7 @@
   <script src="data/argo-temperature-anomaly-300dbar-2026-07.js" defer></script>
   <script src="data/argo-temperature-anomaly-700dbar-2026-07.js" defer></script>
   <script src="data/argo-temperature-anomaly-1000dbar-2026-07.js" defer></script>
+  <script src="data/relation-smoke-fixture.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>
