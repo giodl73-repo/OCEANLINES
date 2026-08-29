@@ -112,6 +112,18 @@
           <div class="temperature-ticks"><span id="scale-min">−2°C</span><span id="scale-mid">15°C</span><span id="scale-max">32°C</span></div>
         </div>
         <p class="map-note" id="map-note"><span></span> Selectable shapes are schematic geographic indexes—not observed boundaries · conceptual, overlapping geography · land-subtracted at the shared Natural Earth coastline</p>
+        <section class="relation-panel" id="relation-panel" aria-labelledby="relation-title">
+          <div class="relation-heading">
+            <div><p class="eyebrow">Place ↔ object</p><h3 id="relation-title">Schematic rendered overlap</h3></div>
+            <div class="relation-actions"><button type="button" id="relation-clear">Clear spotlight</button><button type="button" id="relation-export" disabled>Export 36 × 56 CSV</button></div>
+          </div>
+          <p id="relation-summary" aria-live="polite">Loading the relationship between 36 feature shapes and 56 ocean states…</p>
+          <div class="relation-lists">
+            <section aria-labelledby="overlap-title"><h4 id="overlap-title">Overlaps</h4><div id="relation-overlaps" class="relation-buttons"></div></section>
+            <section aria-labelledby="near-title"><h4 id="near-title">Near-contacts</h4><div id="relation-near" class="relation-buttons"></div></section>
+          </div>
+          <p class="relation-method">This is a sampled relationship between two schematic display layers—not observed membership, transport, or a physical boundary.</p>
+        </section>
         <div class="conceptual-actions" id="conceptual-actions">
           <a id="full-size-conceptual-map" href="../figures/oceanlines-province-atlas-coastal-states.svg" target="_blank" rel="noopener">Open the full-size province map ↗</a>
           <a href="../projections/">Open projection laboratory →</a>

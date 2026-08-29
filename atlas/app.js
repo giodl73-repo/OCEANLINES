@@ -67,6 +67,13 @@ let requestedProvinceCode = new URLSearchParams(window.location.search).get("pro
 let probeCell = null;
 let ringLatitude = 64;
 let currentArgoPressure = 700;
+const RELATION_METHOD = Object.freeze({ version: "rendered-overlap-1", coarsePathStep: 6, coarseGridStep: 12, finePathStep: 3, fineGridStep: 6 });
+let provinceGroups = [];
+let featureGroups = [];
+let relationMatrix = new Map();
+let relationSubject = "feature";
+let provinceSvgSha256 = "pending";
+let featureSvgSha256 = "pending";
 const argoLayers = {
   10: window.OCEANLINES_ARGO_TEMPERATURE_ANOMALY_10DBAR,
   300: window.OCEANLINES_ARGO_TEMPERATURE_ANOMALY_300DBAR,
@@ -76,6 +83,7 @@ const argoLayers = {
 
 function selectZone(zone) {
   selectedZone = zone;
+  relationSubject = "feature";
   document.querySelectorAll("#feature-shape-host .feature-shape").forEach(shape => shape.classList.toggle("selected", shape.dataset.id === zone.id));
   fields.index.textContent = `ZONE ${String(zone.n).padStart(2, "0")} · ${zone.label.toUpperCase()}`;
   fields.name.textContent = zone.name;
@@ -86,6 +94,7 @@ function selectZone(zone) {
   for (const key of ["summary", "role", "depth", "clock", "evidence", "boundary"]) fields[key].textContent = zone[key];
   fields.source.href = zone.source;
   fields.source.textContent = zone.source.startsWith("../") ? "Open the source register →" : "Open primary source →";
+  renderFeatureRelations(zone);
 }
 
 function colorFromStops(value, stops) {
@@ -607,10 +616,217 @@ function updateAtlasUrl() {
   window.history.replaceState({}, "", url);
 }
 
-function provinceFeatureMatches(group) {
-  if (!window.DOMPoint || !group.querySelector("path")?.isPointInFill) return [];
-  const path = group.querySelector("path");
-  return zones.filter(zone => path.isPointInFill(new DOMPoint(zone.x / 100 * 1600, zone.y / 100 * 1050)));
+function relationKey(provinceCode, featureId) {
+  return `${provinceCode}::${featureId}`;
+}
+
+async function sha256Text(value) {
+  if (!window.crypto?.subtle) return "unavailable";
+  const bytes = new TextEncoder().encode(value);
+  const digest = await window.crypto.subtle.digest("SHA-256", bytes);
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function geometryChildren(group) {
+  return [...group.querySelectorAll("path,ellipse,rect,circle,polygon,polyline")];
+}
+
+function boxesOverlap(a, b) {
+  return a.x <= b.x + b.width && a.x + a.width >= b.x && a.y <= b.y + b.height && a.y + a.height >= b.y;
+}
+
+function featureContainsPoint(group, point) {
+  return geometryChildren(group).some(element => {
+    try {
+      return Boolean(element.isPointInFill?.(point) || element.isPointInStroke?.(point));
+    } catch (_) {
+      return false;
+    }
+  });
+}
+
+function sampledPairHit(provincePath, featureGroup, pathStep, gridStep) {
+  const provinceBox = provincePath.getBBox();
+  const featureBox = featureGroup.getBBox();
+  if (!boxesOverlap(provinceBox, featureBox)) return false;
+  for (const element of geometryChildren(featureGroup)) {
+    if (!element.getTotalLength || !element.getPointAtLength) continue;
+    let length = 0;
+    try { length = element.getTotalLength(); } catch (_) { continue; }
+    const samples = Math.max(1, Math.ceil(length / pathStep));
+    for (let index = 0; index <= samples; index += 1) {
+      const point = element.getPointAtLength(length * index / samples);
+      if (provincePath.isPointInFill(new DOMPoint(point.x, point.y))) return true;
+    }
+  }
+  const left = Math.max(provinceBox.x, featureBox.x);
+  const right = Math.min(provinceBox.x + provinceBox.width, featureBox.x + featureBox.width);
+  const top = Math.max(provinceBox.y, featureBox.y);
+  const bottom = Math.min(provinceBox.y + provinceBox.height, featureBox.y + featureBox.height);
+  for (let y = top + gridStep / 2; y <= bottom; y += gridStep) {
+    for (let x = left + gridStep / 2; x <= right; x += gridStep) {
+      const point = new DOMPoint(x, y);
+      if (provincePath.isPointInFill(point) && featureContainsPoint(featureGroup, point)) return true;
+    }
+  }
+  return false;
+}
+
+function classifyRenderedOverlap(provinceGroup, featureGroup) {
+  const provincePath = provinceGroup.querySelector("path");
+  if (!provincePath?.isPointInFill || !window.DOMPoint) return { relation: "none", hitMethod: "unsupported" };
+  if (sampledPairHit(provincePath, featureGroup, RELATION_METHOD.coarsePathStep, RELATION_METHOD.coarseGridStep)) {
+    return { relation: "overlap", hitMethod: "coarse-sampled-svg" };
+  }
+  if (sampledPairHit(provincePath, featureGroup, RELATION_METHOD.finePathStep, RELATION_METHOD.fineGridStep)) {
+    return { relation: "near-contact", hitMethod: "fine-sampled-svg" };
+  }
+  return { relation: "none", hitMethod: "sampled-svg" };
+}
+
+function evidenceClass(zone) {
+  const evidence = zone.evidence.toLowerCase();
+  if (evidence.includes("modeled") || evidence.includes("modelled") || evidence.includes(" / ")) return "MODELED/MIXED";
+  if (evidence.includes("observational")) return "OBSERVATIONAL";
+  if (evidence.includes("synthesis")) return "SYNTHESIS";
+  return "CONCEPTUAL";
+}
+
+function buildRelationMatrix() {
+  if (relationMatrix.size || provinceGroups.length !== 56 || featureGroups.length !== 36) return;
+  const hiddenFeatures = featureGroups.filter(group => group.hasAttribute("hidden"));
+  hiddenFeatures.forEach(group => group.removeAttribute("hidden"));
+  for (const province of provinceGroups) {
+    for (const feature of featureGroups) {
+      const classification = classifyRenderedOverlap(province, feature);
+      relationMatrix.set(relationKey(province.dataset.code, feature.dataset.id), {
+        provinceCode: province.dataset.code,
+        featureId: feature.dataset.id,
+        ...classification
+      });
+    }
+  }
+  hiddenFeatures.forEach(group => group.setAttribute("hidden", ""));
+  window.OCEANLINES_RELATION_MATRIX = relationMatrix;
+  window.OCEANLINES_RELATION_METHOD = RELATION_METHOD;
+  document.querySelector("#relation-export").disabled = false;
+  if (selectedProvinceCode) renderProvinceRelations(provinceGroups.find(group => group.dataset.code === selectedProvinceCode));
+  else renderFeatureRelations(selectedZone);
+}
+
+function maybeBuildRelationMatrix() {
+  if (provinceGroups.length === 56 && featureGroups.length === 36) window.requestAnimationFrame(buildRelationMatrix);
+}
+
+function recordsForProvince(code) {
+  return zones.map(zone => ({ zone, record: relationMatrix.get(relationKey(code, zone.id)) })).filter(item => item.record);
+}
+
+function recordsForFeature(id) {
+  return provinceGroups.map(province => ({ province, record: relationMatrix.get(relationKey(province.dataset.code, id)) })).filter(item => item.record);
+}
+
+function clearRelationClasses() {
+  document.querySelectorAll("#feature-shape-host .feature-shape,#province-map-host .province").forEach(element => {
+    element.classList.remove("related", "near-contact", "relation-muted");
+  });
+}
+
+function renderRelationButtons(container, items, near = false) {
+  container.replaceChildren();
+  if (!items.length) {
+    const empty = document.createElement("span");
+    empty.textContent = "None at the declared tolerance";
+    container.append(empty);
+    return;
+  }
+  for (const item of items) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.classList.toggle("near", near);
+    if (item.zone) {
+      button.textContent = `${item.zone.name} · ${item.zone.lens}`;
+      button.addEventListener("click", () => selectZone(item.zone));
+    } else {
+      button.textContent = `${item.province.dataset.code} · ${item.province.dataset.name}`;
+      button.addEventListener("click", () => selectProvince(item.province));
+    }
+    container.append(button);
+  }
+}
+
+function renderProvinceRelations(group) {
+  if (!group || !relationMatrix.size) return;
+  relationSubject = "province";
+  clearRelationClasses();
+  const records = recordsForProvince(group.dataset.code);
+  const overlaps = records.filter(item => item.record.relation === "overlap");
+  const near = records.filter(item => item.record.relation === "near-contact");
+  const relatedIds = new Set(overlaps.map(item => item.zone.id));
+  const nearIds = new Set(near.map(item => item.zone.id));
+  featureGroups.forEach(feature => {
+    feature.classList.toggle("related", relatedIds.has(feature.dataset.id));
+    feature.classList.toggle("near-contact", nearIds.has(feature.dataset.id));
+    feature.classList.toggle("relation-muted", !relatedIds.has(feature.dataset.id) && !nearIds.has(feature.dataset.id));
+  });
+  document.querySelector("#relation-title").textContent = `${group.dataset.code} · schematic rendered overlap`;
+  document.querySelector("#relation-summary").textContent = `${overlaps.length} feature shapes overlap ${group.dataset.name}; ${near.length} additional pair${near.length === 1 ? " is" : "s are"} resolution-dependent near-contacts.`;
+  renderRelationButtons(document.querySelector("#relation-overlaps"), overlaps);
+  renderRelationButtons(document.querySelector("#relation-near"), near, true);
+}
+
+function renderFeatureRelations(zone) {
+  if (!zone || !relationMatrix.size || relationSubject === "province" && selectedProvinceCode) return;
+  relationSubject = "feature";
+  clearRelationClasses();
+  const records = recordsForFeature(zone.id);
+  const overlaps = records.filter(item => item.record.relation === "overlap");
+  const near = records.filter(item => item.record.relation === "near-contact");
+  const relatedCodes = new Set(overlaps.map(item => item.province.dataset.code));
+  const nearCodes = new Set(near.map(item => item.province.dataset.code));
+  featureGroups.forEach(feature => feature.classList.toggle("relation-muted", feature.dataset.id !== zone.id));
+  provinceGroups.forEach(province => {
+    province.classList.toggle("related", relatedCodes.has(province.dataset.code));
+    province.classList.toggle("near-contact", nearCodes.has(province.dataset.code));
+    province.classList.toggle("relation-muted", !relatedCodes.has(province.dataset.code) && !nearCodes.has(province.dataset.code));
+  });
+  document.querySelector("#relation-title").textContent = `${zone.name} · schematic rendered overlap`;
+  document.querySelector("#relation-summary").textContent = `${zone.name} overlaps ${overlaps.length} approximate ocean state${overlaps.length === 1 ? "" : "s"}; ${near.length} additional pair${near.length === 1 ? " is" : "s are"} resolution-dependent near-contacts.`;
+  renderRelationButtons(document.querySelector("#relation-overlaps"), overlaps);
+  renderRelationButtons(document.querySelector("#relation-near"), near, true);
+}
+
+function provinceFeatureMatches(group, relation = "overlap") {
+  if (!relationMatrix.size) return [];
+  return recordsForProvince(group.dataset.code).filter(item => item.record.relation === relation).map(item => item.zone);
+}
+
+function exportRelationMatrix() {
+  if (relationMatrix.size !== 2016) return;
+  const header = ["algorithm_version", "province_svg_sha256", "feature_svg_sha256", "province_edition", "catalog_version", "province_code", "feature_number", "feature_id", "evidence_class", "relation", "hit_method", "coarse_path_step", "coarse_grid_step", "fine_path_step", "fine_grid_step"];
+  const quote = value => `"${String(value).replaceAll('"', '""')}"`;
+  const rows = [header.map(quote).join(",")];
+  [...provinceGroups].sort((a, b) => a.dataset.code.localeCompare(b.dataset.code)).forEach(province => {
+    zones.forEach(zone => {
+      const record = relationMatrix.get(relationKey(province.dataset.code, zone.id));
+      rows.push([RELATION_METHOD.version, provinceSvgSha256, featureSvgSha256, "classic-56-approximate", "atlas-08", province.dataset.code, zone.n, zone.id, evidenceClass(zone), record.relation, record.hitMethod, RELATION_METHOD.coarsePathStep, RELATION_METHOD.coarseGridStep, RELATION_METHOD.finePathStep, RELATION_METHOD.fineGridStep].map(quote).join(","));
+    });
+  });
+  const url = URL.createObjectURL(new Blob([`${rows.join("\n")}\n`], { type: "text/csv;charset=utf-8" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "oceanlines-schematic-rendered-overlap.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearRelationSpotlight() {
+  relationSubject = null;
+  clearRelationClasses();
+  document.querySelector("#relation-title").textContent = "Schematic rendered overlap";
+  document.querySelector("#relation-summary").textContent = "Spotlight cleared. Select a province or feature to inspect its sampled display relationships.";
+  document.querySelector("#relation-overlaps").replaceChildren();
+  document.querySelector("#relation-near").replaceChildren();
 }
 
 function applyProvinceZoom() {
@@ -649,6 +865,7 @@ function expandedProvinceView(group) {
 
 function selectProvince(group, updateUrl = true) {
   if (!group) return;
+  relationSubject = "province";
   selectedProvinceCode = group.dataset.code;
   requestedProvinceCode = null;
   provinceView = expandedProvinceView(group);
@@ -658,10 +875,11 @@ function selectProvince(group, updateUrl = true) {
   document.querySelector("#province-status").textContent = `${selectedProvinceCode} · ${group.dataset.name} · click another state or change any view.`;
   if (currentMode === "conceptual") {
     const related = provinceFeatureMatches(group);
+    const near = provinceFeatureMatches(group, "near-contact");
     fields.index.textContent = `PROVINCE ${selectedProvinceCode} · ${group.dataset.biome.toUpperCase()}`;
     fields.name.textContent = group.dataset.name;
     fields.kind.textContent = `${group.dataset.basin.toUpperCase()} · CLASSIC 56`;
-    fields.summary.textContent = `${related.length} curated atlas feature point${related.length === 1 ? " falls" : "s fall"} inside this approximate state: ${related.length ? related.map(zone => zone.name).join(", ") : "none in the current 36-feature index"}. Switch lenses or observed fields without leaving the province.`;
+    fields.summary.textContent = `${related.length} curated feature shape${related.length === 1 ? " overlaps" : "s overlap"} this approximate state${near.length ? `, with ${near.length} resolution-dependent near-contact${near.length === 1 ? "" : "s"}` : ""}: ${related.length ? related.map(zone => zone.name).join(", ") : "none at the declared sampling tolerance"}. Switch lenses or observed fields without leaving the province.`;
     fields.lens.textContent = "ALL SIX LENSES + OBSERVED FIELDS";
     fields.role.textContent = "surface ecological reference province";
     fields.basis.textContent = "approximate geographic seed with its real Natural Earth coast edge";
@@ -669,10 +887,11 @@ function selectProvince(group, updateUrl = true) {
     fields.depth.textContent = "surface province identity; other atlas layers may be deeper";
     fields.clock.textContent = "mean reference; natural boundaries move";
     fields.evidence.textContent = "classic 56 vocabulary · schematic OCEANLINES geometry";
-    fields.boundary.textContent = "The inherited coast is real context. The internal state boundary, area, adjacency, and feature-point membership are approximate and are not published Longhurst geometry.";
+    fields.boundary.textContent = "The inherited coast is real context. Internal state boundaries and sampled shape overlaps are approximate display relationships, not published Longhurst geometry or observed ocean membership.";
     fields.source.href = "../research/longhurst-province-reference.csv";
     fields.source.textContent = "Open the 56-province directory →";
   }
+  renderProvinceRelations(group);
   applyProvinceZoom();
   if (updateUrl) updateAtlasUrl();
 }
@@ -686,7 +905,10 @@ function resetProvince(updateUrl = true) {
   document.querySelector("#province-reset").disabled = true;
   document.querySelector("#province-status").textContent = "Select a province to inspect and zoom.";
   applyProvinceZoom();
-  if (currentMode === "conceptual") selectZone(selectedZone);
+  if (currentMode === "conceptual") {
+    relationSubject = "feature";
+    selectZone(selectedZone);
+  }
   if (updateUrl) updateAtlasUrl();
 }
 
@@ -695,12 +917,15 @@ async function loadProvinceMap() {
   try {
     const response = await fetch("../figures/oceanlines-province-atlas-interactive.svg");
     if (!response.ok) throw new Error(`Province map request failed: ${response.status}`);
-    const documentSvg = new DOMParser().parseFromString(await response.text(), "image/svg+xml");
+    const svgText = await response.text();
+    provinceSvgSha256 = await sha256Text(svgText);
+    const documentSvg = new DOMParser().parseFromString(svgText, "image/svg+xml");
     const svg = documentSvg.documentElement;
     svg.removeAttribute("width");
     svg.removeAttribute("height");
     host.replaceChildren(document.importNode(svg, true));
     const groups = [...host.querySelectorAll(".province")];
+    provinceGroups = groups;
     const select = document.querySelector("#province-select");
     groups.sort((a, b) => a.dataset.code.localeCompare(b.dataset.code)).forEach(group => {
       const option = document.createElement("option");
@@ -716,6 +941,7 @@ async function loadProvinceMap() {
       });
     });
     if (requestedProvinceCode) selectProvince(groups.find(group => group.dataset.code === requestedProvinceCode), false);
+    maybeBuildRelationMatrix();
   } catch (error) {
     document.querySelector("#province-status").textContent = "Static province map loaded; interactive zoom requires the local web preview.";
   }
@@ -726,12 +952,15 @@ async function loadFeatureShapes() {
   try {
     const response = await fetch("../figures/oceanlines-atlas-feature-shapes.svg");
     if (!response.ok) throw new Error(`Feature-shape request failed: ${response.status}`);
-    const documentSvg = new DOMParser().parseFromString(await response.text(), "image/svg+xml");
+    const svgText = await response.text();
+    featureSvgSha256 = await sha256Text(svgText);
+    const documentSvg = new DOMParser().parseFromString(svgText, "image/svg+xml");
     const svg = documentSvg.documentElement;
     svg.removeAttribute("width");
     svg.removeAttribute("height");
     host.replaceChildren(document.importNode(svg, true));
-    host.querySelectorAll(".feature-shape").forEach(shape => {
+    featureGroups = [...host.querySelectorAll(".feature-shape")];
+    featureGroups.forEach(shape => {
       const zone = zones.find(item => item.id === shape.dataset.id);
       if (!zone) return;
       shape.addEventListener("click", event => {
@@ -747,6 +976,7 @@ async function loadFeatureShapes() {
     });
     applyGeographyFilters(false);
     selectZone(selectedZone);
+    maybeBuildRelationMatrix();
   } catch (error) {
     host.hidden = true;
     document.querySelector("#filter-status").textContent = "Feature shapes require the local web preview; use the complete text directory below the map.";
@@ -951,6 +1181,8 @@ document.querySelector("#province-select").addEventListener("change", event => {
   else selectProvince([...document.querySelectorAll("#province-map-host .province")].find(group => group.dataset.code === event.target.value));
 });
 document.querySelector("#province-reset").addEventListener("click", () => resetProvince());
+document.querySelector("#relation-clear").addEventListener("click", clearRelationSpotlight);
+document.querySelector("#relation-export").addEventListener("click", exportRelationMatrix);
 window.addEventListener("resize", applyProvinceZoom);
 document.querySelector("#coordinate-probe").addEventListener("submit", event => {
   event.preventDefault();

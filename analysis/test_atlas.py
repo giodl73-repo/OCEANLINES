@@ -221,6 +221,18 @@ class AtlasTests(unittest.TestCase):
         self.assertIn('id="feature-ocean-only"', overlay)
         self.assertIn('mask="url(#feature-ocean-only)"', overlay)
 
+    def test_relational_atlas_uses_sampled_shape_overlap_not_centroids(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        css = CSS.read_text(encoding="utf-8")
+        for token in ('id="relation-panel"', 'id="relation-overlaps"', 'id="relation-near"', 'id="relation-export"'):
+            self.assertIn(token, html)
+        for token in ("rendered-overlap-1", "classifyRenderedOverlap", "sampledPairHit", "near-contact", "exportRelationMatrix", "2016"):
+            self.assertIn(token, app)
+        self.assertNotIn("zone.x / 100 * 1600", app)
+        for token in (".feature-shape.relation-muted", ".province.related", ".province.near-contact"):
+            self.assertIn(token, css)
+
     def test_heat_continents_have_coastlike_shapes_distinct_from_blobs(self):
         builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
         figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
