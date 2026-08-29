@@ -48,6 +48,24 @@ h1 { grid-column:1; margin:0; max-width:950px; font-size:clamp(4rem,8.5vw,8rem);
 .heatplates-figure { display:block; min-width:0; }
 .heatplates-figure:focus-visible { outline:3px solid var(--cyan); outline-offset:3px; }
 .heatplates-figure img { display:block; width:100%; border:1px solid var(--line); background:var(--deep); }
+.province-atlas { padding:7rem 0; border-bottom:1px solid var(--line); }
+.province-atlas-copy { display:grid; grid-template-columns:minmax(270px,.8fr) minmax(0,1.35fr); column-gap:5vw; align-items:end; }
+.province-atlas-copy .eyebrow { grid-column:1/-1; }
+.province-atlas h2 { margin:0; font-size:clamp(2.8rem,6vw,6rem); line-height:.9; letter-spacing:-.06em; }
+.province-atlas-copy > p:not(.eyebrow) { margin:0; max-width:740px; color:var(--muted); font-size:1.05rem; line-height:1.65; }
+.province-atlas-rule { grid-column:2; margin-top:1.5rem; padding:1.2rem; border-left:4px solid var(--warm); background:var(--panel); }
+.province-atlas-rule strong { color:var(--warm); font:900 .65rem ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; }
+.province-atlas-rule p { margin:.5rem 0 0; color:var(--muted); line-height:1.5; }
+.province-atlas-figure { display:block; margin-top:3rem; }
+.province-atlas-figure:focus-visible { outline:3px solid var(--cyan); outline-offset:3px; }
+.province-atlas-figure img { display:block; width:100%; border:1px solid var(--line); background:var(--deep); }
+.province-atlas-notes { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin-top:1px; background:var(--line); }
+.province-atlas-notes p { margin:0; padding:1.25rem; color:var(--muted); background:var(--panel); font-size:.84rem; line-height:1.55; }
+.province-atlas-notes strong { display:block; margin-bottom:.35rem; color:var(--cyan); }
+.province-directory-link { display:flex; gap:1.5rem; align-items:baseline; margin:1.5rem 0 0; padding:1.25rem; border:1px solid var(--line); }
+.province-directory-link a { color:var(--cyan); font-weight:850; text-decoration:none; }
+.province-directory-link a:hover,.province-directory-link a:focus-visible { color:var(--warm); text-decoration:underline; }
+.province-directory-link span { color:var(--muted); font-size:.8rem; line-height:1.5; }
 .scorecard,.method { display:grid; grid-template-columns:.75fr 1.5fr; gap:5vw; padding:7rem 0; border-bottom:1px solid var(--line); }
 .scorecard > div > p:not(.eyebrow) { max-width:31rem; color:var(--muted); line-height:1.55; }
 .table-wrap { overflow-x:auto; }
@@ -67,8 +85,8 @@ footer { min-height:110px; padding:2rem 4vw; display:flex; align-items:center; c
 footer a { margin-left:auto; text-decoration:none; }
 @media (max-width:950px) {
   .hero { grid-template-columns:1fr; padding-top:5rem; }.hero .eyebrow,.hero h1,.hero .lede,.status { grid-column:1; grid-row:auto; }.status { margin-top:2rem; }
-  .criteria,.scorecard,.method,.heatplates { grid-template-columns:1fr; }.candidates { grid-template-columns:1fr; }.candidates article { padding:1rem; }.candidates img { max-height:72vh; }
+  .criteria,.scorecard,.method,.heatplates,.province-atlas-copy { grid-template-columns:1fr; }.province-atlas-copy .eyebrow,.province-atlas-rule { grid-column:1; }.province-atlas-copy > p:not(.eyebrow) { margin-top:1.5rem; }.province-atlas-notes { grid-template-columns:1fr; }.candidates { grid-template-columns:1fr; }.candidates article { padding:1rem; }.candidates img { max-height:72vh; }
 }
 @media (max-width:620px) {
-  .masthead p { display:none; }.masthead nav a:not(:first-child) { display:none; }.criteria ol { grid-template-columns:1fr; }h1 { max-width:100%; font-size:clamp(2.8rem,14vw,3.6rem); overflow-wrap:anywhere; }.hero { min-height:auto; }.lede,.status p { overflow-wrap:anywhere; }
+  .masthead p { display:none; }.masthead nav a:not(:first-child) { display:none; }.criteria ol { grid-template-columns:1fr; }.province-directory-link { display:block; }.province-directory-link span { display:block; margin-top:.6rem; }h1 { max-width:100%; font-size:clamp(2.8rem,14vw,3.6rem); overflow-wrap:anywhere; }.hero { min-height:auto; }.lede,.status p { overflow-wrap:anywhere; }
 }

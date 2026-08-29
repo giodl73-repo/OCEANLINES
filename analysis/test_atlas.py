@@ -216,6 +216,28 @@ class AtlasTests(unittest.TestCase):
         for title in ("INDO-PACIFIC WARM POOL", "WESTERN WARM POOL", "NORTHEAST PACIFIC BLOB", "EL NIÑO TONGUE", "ATLANTIC WATER / ARCTIC", "CIRCUMPOLAR DEEP WATER"):
             self.assertIn(title, figure)
 
+    def test_province_atlas_exposes_all_56_without_claiming_a_projection(self):
+        page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")
+        figure_path = ROOT / "figures" / "oceanlines-province-atlas.svg"
+        builder = (ROOT / "analysis" / "build_province_cartogram.py").read_text(encoding="utf-8")
+        catalog_path = ROOT / "research" / "longhurst-province-reference.csv"
+        self.assertTrue(figure_path.is_file())
+        self.assertTrue(catalog_path.is_file())
+        figure = figure_path.read_text(encoding="utf-8")
+        self.assertEqual(56, figure.count('class="province '))
+        for token in ("PROVINCE ATLAS", "REFERENCE CARTOGRAM · NOT A PROJECTION", "CLASSIC SURFACE PROVINCES", "Static provinces are mean ecological references"):
+            self.assertIn(token, figure + page)
+        for code in ("BPLR", "WARM", "PEQD", "OCAL", "CCAL", "ISSG", "GFST", "SANT", "APLR"):
+            self.assertIn(code, figure)
+        self.assertIn("does not reproduce the CC-BY-NC-SA Marine Regions boundary dataset", figure)
+        self.assertIn("Expected 56 provinces", builder)
+        with catalog_path.open(encoding="utf-8", newline="") as source:
+            rows = list(csv.DictReader(source))
+        self.assertEqual(56, len(rows))
+        self.assertEqual(56, len({row["code"] for row in rows}))
+        self.assertTrue(all(row["edition"] == "classic 56-province reference" for row in rows))
+        self.assertIn("Open the complete 56-row province directory", page)
+
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")
         data = (ROOT / "atlas" / "data" / "oisst-2026-08-01.js").read_text(encoding="utf-8")

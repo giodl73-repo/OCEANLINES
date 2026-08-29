@@ -10,6 +10,8 @@
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
 [Compare ocean-first projections](projections/) ·
+[See the ocean as 56 state-like provinces](figures/oceanlines-province-atlas.svg) ·
+[Download the 56-province directory](research/longhurst-province-reference.csv) ·
 [Read the field guide](HEATMASS.md) ·
 [Open the research note](research/) ·
 [Import the bibliography](REFERENCES.bib) ·
@@ -20,7 +22,7 @@
 | If you want to… | Go here |
 |---|---|
 | See the idea in one image | [Full fluid-geography map](figures/oceanlines-fluid-geography.svg) |
-| Compare ocean-first world geometries | [Projection laboratory](projections/) |
+| Compare ocean-first world geometries and the 56-province cartogram | [Projection laboratory](projections/) |
 | Explore waters, flows, edges, seafloor, life, events, and observational layers | [Interactive Atlas](atlas/) |
 | Understand reservoirs, anomalies, pathways, and gates | [HEATMASS field guide](HEATMASS.md) |
 | Evaluate claims, receipts, and next measurements | [Research note](research/) |
@@ -93,7 +95,7 @@ quantitative.
 1. Explore the private [ATLAS 10 depth ladder](atlas/) for conceptual zones,
    surface observations, four Argo pressure levels, paired polar rings, the
    latitude ladder, and aligned polar-cap mirrors.
-2. Compare Spilhaus, Oceanic Goode, Equal Earth, and experimental PELAGOS—or inspect each feature in the local [HEATPLATES shape atlas](projections/).
+2. Compare Spilhaus, Oceanic Goode, Equal Earth, and experimental PELAGOS; inspect local HEATPLATES; or read the classic 56 provinces as a state-like [reference cartogram](projections/).
 3. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
 4. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
 5. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
@@ -126,6 +128,15 @@ python -m unittest test_heat_zone_ledger.py
 ```
 
 The calculator uses only the Python standard library.
+
+Regenerate the original 56-province reference cartogram with:
+
+```powershell
+python analysis/build_province_cartogram.py
+```
+
+The generator uses no downloaded boundary geometry. It deliberately produces a
+non-metric, state-like layout from the cited province vocabulary.
 
 ## Project status
 
