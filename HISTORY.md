@@ -53,3 +53,33 @@ The mature Province Atlas should hold two complementary truths:
 The intended hook is a stable code and color system that can move between those
 views. The static Longhurst reference is only the beginning: natural ecological
 boundaries move seasonally and interannually.
+
+## 2026-08-29 — The provinces become the atlas
+
+### The second breakthrough
+
+The first state-map experiments still treated coastlines as decoration or as a
+single hole punched through unrelated tiles. The owner supplied the decisive
+correction: **the coastline must belong to the province itself**. ALSK should
+inherit a recognizable Alaska edge; HUMB should inherit Peru and Chile; BENG
+should inherit southwest Africa.
+
+`ef5f37a` rebuilt the 56 pieces from approximate geographic seeds over a
+complete ocean field and subtracted checksum-pinned Natural Earth land from
+them. The internal borders remain original schematic geometry, but every
+coast-facing piece now owns the real coastline it reaches. Continents became
+the lakes inside the ocean-state map.
+
+`a72074d` then made that geometry the common Atlas 10 ground. All six conceptual
+lenses and the SST, SST-anomaly, Argo-depth-anomaly, and estimated-error modes
+can be read without leaving the 56-state system. Every province is selectable,
+keyboard operable, URL-addressable, and zoomable; changing views preserves the
+selected geographic frame.
+
+The durable interaction principle is:
+
+> Select a province as the place. Then change the view to ask what waters,
+> flows, edges, life, events, or observations cross that place.
+
+This is still a reference cartogram—not validated Longhurst boundary geometry
+and not a mechanism, budget, or material wall.

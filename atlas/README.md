@@ -4,7 +4,8 @@
 use this document for transformations, thresholds, caveats, and rebuild commands.
 
 Atlas 10 extends the native-role-approved Atlas 09 depth preview with a
-four-level pressure ladder. It separates five top-level views: the conceptual 36-feature
+four-level pressure ladder. All views now share a selectable, zoomable ground
+of 56 approximate coast-owned ocean provinces. It separates five top-level views: the conceptual 36-feature
 geography, absolute NOAA OISST v2.1 sea surface temperature, NOAA's published
 SST anomaly, its time-matched estimated analysis error for 1 August 2026, and
 the Scripps RG Argo July 2026 potential-temperature anomaly at selectable 10,
@@ -30,28 +31,35 @@ symmetrically at ±5°C while the text summary retains the sampled source range.
 The preview adds geographic reference labels and a three-tick scale, states a
 plain-language conclusion before the controls, keeps polar and full-latitude
 diagnostics behind an explicit disclosure, separates nearby conceptual
-markers, and provides a text directory plus a full-size conceptual map for
+markers, and provides a text directory plus a full-size province map for
 small screens. It does not change the underlying fields or evidence class.
 
-The conceptual view uses Natural Earth 1:110m public-domain land geometry at
+The shared province ground uses Natural Earth 1:110m public-domain land geometry at
 commit `ca96624a56bd078437bca8184e78163e5039ad19`. The coastline source response
 has SHA-256
 `9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9`.
-Coastlines are geographic reference; all fluid overlays remain conceptual.
-Persistent and seasonal reservoirs use irregular, continent-like silhouettes
-with an inset shelf contour. Transient anomalies remain soft, round, and
-dashed. This is a visual vocabulary for distinguishing mechanisms, not a
-claim that the reservoir edges were measured, thresholded, fixed, or
-impermeable.
+Coastlines are geographic reference. The 56 classic identities are placed by
+original approximate geographic seeds, then real land is removed so each
+coastal province inherits the coast it reaches. Internal borders, areas,
+contacts, and point membership are schematic—not published Longhurst geometry.
+All fluid features remain conceptual index points, not measured footprints.
 
-The conceptual atlas offers two figure-ground treatments of the same overlay.
-**Land reference** uses filled continents for immediate orientation.
-**Water first** masks land with the ocean palette and leaves faint coastline
-traces, allowing the fluid features to lead without drawing heat overlays
-through land. The toggle changes emphasis only; it does not change geography,
-zone records, evidence, or interpretation.
+The conceptual atlas offers two treatments of the same province ground.
+**Ocean states** uses the strongest monochrome borders and labels. **Quiet
+states** reduces their contrast so crossing feature markers lead. The toggle
+changes emphasis only; it does not change geometry, records, evidence, or
+interpretation. Selecting a province by map or dropdown zooms the entire
+geographic stack; the URL records that selection, and switching to SST,
+anomaly, Argo, or error retains the same view.
 
-Rebuild the conceptual SVG after acquiring that exact GeoJSON response:
+Rebuild the province ground after acquiring the exact Natural Earth response:
+
+```powershell
+python analysis/build_province_cartogram.py --land-geojson path/to/ne_110m_land.geojson
+```
+
+The older full fluid-geography figure remains a separate annotated design
+study. Rebuild it with:
 
 ```powershell
 python analysis/build_fluid_geography.py `

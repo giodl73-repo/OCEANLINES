@@ -26,6 +26,7 @@ Owner visual approval and public promotion remain open.
 | Equal Earth and HEATPLATES shape atlas | `e91e67a` | APPROVED as additive private experiments | [HEATPLATES native-role review](signals/roles/check/heatplates-shape-atlas-roles-check-2026-08-29.md) |
 | Six-lens ocean geography and 36-feature catalog | `aa91cb8` | APPROVED as an additive private-preview expansion | [ocean-geography native-role review](signals/roles/check/ocean-geography-expansion-roles-check-2026-08-29.md) |
 | Classic 56-province cartogram, coastline fingerprints, and monochrome continents-as-lakes study | `9df16e7`, `495ec4b`, `2327cec` | APPROVED as additive private experiments; owner visual review open | [initial review](signals/roles/check/province-atlas-cartogram-roles-check-2026-08-29.md) · [coastline review](signals/roles/check/province-atlas-coastline-fingerprints-roles-check-2026-08-29.md) · [lakes review](signals/roles/check/province-atlas-continents-as-lakes-roles-check-2026-08-29.md) |
+| Coast-owned 56-state ground, cross-mode integration, and province zoom | `ef5f37a`, `a72074d` | APPROVED for private preview; owner interaction review open | [interactive-ground review](signals/roles/check/interactive-province-atlas-ground-roles-check-2026-08-29.md) |
 
 The review commits that record those verdicts follow their source commits in
 Git history. Each approval is scoped to a private preview and does not replace
@@ -55,6 +56,11 @@ external scientific peer review.
   data. Experiment 03B removes biome color and masks the compressed continents
   directly out of one neutral province field; its internal pieces remain
   schematic.
+- **New common atlas ground:** coast-owned approximate province pieces now
+  underlay the six conceptual lenses and all four observed evidence modes.
+  Province selection is keyboard accessible, URL-addressable, zoomable, and
+  persistent across view changes; this does not create observed province
+  boundaries or province-aggregated data.
 - **New research handoff:** bounded claims, exact source-response receipts,
   primary-literature mapping, BibTeX, optional review prompts, and CSV exports.
 - **Still not present:** depth-integrated heat content, section heat transport,
@@ -92,6 +98,8 @@ the default offline gate.
    common-scale companion after observed feature boundaries are defined.
 9. Whether the Province Atlas should receive owner visual approval, a styled
    HTML directory, and a separately versioned 54-province switch.
+10. Whether the interactive coast-owned province ground should replace the old
+    conceptual-map ground in a promoted release after owner interaction review.
 
 Until those decisions are made, repository links may expose Atlas 10 on this
 branch while public URLs and citation metadata continue to describe Atlas 07.

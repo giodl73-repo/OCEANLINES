@@ -6,7 +6,7 @@
 
 ## Enter OCEANLINES
 
-**[Explore 36 ocean features and the Atlas 10 depth ladder →](atlas/)**
+**[Explore 56 ocean states, 36 crossing features, and the Atlas 10 depth ladder →](atlas/)**
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
 [Compare ocean-first projections](projections/) ·
@@ -138,8 +138,9 @@ python analysis/build_province_cartogram.py --land-geojson path/to/ne_110m_land.
 ```
 
 The generator uses checksum-pinned, public-domain Natural Earth land geometry
-only for compressed continental context. Province boundaries remain an original,
-non-metric, state-like layout; no Longhurst boundary dataset is redistributed.
+for coast-owned province edges. It writes the poster studies and the shared
+interactive Atlas 10 ground. Internal province boundaries remain original,
+approximate nearest-seed geometry; no Longhurst boundary dataset is redistributed.
 
 ## Project status
 

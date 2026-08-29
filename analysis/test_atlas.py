@@ -36,7 +36,7 @@ class AtlasTests(unittest.TestCase):
     def test_readme_and_atlas_expose_clear_entry_routes(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         html = HTML.read_text(encoding="utf-8")
-        for token in ("## Enter OCEANLINES", "Explore 36 ocean features and the Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
+        for token in ("## Enter OCEANLINES", "Explore 56 ocean states, 36 crossing features, and the Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
             self.assertIn(token, readme)
         for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
             self.assertIn(f'href="{target}"', html)
