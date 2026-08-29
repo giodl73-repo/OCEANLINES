@@ -57,6 +57,11 @@
           <button type="button" data-pressure="700" aria-pressed="true">700 dbar <small>intermediate</small></button>
           <button type="button" data-pressure="1000" aria-pressed="false">1000 dbar <small>deep</small></button>
         </div>
+        <div class="conceptual-views" id="conceptual-views" role="group" aria-label="Conceptual map land emphasis">
+          <span>FIGURE / GROUND</span>
+          <button type="button" data-conceptual-view="reference" aria-pressed="true">Land reference <small>continents visible</small></button>
+          <button type="button" data-conceptual-view="water-first" aria-pressed="false">Water first <small>ghost coastlines</small></button>
+        </div>
         <div class="map-stage" id="map-stage">
           <img id="conceptual-map" src="../figures/oceanlines-fluid-geography-interactive.svg"
             alt="Conceptual world map: irregular continent-like heat reservoirs, round dashed anomalies, current pathways, buried layers, and gates.">
@@ -86,7 +91,7 @@
         </div>
         <p class="map-note" id="map-note"><span></span> Schematic, permeable, moving regions · not fixed boundaries · not a live analysis</p>
         <div class="conceptual-actions" id="conceptual-actions">
-          <a href="../figures/oceanlines-fluid-geography.svg" target="_blank" rel="noopener">Open the full-size map ↗</a>
+          <a id="full-size-conceptual-map" href="../figures/oceanlines-fluid-geography.svg" target="_blank" rel="noopener">Open the full-size map ↗</a>
           <details class="zone-directory">
             <summary>Browse all 12 zones as text</summary>
             <ol id="zone-directory-list"></ol>

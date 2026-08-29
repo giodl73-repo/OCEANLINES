@@ -18,6 +18,7 @@ const count = document.querySelector("#visible-count");
 const fields = Object.fromEntries(["index", "name", "kind", "summary", "role", "depth", "clock", "evidence", "boundary", "source"].map(key => [key, document.querySelector(`#zone-${key}`)]));
 let selectedZone = zones[0];
 let currentMode = "conceptual";
+let currentConceptualView = "reference";
 let probeCell = null;
 let ringLatitude = 64;
 let currentArgoPressure = 700;
@@ -534,6 +535,8 @@ function updateAtlasUrl() {
     url.searchParams.delete("lon");
     url.searchParams.delete("ring");
     url.searchParams.delete("pressure");
+    if (currentConceptualView === "water-first") url.searchParams.set("view", "water-first");
+    else url.searchParams.delete("view");
   } else {
     url.searchParams.set("mode", currentMode);
     url.searchParams.set("ring", ringLatitude.toFixed(3));
@@ -543,8 +546,35 @@ function updateAtlasUrl() {
     }
     if (currentMode === "argo700") url.searchParams.set("pressure", String(currentArgoPressure));
     else url.searchParams.delete("pressure");
+    url.searchParams.delete("view");
   }
   window.history.replaceState({}, "", url);
+}
+
+function conceptualMapNote() {
+  const view = currentConceptualView === "water-first" ? "water-first · ghost coastlines · " : "land-reference · ";
+  return `<span></span> ${view}schematic, permeable, moving regions · not fixed boundaries · not a live analysis`;
+}
+
+function setConceptualView(view, updateUrl = true) {
+  if (!['reference', 'water-first'].includes(view)) return;
+  currentConceptualView = view;
+  const waterFirst = view === "water-first";
+  const map = document.querySelector("#conceptual-map");
+  map.src = waterFirst
+    ? "../figures/oceanlines-fluid-geography-water-first-interactive.svg"
+    : "../figures/oceanlines-fluid-geography-interactive.svg";
+  map.alt = waterFirst
+    ? "Water-first conceptual world map: heat reservoirs, round dashed anomalies, current pathways, buried layers, and gates lead over ghosted land outlines."
+    : "Conceptual world map: irregular continent-like heat reservoirs, round dashed anomalies, current pathways, buried layers, and gates.";
+  document.querySelector("#full-size-conceptual-map").href = waterFirst
+    ? "../figures/oceanlines-fluid-geography-water-first.svg"
+    : "../figures/oceanlines-fluid-geography.svg";
+  document.querySelectorAll("#conceptual-views button").forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.conceptualView === view));
+  });
+  if (currentMode === "conceptual") document.querySelector("#map-note").innerHTML = conceptualMapNote();
+  if (updateUrl) updateAtlasUrl();
 }
 
 function setRingLatitude(latitude, updateUrl = true) {
@@ -599,6 +629,7 @@ function setMapMode(mode) {
   document.querySelector("#argo-depths").hidden = !subsurface;
   document.querySelector("#map-data-summary").hidden = !observed;
   document.querySelector("#conceptual-actions").hidden = observed;
+  document.querySelector("#conceptual-views").hidden = observed;
   document.querySelector("#map-reference-labels").hidden = !observed;
   document.querySelector(".atlas-shell").classList.toggle("observed-mode", observed);
   markers.hidden = observed;
@@ -614,7 +645,7 @@ function setMapMode(mode) {
   canvas.setAttribute("aria-label", subsurface ? `Scripps RG Argo potential-temperature anomaly at ${data.pressure_dbar.toFixed(0)} dbar for July 2026, displayed on a two-degree equirectangular grid from 64.5 degrees south to 79.5 degrees north.` : anomaly ? "NOAA OISST anomaly for 1 August 2026 relative to 1971 to 2000, displayed on a two-degree equirectangular grid." : error ? "NOAA OISST estimated analysis error for 1 August 2026, displayed on a two-degree equirectangular grid." : "NOAA OISST absolute sea surface temperature for 1 August 2026, displayed on a two-degree equirectangular grid.");
   document.querySelector("#map-note").innerHTML = observed
     ? `<span></span> ${subsurface ? `${data.pressure_dbar.toFixed(0)} dbar anomaly · RG 2019 seasonal reference · July 2026 · symmetric ±5°C display clamp · 64.5°S–79.5°N · slate outside source domain` : anomaly ? "SST anomaly · 1971–2000 reference · symmetric ±5°C display clamp" : error ? "estimated analysis error · 0.1–0.6°C display clamp" : "absolute SST"} · equirectangular · antimeridian seam · 2° display stride`
-    : "<span></span> Schematic, permeable, moving regions · not fixed boundaries · not a live analysis";
+    : conceptualMapNote();
   if (observed) {
     renderObservedField(data, anomaly || subsurface ? anomalyColor : error ? errorColor : temperatureColor);
     showObservedMetadata(data, mode);
@@ -681,6 +712,7 @@ document.querySelectorAll(".lens").forEach(button => {
 
 document.querySelectorAll(".map-mode").forEach(button => button.addEventListener("click", () => setMapMode(button.dataset.mode)));
 document.querySelectorAll("#argo-depths button").forEach(button => button.addEventListener("click", () => setArgoPressure(Number(button.dataset.pressure))));
+document.querySelectorAll("#conceptual-views button").forEach(button => button.addEventListener("click", () => setConceptualView(button.dataset.conceptualView)));
 document.querySelector("#coordinate-probe").addEventListener("submit", event => {
   event.preventDefault();
   inspectCoordinates(Number(document.querySelector("#probe-lat").value), Number(document.querySelector("#probe-lon").value));
@@ -698,6 +730,7 @@ document.querySelector("#sst-canvas").addEventListener("click", event => {
 selectZone(zones[0]);
 const requestedParameters = new URLSearchParams(window.location.search);
 const requestedMode = requestedParameters.get("mode");
+if (requestedParameters.get("view") === "water-first") setConceptualView("water-first", false);
 if (requestedParameters.has("pressure")) setArgoPressure(Number(requestedParameters.get("pressure")), false);
 if (requestedParameters.has("ring")) setRingLatitude(Number(requestedParameters.get("ring")), false);
 if (["observed", "sst", "anomaly", "argo700", "error"].includes(requestedMode)) setMapMode(requestedMode);

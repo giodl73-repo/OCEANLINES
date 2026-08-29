@@ -12,7 +12,7 @@ REFERENCES = ROOT / "REFERENCES.bib"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", *(ROOT / "atlas" / "data" / f"argo-temperature-anomaly-{pressure}dbar-2026-07.js" for pressure in (10, 300, 700, 1000))):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "figures" / "oceanlines-fluid-geography-water-first.svg", ROOT / "figures" / "oceanlines-fluid-geography-water-first-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", *(ROOT / "atlas" / "data" / f"argo-temperature-anomaly-{pressure}dbar-2026-07.js" for pressure in (10, 300, 700, 1000))):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -167,6 +167,19 @@ class AtlasTests(unittest.TestCase):
         self.assertGreaterEqual(figure.count('class="heat-shelf"'), 3)
         self.assertIn('<ellipse cx="205" cy="285"', figure)
         self.assertNotIn('<ellipse cx="1345" cy="442"', figure)
+
+    def test_water_first_view_changes_emphasis_not_fluid_geography(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        reference = (ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg").read_text(encoding="utf-8")
+        water_first = (ROOT / "figures" / "oceanlines-fluid-geography-water-first-interactive.svg").read_text(encoding="utf-8")
+        self.assertIn('data-conceptual-view="water-first"', html)
+        self.assertIn('view", "water-first"', app)
+        self.assertIn("WATER-FIRST", water_first)
+        self.assertIn("fill:url(#ocean); stroke:#9ab8b8; stroke-opacity:.24", water_first)
+        self.assertIn("fill:#182d31; stroke:#799395", reference)
+        for feature in ('id="indo-pacific-heat-continent"', '<ellipse cx="205" cy="285"', 'class="current"', 'class="gate"'):
+            self.assertEqual(reference.count(feature), water_first.count(feature), feature)
 
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")

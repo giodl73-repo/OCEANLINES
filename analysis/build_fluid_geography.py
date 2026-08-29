@@ -84,7 +84,31 @@ def callout(
       </g>"""
 
 
-def build_svg(coastline_path: str, source_sha256: str, include_callouts: bool = True) -> str:
+def build_svg(
+    coastline_path: str,
+    source_sha256: str,
+    include_callouts: bool = True,
+    land_emphasis: str = "reference",
+) -> str:
+    if land_emphasis not in {"reference", "water-first"}:
+        raise ValueError(f"Unknown land emphasis: {land_emphasis}")
+    water_first = land_emphasis == "water-first"
+    land_style = (
+        "fill:url(#ocean); stroke:#9ab8b8; stroke-opacity:.24; stroke-width:1;"
+        if water_first
+        else "fill:#182d31; stroke:#799395; stroke-width:1.5;"
+    )
+    coast_glow_style = (
+        "fill:none; stroke:#b7ccca; stroke-opacity:.05; stroke-width:3;"
+        if water_first
+        else "fill:none; stroke:#b7ccca; stroke-opacity:.2; stroke-width:5;"
+    )
+    view_description = (
+        "This water-first rendering masks land with the ocean palette and retains only ghost coastlines so fluid features lead the figure-ground hierarchy. "
+        if water_first
+        else "Land is retained as a geographic reference. "
+    )
+    view_stamp = "CONCEPTUAL ATLAS · WATER-FIRST · NOT A HEAT BUDGET" if water_first else "CONCEPTUAL ATLAS · NOT A HEAT BUDGET"
     callouts = "".join(
         [
             callout(3, "Northeast Pacific Blob", "transient anomaly", 80, 170, 205, 285, "#ff766c", 250),
@@ -104,7 +128,7 @@ def build_svg(coastline_path: str, source_sha256: str, include_callouts: bool = 
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{WIDTH}" height="{HEIGHT}" viewBox="0 0 {WIDTH} {HEIGHT}" role="img" aria-labelledby="title desc">
   <title id="title">OCEANLINES fluid geography of Earth's ocean</title>
-  <desc id="desc">An ocean-first conceptual map on Natural Earth coastlines. Twelve numbered callouts identify continent-like warm reservoirs, boundary-current pathways, transient anomalies, buried polar water masses, the Antarctic Circumpolar Current, and exchange gates. Reservoirs use irregular fluid coastlines to distinguish persistent or seasonal heatmasses from round transient blobs. All heat shapes and pathways are schematic, permeable, and moving rather than measured boundaries. The figure does not calculate heat content or transport.</desc>
+  <desc id="desc">An ocean-first conceptual map on Natural Earth coastlines. {view_description}Twelve numbered callouts identify continent-like warm reservoirs, boundary-current pathways, transient anomalies, buried polar water masses, the Antarctic Circumpolar Current, and exchange gates. Reservoirs use irregular fluid coastlines to distinguish persistent or seasonal heatmasses from round transient blobs. All heat shapes and pathways are schematic, permeable, and moving rather than measured boundaries. The figure does not calculate heat content or transport.</desc>
   <metadata>
     Natural Earth 1:110m land geometry, public domain, commit {SOURCE_COMMIT}, source SHA-256 {source_sha256}, {SOURCE_URL}. OCEANLINES conceptual overlays are original MIT-licensed artwork.
   </metadata>
@@ -147,8 +171,8 @@ def build_svg(coastline_path: str, source_sha256: str, include_callouts: bool = 
       text {{ font-family: Inter, ui-sans-serif, system-ui, sans-serif; }}
       .grid {{ fill:none; stroke:#b6e0e3; stroke-opacity:.12; stroke-width:1; }}
       .geo-label {{ fill:#b2d1d2; fill-opacity:.38; font-size:18px; font-weight:700; letter-spacing:5px; }}
-      .land {{ fill:#182d31; stroke:#799395; stroke-width:1.5; vector-effect:non-scaling-stroke; }}
-      .coast-glow {{ fill:none; stroke:#b7ccca; stroke-opacity:.2; stroke-width:5; vector-effect:non-scaling-stroke; }}
+      .land {{ {land_style} vector-effect:non-scaling-stroke; }}
+      .coast-glow {{ {coast_glow_style} vector-effect:non-scaling-stroke; }}
       .heat-continent {{ fill:url(#warmPool); stroke:#ffd06b; stroke-opacity:.96; stroke-width:3.5; stroke-linejoin:round; }}
       .heat-shelf {{ fill:none; stroke:#fff0b8; stroke-opacity:.62; stroke-width:2; stroke-dasharray:14 8; stroke-linecap:round; }}
       .current-halo {{ fill:none; stroke:#031116; stroke-opacity:.72; stroke-width:17; stroke-linecap:round; stroke-linejoin:round; }}
@@ -167,7 +191,7 @@ def build_svg(coastline_path: str, source_sha256: str, include_callouts: bool = 
 
   <rect width="1600" height="1050" fill="#06171c"/>
   <text x="60" y="43" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="4">OCEANLINES / FLUID GEOGRAPHY</text>
-  <text x="1540" y="43" text-anchor="end" fill="#ffb454" font-size="12" font-weight="800" letter-spacing="2.2">CONCEPTUAL ATLAS · NOT A HEAT BUDGET</text>
+  <text x="1540" y="43" text-anchor="end" fill="#ffb454" font-size="12" font-weight="800" letter-spacing="2.2">{view_stamp}</text>
 
   <g clip-path="url(#mapClip)">
     <rect x="{MAP_X}" y="{MAP_Y}" width="{MAP_WIDTH}" height="{MAP_HEIGHT}" fill="url(#ocean)"/>
@@ -259,6 +283,8 @@ def main() -> None:
     parser.add_argument("--land-geojson", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--interactive-output", type=Path)
+    parser.add_argument("--water-first-output", type=Path)
+    parser.add_argument("--water-first-interactive-output", type=Path)
     args = parser.parse_args()
 
     payload = args.land_geojson.read_bytes()
@@ -274,6 +300,23 @@ def main() -> None:
         interactive_svg = build_svg(coastline_path, digest, include_callouts=False)
         args.interactive_output.parent.mkdir(parents=True, exist_ok=True)
         args.interactive_output.write_text(interactive_svg, encoding="utf-8", newline="\n")
+    if args.water_first_output:
+        water_first_svg = build_svg(coastline_path, digest, land_emphasis="water-first")
+        args.water_first_output.parent.mkdir(parents=True, exist_ok=True)
+        args.water_first_output.write_text(water_first_svg, encoding="utf-8", newline="\n")
+    if args.water_first_interactive_output:
+        water_first_interactive_svg = build_svg(
+            coastline_path,
+            digest,
+            include_callouts=False,
+            land_emphasis="water-first",
+        )
+        args.water_first_interactive_output.parent.mkdir(parents=True, exist_ok=True)
+        args.water_first_interactive_output.write_text(
+            water_first_interactive_svg,
+            encoding="utf-8",
+            newline="\n",
+        )
 
 
 if __name__ == "__main__":

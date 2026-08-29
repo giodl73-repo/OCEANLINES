@@ -44,13 +44,22 @@ dashed. This is a visual vocabulary for distinguishing mechanisms, not a
 claim that the reservoir edges were measured, thresholded, fixed, or
 impermeable.
 
+The conceptual atlas offers two figure-ground treatments of the same overlay.
+**Land reference** uses filled continents for immediate orientation.
+**Water first** masks land with the ocean palette and leaves faint coastline
+traces, allowing the fluid features to lead without drawing heat overlays
+through land. The toggle changes emphasis only; it does not change geography,
+zone records, evidence, or interpretation.
+
 Rebuild the conceptual SVG after acquiring that exact GeoJSON response:
 
 ```powershell
 python analysis/build_fluid_geography.py `
   --land-geojson path/to/ne_110m_land.geojson `
   --output figures/oceanlines-fluid-geography.svg `
-  --interactive-output figures/oceanlines-fluid-geography-interactive.svg
+  --interactive-output figures/oceanlines-fluid-geography-interactive.svg `
+  --water-first-output figures/oceanlines-fluid-geography-water-first.svg `
+  --water-first-interactive-output figures/oceanlines-fluid-geography-water-first-interactive.svg
 ```
 
 Serve the repository root locally so relative links resolve:
