@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import html
 from pathlib import Path
+import xml.etree.ElementTree as ET
 
 
 FEATURES = [
@@ -55,7 +56,18 @@ FEATURES = [
 ]
 
 
-def build_svg() -> str:
+def load_land_path(province_map: Path) -> str:
+    """Reuse the province ground's exact, checksum-receipted land geometry."""
+    root = ET.parse(province_map).getroot()
+    for element in root.iter("{http://www.w3.org/2000/svg}path"):
+        if element.attrib.get("class") == "land-outline":
+            path = element.attrib.get("d")
+            if path:
+                return path
+    raise ValueError(f"No land-outline path found in {province_map}")
+
+
+def build_svg(land_path: str) -> str:
     groups = []
     for feature_id, name, lens, geometry in FEATURES:
         groups.append(
@@ -70,6 +82,10 @@ def build_svg() -> str:
     <marker id="flow-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto"><path d="M1 1L11 6L1 11Z" fill="#ffb454"/></marker>
     <pattern id="buried-pattern" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><rect width="14" height="14" fill="#8c7be7" fill-opacity=".19"/><path d="M0 0V14" stroke="#cfc6ff" stroke-width="3" stroke-opacity=".46"/></pattern>
     <pattern id="oxygen-pattern" width="13" height="13" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)"><rect width="13" height="13" fill="#72d389" fill-opacity=".13"/><path d="M0 0V13" stroke="#9bea9f" stroke-width="2.5" stroke-opacity=".42"/></pattern>
+    <mask id="feature-ocean-only" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1050">
+      <rect x="60" y="90" width="1480" height="740" fill="white"/>
+      <path d="{html.escape(land_path, quote=True)}" fill="black" fill-rule="evenodd"/>
+    </mask>
   </defs>
   <style>
     .feature-shape {{ cursor:pointer; }} .feature-shape:focus {{ outline:none; }}
@@ -95,15 +111,16 @@ def build_svg() -> str:
     .feature-shape:hover > :not(title):not(.hit),.feature-shape:focus > :not(title):not(.hit),.feature-shape.selected > :not(title):not(.hit) {{ filter:drop-shadow(0 0 7px #fff4d7); stroke:#fff4d7; }}
     .feature-shape[hidden] {{ display:none; }}
   </style>
-  <g aria-label="Selectable conceptual feature shapes">{''.join(groups)}</g>
+  <g aria-label="Selectable conceptual feature shapes" mask="url(#feature-ocean-only)">{''.join(groups)}</g>
 </svg>'''
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "figures" / "oceanlines-atlas-feature-shapes.svg")
+    parser.add_argument("--province-map", type=Path, default=Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-interactive.svg")
     args = parser.parse_args()
-    args.output.write_text(build_svg(), encoding="utf-8", newline="\n")
+    args.output.write_text(build_svg(load_land_path(args.province_map)), encoding="utf-8", newline="\n")
     print(args.output)
 
 

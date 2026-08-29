@@ -90,6 +90,13 @@ These forms communicate object type, approximate placement, and geographic
 character. They do not communicate an observed boundary, measured extent,
 transport section, threshold contour, or water-mass analysis.
 
+The generator extracts the exact `land-outline` path from the committed
+interactive province ground and uses it as a negative SVG mask. Every feature
+is therefore cut cleanly at the same checksum-receipted Natural Earth
+coastline; the overlay does not maintain a second approximate land drawing.
+The land mask clips display geometry only—it does not make the remaining ocean
+footprint observational.
+
 Serve the repository root locally so relative links resolve:
 
 ```powershell

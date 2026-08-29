@@ -202,6 +202,25 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(36, overlay.count('tabindex="0" role="button"'))
         self.assertEqual(36, overlay.count('aria-label="Select '))
 
+    def test_feature_shapes_subtract_the_exact_province_map_land(self):
+        overlay_path = ROOT / "figures" / "oceanlines-atlas-feature-shapes.svg"
+        province_path = ROOT / "figures" / "oceanlines-province-atlas-interactive.svg"
+        overlay = overlay_path.read_text(encoding="utf-8")
+        namespace = "{http://www.w3.org/2000/svg}"
+        overlay_root = ET.parse(overlay_path).getroot()
+        province_root = ET.parse(province_path).getroot()
+        overlay_land = next(
+            element.attrib["d"] for element in overlay_root.iter(f"{namespace}path")
+            if element.attrib.get("fill") == "black" and element.attrib.get("fill-rule") == "evenodd"
+        )
+        province_land = next(
+            element.attrib["d"] for element in province_root.iter(f"{namespace}path")
+            if element.attrib.get("class") == "land-outline"
+        )
+        self.assertEqual(province_land, overlay_land)
+        self.assertIn('id="feature-ocean-only"', overlay)
+        self.assertIn('mask="url(#feature-ocean-only)"', overlay)
+
     def test_heat_continents_have_coastlike_shapes_distinct_from_blobs(self):
         builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
         figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
