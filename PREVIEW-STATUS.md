@@ -23,6 +23,7 @@ Owner visual approval and public promotion remain open.
 | Atlas 09 RG Argo 700 dbar anomaly | `ef6662e` | APPROVED by native roles; owner visual review open | [Atlas 09 depth review](signals/roles/check/atlas-09-argo-700dbar-roles-check-2026-08-28.md) |
 | Atlas 10 RG Argo depth ladder | `2756f1e` | APPROVED by native roles; owner visual review open | [Atlas 10 depth-ladder review](signals/roles/check/atlas-10-argo-depth-ladder-roles-check-2026-08-28.md) |
 | PELAGOS projection laboratory | `92345ec`, `dbe8165` | APPROVED as a private experiment; default-atlas adoption open | [PELAGOS native-role review](signals/roles/check/pelagos-projection-laboratory-roles-check-2026-08-29.md) |
+| Equal Earth and HEATPLATES shape atlas | `e91e67a` | APPROVED as additive private experiments | [HEATPLATES native-role review](signals/roles/check/heatplates-shape-atlas-roles-check-2026-08-29.md) |
 
 The review commits that record those verdicts follow their source commits in
 Git history. Each approval is scoped to a private preview and does not replace
@@ -40,9 +41,10 @@ external scientific peer review.
   and 1000 dbar, pressure controls, bookmark state, and four-level probe output.
 - **New presentation layer:** pinned Natural Earth coastline geometry,
   redesigned conceptual overlays, land-reference and water-first treatments,
-  clearer evidence modes, researcher routes, and a three-candidate ocean-first
-  projection laboratory. PELAGOS remains an experimental equal-area aspect,
-  not the default atlas projection.
+  clearer evidence modes, researcher routes, a four-candidate ocean-first
+  projection laboratory, and a six-panel HEATPLATES shape directory. PELAGOS
+  remains an experimental equal-area aspect, not the default atlas projection;
+  HEATPLATES uses panel-specific zoom and cannot compare footprint area.
 - **New research handoff:** bounded claims, exact source-response receipts,
   primary-literature mapping, BibTeX, optional review prompts, and CSV exports.
 - **Still not present:** depth-integrated heat content, section heat transport,
@@ -76,6 +78,8 @@ the default offline gate.
    preview after owner visual review.
 7. Whether PELAGOS should remain a projection study, receive quantitative
    distortion diagnostics, or become an interactive atlas option.
+8. Whether HEATPLATES should remain a conceptual shape directory or gain a
+   common-scale companion after observed feature boundaries are defined.
 
 Until those decisions are made, repository links may expose Atlas 10 on this
 branch while public URLs and citation metadata continue to describe Atlas 07.
