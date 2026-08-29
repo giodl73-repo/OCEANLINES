@@ -76,10 +76,19 @@ Regenerate the 36 selectable atlas shapes with:
 python analysis/build_atlas_feature_overlay.py
 ```
 
-The first twelve preserve the established fluid-geography artwork. The rest
-use mechanism-specific schematic geometry—water regions, gyre loops, fronts,
-ridges, a trench, a plateau, and biogeochemical regions. Stable record numbers
-remain in the text directory but are no longer drawn as map symbols.
+The first twelve preserve and extend the established fluid-geography artwork;
+HEATPLATES supplies the shape-first quality precedent. The rest follow the
+feature-silhouette contract: water masses have source necks, cores, and
+spreading tongues; gyres use asymmetric directional basin loops; fronts use
+paired meandering seams; gates use section and passage marks; ridges, trenches,
+and plateaus use distinct relief conventions; oxygen-minimum zones use hatched
+coastal wedges. Shape, texture, and line construction carry meaning without
+depending on color. Stable record numbers remain in the text directory but are
+no longer drawn as map symbols.
+
+These forms communicate object type, approximate placement, and geographic
+character. They do not communicate an observed boundary, measured extent,
+transport section, threshold contour, or water-mass analysis.
 
 Serve the repository root locally so relative links resolve:
 

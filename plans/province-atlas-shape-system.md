@@ -71,6 +71,32 @@ The geographic view must state its Longhurst edition, coordinate system,
 feature count, source license, source checksum, simplification tolerance, and
 whether boundaries are static means or dynamically diagnosed.
 
+## Crossing-feature silhouette contract
+
+The 36 selectable waters, flows, edges, seafloor features, life zones, and
+events are not map pins or badges. Even while schematic, every object must have
+enough geographic character to be recognized as a different kind of ocean
+place.
+
+Required invariants:
+
+1. Every object has a distinct silhouette signature; repeated circles,
+   capsules, diamonds, and rounded quadrilaterals are not an acceptable system.
+2. Area objects show a plausible relationship to their source, basin, coast,
+   latitude belt, or spreading direction without claiming observed extent.
+3. Mechanism is legible in topology: water masses have source necks and
+   spreading tongues; gyres have asymmetric directional loops; fronts have
+   meandering paired seams; gates have section or passage geometry; relief uses
+   ridge, trench, or plateau conventions; anomalies remain visibly transient.
+4. Family identity survives without color through fill, hatching, dash rhythm,
+   line construction, or conventional map marks.
+5. Thin paths retain a generous invisible hit area, and every multi-part object
+   remains one keyboard-focusable selectable group.
+
+These are interpretive index shapes, not measured footprints, boundaries,
+transport sections, or water-mass analyses. The fluid-geography map and
+HEATPLATES are the quality precedent for their silhouette language.
+
 ## Version 4 — moving provinces
 
 The scientific destination is not a prettier fixed border. A later observed
@@ -88,4 +114,3 @@ https://doi.org/10.1002/gbc.20089
    reviews on the selected puzzle grammar.
 4. Resolve a legally compatible source path before implementing true footprints.
 5. Only then prototype the Equal voice ↔ True footprint transition.
-

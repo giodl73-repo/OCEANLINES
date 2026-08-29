@@ -2,6 +2,7 @@ import csv
 import pathlib
 import re
 import unittest
+import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 APP = ROOT / "atlas" / "app.js"
@@ -184,6 +185,22 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(f'data-id="{feature_id}"', overlay)
         self.assertNotIn('button.className = "marker"', app)
         self.assertIn("The first twelve geometries preserve", builder)
+
+    def test_feature_shapes_use_character_rich_mechanism_grammar(self):
+        figure_path = ROOT / "figures" / "oceanlines-atlas-feature-shapes.svg"
+        overlay = figure_path.read_text(encoding="utf-8")
+        ET.parse(figure_path)
+        for token in (
+            'class="water-branch"', 'class="gyre-spine"',
+            'class="front-companion"', 'class="gate-section"',
+            'class="ridge-flank"', 'class="trench-teeth"',
+            'class="oxygen-core"', 'class="sargasso-boundary"',
+        ):
+            self.assertIn(token, overlay)
+        self.assertNotIn('<ellipse class="gyre"', overlay)
+        self.assertGreaterEqual(overlay.count('class="hit"'), 17)
+        self.assertEqual(36, overlay.count('tabindex="0" role="button"'))
+        self.assertEqual(36, overlay.count('aria-label="Select '))
 
     def test_heat_continents_have_coastlike_shapes_distinct_from_blobs(self):
         builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
