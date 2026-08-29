@@ -45,6 +45,17 @@ class AtlasTests(unittest.TestCase):
         for target in ("../figures/osw-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
             self.assertIn(f'href="{target}"', html)
 
+    def test_osw_rebrand_preserves_versioned_observation_interfaces(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        self.assertIn("`OSW` always expands", readme)
+        self.assertIn("The Ocean States", readme)
+        self.assertIn("backward compatibility", readme)
+        for token in ("window.OCEANLINES_OISST", "window.OCEANLINES_ARGO_TEMPERATURE_ANOMALY", 'oceanlines.oisst.snapshot.v2'):
+            self.assertIn(token, app)
+        for token in ("window.OSW_RELATION_MATRIX", "window.OSW_RELATION_METHOD", "window.OSW_RELATION_SMOKE"):
+            self.assertIn(token, app)
+
     def test_research_note_separates_claims_and_records_data_receipts(self):
         source = RESEARCH_HTML.read_text(encoding="utf-8")
         styles = (ROOT / "research" / "styles.css").read_text(encoding="utf-8")

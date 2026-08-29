@@ -80,6 +80,8 @@ const featureGridCache = new WeakMap();
 let relationSubject = "feature";
 let provinceSvgSha256 = "pending";
 let featureSvgSha256 = "pending";
+// These observation globals and their oceanlines.* schema IDs are versioned
+// data interfaces. Keep them stable across the OSW human-facing rebrand.
 const argoLayers = {
   10: window.OCEANLINES_ARGO_TEMPERATURE_ANOMALY_10DBAR,
   300: window.OCEANLINES_ARGO_TEMPERATURE_ANOMALY_300DBAR,
