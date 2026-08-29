@@ -220,15 +220,19 @@ class AtlasTests(unittest.TestCase):
         page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")
         figure_path = ROOT / "figures" / "oceanlines-province-atlas.svg"
         lakes_path = ROOT / "figures" / "oceanlines-province-atlas-lakes.svg"
+        coastal_states_path = ROOT / "figures" / "oceanlines-province-atlas-coastal-states.svg"
         builder = (ROOT / "analysis" / "build_province_cartogram.py").read_text(encoding="utf-8")
         catalog_path = ROOT / "research" / "longhurst-province-reference.csv"
         self.assertTrue(figure_path.is_file())
         self.assertTrue(lakes_path.is_file())
+        self.assertTrue(coastal_states_path.is_file())
         self.assertTrue(catalog_path.is_file())
         figure = figure_path.read_text(encoding="utf-8")
         lakes = lakes_path.read_text(encoding="utf-8")
+        coastal_states = coastal_states_path.read_text(encoding="utf-8")
         self.assertEqual(56, figure.count('class="province '))
         self.assertEqual(56, lakes.count('class="province '))
+        self.assertEqual(56, coastal_states.count('class="province '))
         for token in ("PROVINCE ATLAS", "REFERENCE CARTOGRAM · NOT A PROJECTION", "CLASSIC SURFACE PROVINCES", "Static provinces are mean ecological references"):
             self.assertIn(token, figure + page)
         for code in ("BPLR", "WARM", "PEQD", "OCAL", "CCAL", "ISSG", "GFST", "SANT", "APLR"):
@@ -246,6 +250,9 @@ class AtlasTests(unittest.TestCase):
         for token in ("CONTINENTS AS LAKES", 'mask id="continent-cutouts"', "ONE FILL", "Real coastlines cut the edge pieces"):
             self.assertIn(token, lakes)
         self.assertIn("oceanlines-province-atlas-lakes.svg", page)
+        for token in ("COAST-OWNED STATES", 'mask id="ocean-only"', "ALSK inherits Alaska", "nearest-seed internal borders"):
+            self.assertIn(token, coastal_states + page)
+        self.assertIn("oceanlines-province-atlas-coastal-states.svg", page)
 
     def test_province_atlas_breakthrough_is_preserved_in_project_history(self):
         history = (ROOT / "HISTORY.md").read_text(encoding="utf-8")

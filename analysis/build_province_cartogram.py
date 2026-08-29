@@ -94,6 +94,27 @@ SOURCE_COMMIT = "ca96624a56bd078437bca8184e78163e5039ad19"
 SOURCE_URL = f"https://raw.githubusercontent.com/nvkelso/natural-earth-vector/{SOURCE_COMMIT}/geojson/ne_110m_land.geojson"
 EXPECTED_SOURCE_SHA256 = "9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9"
 
+# Approximate open-ocean label/seed positions for an original nearest-neighbour
+# cartogram. These are deliberately not published Longhurst boundary geometry:
+# they place the vocabulary geographically so the real coast is inherited by
+# the appropriate coastal province (ALSK at Alaska, HUMB at Peru/Chile, etc.).
+PROVINCE_SEEDS = {
+    "BPLR": (0, 79), "BERS": (-170, 58), "PSAW": (160, 48), "NPPF": (-175, 42),
+    "PSAE": (-145, 49), "ALSK": (-148, 58), "KURO": (145, 35), "NPSW": (165, 28),
+    "NPSE": (-135, 30), "CCAL": (-124, 36), "CHIN": (122, 24), "NPTG": (-165, 20),
+    "PNEC": (-140, 9), "CAMR": (-92, 10), "SUND": (126, -5), "WARM": (150, 8),
+    "PEQD": (-115, 0), "HUMB": (-82, -22), "AUSE": (156, -25), "ARCH": (140, -12),
+    "SPSG": (-135, -28), "NEWZ": (174, -42), "TASM": (160, -38), "OCAL": (-132, 40),
+    "REDS": (43, 18), "IND W": (70, 12), "ARAB": (59, 17), "MONS": (84, 5),
+    "IND E": (88, 14), "ISSG": (82, -27), "EAFR": (48, -12), "AUSW": (108, -25),
+    "ARCT": (-10, 72), "SARC": (-28, 60), "NECS": (2, 55), "NWCS": (-58, 48),
+    "NADR": (-30, 47), "GFST": (-68, 37), "NAST E": (-25, 30), "NAST W": (-55, 28),
+    "MEDI": (17, 36), "CNRY": (-18, 24), "NATR": (-42, 16), "CARB": (-73, 16),
+    "GUIA": (-50, 7), "WTRA": (-35, 3), "ETRA": (-5, 1), "GUIN": (3, 5),
+    "SATL": (-22, -25), "BRAZ": (-43, -25), "BENG": (8, -24), "FKLD": (-58, -47),
+    "SSTC": (20, -45), "SANT": (95, -53), "ANTA": (-110, -66), "APLR": (155, -64),
+}
+
 
 def tile_path(x0: float, y0: float, x1: float, y1: float, seed: int) -> str:
     """Return a deterministic irregular tile with corners shared by its box."""
@@ -315,6 +336,154 @@ def continent_hole_path(geojson: dict) -> str:
     )
 
 
+def clip_half_plane(
+    polygon: list[tuple[float, float]],
+    normal_x: float,
+    normal_y: float,
+    limit: float,
+) -> list[tuple[float, float]]:
+    """Clip a polygon to normal dot point <= limit."""
+    if not polygon:
+        return []
+    result: list[tuple[float, float]] = []
+    previous = polygon[-1]
+    previous_value = normal_x * previous[0] + normal_y * previous[1] - limit
+    for current in polygon:
+        current_value = normal_x * current[0] + normal_y * current[1] - limit
+        if current_value <= 0:
+            if previous_value > 0:
+                fraction = previous_value / (previous_value - current_value)
+                result.append((
+                    previous[0] + fraction * (current[0] - previous[0]),
+                    previous[1] + fraction * (current[1] - previous[1]),
+                ))
+            result.append(current)
+        elif previous_value <= 0:
+            fraction = previous_value / (previous_value - current_value)
+            result.append((
+                previous[0] + fraction * (current[0] - previous[0]),
+                previous[1] + fraction * (current[1] - previous[1]),
+            ))
+        previous, previous_value = current, current_value
+    return result
+
+
+def coastal_state_geometry() -> tuple[str, list[str]]:
+    """Build 56 periodic nearest-seed states and their label positions."""
+    left, top, width, height = 92.0, 174.0, 1416.0, 644.0
+    latitude_top, latitude_bottom = 84.0, -72.0
+
+    def project(longitude: float, latitude: float) -> tuple[float, float]:
+        x = left + ((longitude + 180.0) % 360.0) / 360.0 * width
+        y = top + (latitude_top - latitude) / (latitude_top - latitude_bottom) * height
+        return x, y
+
+    seeds = []
+    lookup = {}
+    for basin, provinces in PROVINCES.items():
+        for code, name, biome in provinces:
+            if code not in PROVINCE_SEEDS:
+                raise ValueError(f"Missing coastal-state seed for {code}")
+            x, y = project(*PROVINCE_SEEDS[code])
+            item = (code, name, biome, basin, x, y)
+            seeds.append(item)
+            lookup[code] = item
+
+    state_groups = []
+    labels = []
+    for code, name, biome, basin, seed_x, seed_y in seeds:
+        pieces = []
+        # Copies allow states at the dateline to appear on both map edges while
+        # remaining one named province.
+        for target_x in (seed_x - width, seed_x, seed_x + width):
+            polygon = [(left, top), (left + width, top), (left + width, top + height), (left, top + height)]
+            for other_code, _, _, _, other_x, other_y in seeds:
+                for competitor_x in (other_x - width, other_x, other_x + width):
+                    if other_code == code and abs(competitor_x - target_x) < 0.01:
+                        continue
+                    normal_x = competitor_x - target_x
+                    normal_y = other_y - seed_y
+                    limit = ((competitor_x * competitor_x + other_y * other_y)
+                             - (target_x * target_x + seed_y * seed_y)) / 2.0
+                    polygon = clip_half_plane(polygon, normal_x, normal_y, limit)
+                    if not polygon:
+                        break
+                if not polygon:
+                    break
+            if len(polygon) >= 3:
+                pieces.append("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in polygon) + " Z")
+        safe_code, safe_name = html.escape(code), html.escape(name)
+        state_groups.append(
+            f'<g class="province {biome.lower()}" tabindex="0">'
+            f'<title>{safe_code} — {safe_name} · {basin} · approximate coastal-state cartogram</title>'
+            f'<path d="{" ".join(pieces)}"/>'
+            f'</g>'
+        )
+        labels.append(
+            f'<text x="{seed_x:.1f}" y="{seed_y + 4:.1f}" data-code="{safe_code}">{safe_code}</text>'
+        )
+    return "".join(state_groups), labels
+
+
+def projected_land_path(geojson: dict) -> str:
+    """Project Natural Earth land into the coastal-state map frame."""
+    left, top, width, height = 92.0, 174.0, 1416.0, 644.0
+    commands = []
+    for feature in geojson["features"]:
+        for ring in geometry_rings(feature["geometry"]):
+            points = []
+            for longitude, latitude in ring:
+                x = left + (longitude + 180.0) / 360.0 * width
+                bounded_latitude = max(-72.0, min(84.0, latitude))
+                y = top + (84.0 - bounded_latitude) / 156.0 * height
+                points.append((x, y))
+            if len(points) >= 3:
+                commands.append("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in points) + " Z")
+    return " ".join(commands)
+
+
+def build_coastal_states_svg(geojson: dict, source_sha256: str) -> str:
+    """Build the coast-owned province study requested after the lakes draft."""
+    states, labels = coastal_state_geometry()
+    land = projected_land_path(geojson)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">OCEANLINES 56 coastal states study</title>
+  <desc id="desc">A monochrome ocean-first map in which 56 approximate province states cover the world ocean. Real Natural Earth land is removed from the states, so coastal provinces inherit recognizable coastline edges. Internal boundaries are original nearest-seed approximations, not scientific Longhurst geometry.</desc>
+  <metadata>Original OCEANLINES nearest-seed state geometry, MIT licensed. Coast edges use public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. Province seeds are approximate geographic placements; no geographic Longhurst boundary dataset is reproduced.</metadata>
+  <defs>
+    <mask id="ocean-only" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1000">
+      <rect x="92" y="174" width="1416" height="644" fill="white"/>
+      <path d="{land}" fill="black" fill-rule="evenodd"/>
+    </mask>
+  </defs>
+  <style>
+    .province path {{ fill:#d7dfdc; stroke:#183239; stroke-width:3.2; stroke-linejoin:round; vector-effect:non-scaling-stroke; }}
+    .province:hover path,.province:focus path {{ fill:#f4f6f3; stroke:#07191e; stroke-width:6; }}
+    .province:focus {{ outline:none; }}
+    .labels text {{ fill:#10272d; font:900 10.5px ui-monospace,Consolas,monospace; text-anchor:middle; paint-order:stroke; stroke:#d7dfdc; stroke-width:3.2px; stroke-linejoin:round; pointer-events:none; }}
+    .land-outline {{ fill:none; stroke:#879b9b; stroke-width:2; stroke-linejoin:round; vector-effect:non-scaling-stroke; }}
+  </style>
+  <rect width="1600" height="1000" fill="#06171c"/>
+  <text x="72" y="70" fill="#b9cdca" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="900" letter-spacing="2.2">EXPERIMENT 03C · COAST-OWNED STATES</text>
+  <text x="72" y="123" fill="#eef4f1" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="900" letter-spacing="-2">THE COAST BELONGS TO THE PROVINCE</text>
+  <text x="1528" y="75" fill="#eef4f1" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="950" text-anchor="end">56</text>
+  <text x="1528" y="98" fill="#8da9a9" font-family="ui-monospace,Consolas,monospace" font-size="10" font-weight="800" letter-spacing="1.5" text-anchor="end">APPROXIMATE OCEAN STATES</text>
+  <g mask="url(#ocean-only)">{states}</g>
+  <path class="land-outline" d="{land}" fill-rule="evenodd" aria-label="Continents as negative-space lakes"/>
+  <g class="labels" mask="url(#ocean-only)">{''.join(labels)}</g>
+  <g transform="translate(92 872)" font-family="ui-monospace,Consolas,monospace">
+    <text fill="#b9cdca" font-size="11" font-weight="900" letter-spacing="1.6">COAST-OWNED GEOMETRY</text>
+    <text y="25" fill="#8da9a9" font-size="11">ALSK INHERITS ALASKA · HUMB INHERITS PERU/CHILE · BENG INHERITS SOUTHWEST AFRICA</text>
+  </g>
+  <g transform="translate(844 866)" font-family="ui-monospace,Consolas,monospace" font-size="10">
+    <text fill="#eef4f1" font-weight="900" letter-spacing="1.4">ORIGINAL SCHEMATIC CARTOGRAM · NOT LONGHURST BOUNDARIES</text>
+    <text y="22" fill="#8da9a9">Real coast edges; approximate nearest-seed internal borders and contacts.</text>
+    <text y="38" fill="#8da9a9">The coastline is clipped into each province rather than overlaid as decoration.</text>
+  </g>
+  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">CLASSIC 56-PROVINCE VOCABULARY · NATURAL EARTH COASTS · ORIGINAL OCEANLINES STATE GEOMETRY</text>
+</svg>'''
+
+
 def build_lakes_svg(geojson: dict, source_sha256: str) -> str:
     count = sum(len(values) for values in PROVINCES.values())
     if count != 56:
@@ -442,6 +611,11 @@ def main() -> None:
         type=pathlib.Path,
         default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-lakes.svg",
     )
+    parser.add_argument(
+        "--coastal-states-output",
+        type=pathlib.Path,
+        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-coastal-states.svg",
+    )
     parser.add_argument("--land-geojson", required=True, type=pathlib.Path)
     parser.add_argument(
         "--catalog-output",
@@ -456,6 +630,7 @@ def main() -> None:
     geojson = json.loads(payload)
     args.output.write_text(build_svg(geojson, digest), encoding="utf-8", newline="\n")
     args.lakes_output.write_text(build_lakes_svg(geojson, digest), encoding="utf-8", newline="\n")
+    args.coastal_states_output.write_text(build_coastal_states_svg(geojson, digest), encoding="utf-8", newline="\n")
     with args.catalog_output.open("w", encoding="utf-8", newline="") as destination:
         writer = csv.writer(destination, lineterminator="\n")
         writer.writerow(("code", "province", "basin", "biome", "edition", "geometry_status"))
@@ -464,6 +639,7 @@ def main() -> None:
                 writer.writerow((code, province, basin, biome, "classic 56-province reference", "OCEANLINES non-metric cartogram"))
     print(args.output)
     print(args.lakes_output)
+    print(args.coastal_states_output)
     print(args.catalog_output)
 
 
