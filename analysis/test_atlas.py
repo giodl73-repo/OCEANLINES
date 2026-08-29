@@ -231,6 +231,8 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(code, figure)
         self.assertIn("does not reproduce the CC-BY-NC-SA Marine Regions boundary dataset", figure)
         self.assertIn("Expected 56 provinces", builder)
+        for token in ("Natural Earth 1:110m", "horizontally compressed", "EXPECTED_SOURCE_SHA256", 'class="coastline"'):
+            self.assertIn(token, figure + builder + page)
         with catalog_path.open(encoding="utf-8", newline="") as source:
             rows = list(csv.DictReader(source))
         self.assertEqual(56, len(rows))

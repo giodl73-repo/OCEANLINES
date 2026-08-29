@@ -132,11 +132,12 @@ The calculator uses only the Python standard library.
 Regenerate the original 56-province reference cartogram with:
 
 ```powershell
-python analysis/build_province_cartogram.py
+python analysis/build_province_cartogram.py --land-geojson path/to/ne_110m_land.geojson
 ```
 
-The generator uses no downloaded boundary geometry. It deliberately produces a
-non-metric, state-like layout from the cited province vocabulary.
+The generator uses checksum-pinned, public-domain Natural Earth land geometry
+only for compressed continental context. Province boundaries remain an original,
+non-metric, state-like layout; no Longhurst boundary dataset is redistributed.
 
 ## Project status
 

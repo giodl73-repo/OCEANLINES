@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import html
+import json
 import pathlib
 
 
@@ -88,6 +90,10 @@ COLORS = {
     "Coastal": ("#72d3b0", "#052219"),
 }
 
+SOURCE_COMMIT = "ca96624a56bd078437bca8184e78163e5039ad19"
+SOURCE_URL = f"https://raw.githubusercontent.com/nvkelso/natural-earth-vector/{SOURCE_COMMIT}/geojson/ne_110m_land.geojson"
+EXPECTED_SOURCE_SHA256 = "9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9"
+
 
 def tile_path(x0: float, y0: float, x1: float, y1: float, seed: int) -> str:
     """Return a deterministic irregular tile with corners shared by its box."""
@@ -150,7 +156,72 @@ def render_strip(name: str, y: int, height: int) -> str:
     return "".join(parts)
 
 
-def build_svg() -> str:
+def geometry_rings(geometry: dict) -> list[list[tuple[float, float]]]:
+    if geometry["type"] == "Polygon":
+        polygons = [geometry["coordinates"]]
+    elif geometry["type"] == "MultiPolygon":
+        polygons = geometry["coordinates"]
+    else:
+        return []
+    return [
+        [(float(longitude), float(latitude)) for longitude, latitude in ring]
+        for polygon in polygons
+        for ring in polygon
+    ]
+
+
+def coastline_fingerprint(
+    geojson: dict,
+    longitude_minimum: float,
+    longitude_maximum: float,
+    screen_minimum: float,
+    screen_maximum: float,
+) -> str:
+    """Compress real coastline segments into one narrow continental seam."""
+
+    def project(longitude: float, latitude: float) -> tuple[float, float]:
+        x = screen_minimum + (longitude - longitude_minimum) / (longitude_maximum - longitude_minimum) * (screen_maximum - screen_minimum)
+        y = 242 + (84 - latitude) / 144 * 466
+        return x, y
+
+    commands: list[str] = []
+    for feature in geojson["features"]:
+        for ring in geometry_rings(feature["geometry"]):
+            segment: list[tuple[float, float]] = []
+            for longitude, latitude in ring:
+                inside = longitude_minimum <= longitude <= longitude_maximum and -60 <= latitude <= 84
+                if inside:
+                    segment.append(project(longitude, latitude))
+                elif len(segment) >= 2:
+                    commands.append("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in segment))
+                    segment = []
+                else:
+                    segment = []
+            if len(segment) >= 2:
+                commands.append("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in segment))
+    return " ".join(commands)
+
+
+def render_continental_context(geojson: dict) -> str:
+    americas_left = coastline_fingerprint(geojson, -170, -30, 61, 91)
+    americas_right = coastline_fingerprint(geojson, -170, -30, 1511, 1541)
+    asia_australia = coastline_fingerprint(geojson, 20, 180, 748, 786)
+    africa_europe = coastline_fingerprint(geojson, -25, 60, 1036, 1074)
+    return f'''
+  <g aria-label="Checksum-pinned continental coastline context">
+    <path class="land-bed" d="M60 242H92V708H60Z M747 242H787V708H747Z M1035 242H1075V708H1035Z M1510 242H1542V708H1510Z"/>
+    <path class="coastline" d="{americas_left}"/>
+    <path class="coastline" d="{asia_australia}"/>
+    <path class="coastline" d="{africa_europe}"/>
+    <path class="coastline" d="{americas_right}"/>
+    <text class="land-label" x="74" y="490" transform="rotate(-90 74 490)">AMERICAS</text>
+    <text class="land-label" x="769" y="475" transform="rotate(-90 769 475)">ASIA · AUSTRALIA</text>
+    <text class="land-label" x="1057" y="475" transform="rotate(-90 1057 475)">AFRICA · EUROPE</text>
+    <text class="land-label" x="1530" y="480" transform="rotate(90 1530 480)">AMERICAS</text>
+  </g>'''
+
+
+def build_svg(geojson: dict, source_sha256: str) -> str:
     count = sum(len(values) for values in PROVINCES.values())
     if count != 56:
         raise ValueError(f"Expected 56 provinces, found {count}")
@@ -164,17 +235,19 @@ def build_svg() -> str:
             render_strip("Southern", 726, 92),
         ]
     )
+    continental_context = render_continental_context(geojson)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
   <title id="title">OCEANLINES 56-province ocean cartogram</title>
-  <desc id="desc">An original flat reference layout of the classic 56 Longhurst surface-ocean provinces. Pacific, Indian, and Atlantic province groups occupy most of the canvas, joined by an Arctic cap and a Southern Ocean base. Narrow pale land ribbons provide continental context. Shapes and areas are schematic; hover or focus a province to read its full name.</desc>
-  <metadata>Original OCEANLINES cartogram geometry, MIT licensed. Province identities follow the classic 56-province vocabulary discussed by Reygondeau et al. 2013, DOI 10.1002/gbc.20089, with OCAL and CCAL shown separately as in the older classification. This graphic does not reproduce the CC-BY-NC-SA Marine Regions boundary dataset.</metadata>
+  <desc id="desc">An original flat reference layout of the classic 56 Longhurst surface-ocean provinces. Pacific, Indian, and Atlantic province groups occupy most of the canvas, joined by an Arctic cap and a Southern Ocean base. Real Natural Earth coastlines are horizontally compressed into narrow continental fingerprints. Province shapes and areas remain schematic; hover or focus a province to read its full name.</desc>
+  <metadata>Original OCEANLINES cartogram geometry, MIT licensed. Province identities follow the classic 56-province vocabulary discussed by Reygondeau et al. 2013, DOI 10.1002/gbc.20089, with OCAL and CCAL shown separately as in the older classification. Continental context uses public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. This graphic does not reproduce the CC-BY-NC-SA Marine Regions boundary dataset.</metadata>
   <style>
     .province path {{ stroke:#06171c; stroke-width:5; stroke-linejoin:round; transition:filter .15s,stroke .15s; }}
     .province text {{ font:900 15px ui-monospace,Consolas,monospace; text-anchor:middle; pointer-events:none; }}
     .province:focus {{ outline:none; }} .province:hover path,.province:focus path {{ stroke:#fff4d7; stroke-width:8; filter:brightness(1.12); }}
     .basin-label {{ fill:#76969a; font:800 12px ui-monospace,Consolas,monospace; letter-spacing:4px; text-anchor:middle; }}
-    .land {{ fill:#d7ddd5; opacity:.26; stroke:#d7ddd5; stroke-width:2; }}
-    .land-label {{ fill:#8da4a2; font:700 9px ui-monospace,Consolas,monospace; letter-spacing:1.6px; text-anchor:middle; }}
+    .land-bed {{ fill:#d7ddd5; opacity:.08; }}
+    .coastline {{ fill:none; stroke:#d7ddd5; stroke-width:1.5; stroke-opacity:.48; stroke-linecap:round; stroke-linejoin:round; }}
+    .land-label {{ fill:#c0d0cc; font:800 8px ui-monospace,Consolas,monospace; letter-spacing:1.4px; text-anchor:middle; paint-order:stroke; stroke:#243b3e; stroke-width:3px; }}
   </style>
   <rect width="1600" height="1000" fill="#06171c"/>
   <text x="72" y="70" fill="#67e4da" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="900" letter-spacing="2.2">EXPERIMENT 03 · PROVINCE ATLAS</text>
@@ -182,16 +255,7 @@ def build_svg() -> str:
   <text x="1528" y="75" fill="#ffb454" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="950" text-anchor="end">56</text>
   <text x="1528" y="98" fill="#8da9a9" font-family="ui-monospace,Consolas,monospace" font-size="10" font-weight="800" letter-spacing="1.5" text-anchor="end">CLASSIC SURFACE PROVINCES</text>
 
-  <g aria-label="Continental context">
-    <path class="land" d="M64 272L88 256L93 358L74 390L92 449L74 508L93 579L84 680L61 704Z"/>
-    <text class="land-label" x="72" y="490" transform="rotate(-90 72 490)">AMERICAS</text>
-    <path class="land" d="M748 257L777 273L771 346L786 377L769 430L785 487L774 554L789 620L758 680Z"/>
-    <text class="land-label" x="770" y="475" transform="rotate(-90 770 475)">ASIA · AUSTRALIA</text>
-    <path class="land" d="M1037 257L1067 273L1054 340L1073 395L1055 462L1072 533L1058 601L1070 680L1041 667Z"/>
-    <text class="land-label" x="1057" y="475" transform="rotate(-90 1057 475)">AFRICA</text>
-    <path class="land" d="M1514 256L1538 272L1532 355L1542 414L1525 473L1540 541L1523 605L1536 679L1512 695Z"/>
-    <text class="land-label" x="1531" y="480" transform="rotate(90 1531 480)">AMERICAS</text>
-  </g>
+{continental_context}
   {clusters}
 
   <g transform="translate(92 872)" font-family="ui-monospace,Consolas,monospace">
@@ -218,13 +282,19 @@ def main() -> None:
         type=pathlib.Path,
         default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas.svg",
     )
+    parser.add_argument("--land-geojson", required=True, type=pathlib.Path)
     parser.add_argument(
         "--catalog-output",
         type=pathlib.Path,
         default=pathlib.Path(__file__).resolve().parents[1] / "research" / "longhurst-province-reference.csv",
     )
     args = parser.parse_args()
-    args.output.write_text(build_svg(), encoding="utf-8", newline="\n")
+    payload = args.land_geojson.read_bytes()
+    digest = hashlib.sha256(payload).hexdigest()
+    if digest != EXPECTED_SOURCE_SHA256:
+        raise SystemExit(f"Natural Earth source checksum mismatch: {digest}")
+    geojson = json.loads(payload)
+    args.output.write_text(build_svg(geojson, digest), encoding="utf-8", newline="\n")
     with args.catalog_output.open("w", encoding="utf-8", newline="") as destination:
         writer = csv.writer(destination, lineterminator="\n")
         writer.writerow(("code", "province", "basin", "biome", "edition", "geometry_status"))
