@@ -36,7 +36,7 @@ class AtlasTests(unittest.TestCase):
     def test_readme_and_atlas_expose_clear_entry_routes(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         html = HTML.read_text(encoding="utf-8")
-        for token in ("## Enter OCEANLINES", "Explore 56 ocean states, 36 crossing features, and the Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
+        for token in ("## Enter OCEANLINES", "Explore 56 ocean states, 36 shaped features, and the Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
             self.assertIn(token, readme)
         for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
             self.assertIn(f'href="{target}"', html)
@@ -145,7 +145,7 @@ class AtlasTests(unittest.TestCase):
     def test_conceptual_boundaries_are_explicitly_permeable(self):
         html = HTML.read_text(encoding="utf-8")
         figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
-        self.assertIn("representative index points", html)
+        self.assertIn("schematic geographic indexes", html)
         self.assertIn("schematic, permeable, and moving rather than measured boundaries", figure)
 
     def test_conceptual_map_uses_pinned_natural_earth_geometry(self):
@@ -168,8 +168,22 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(token, html)
         for token in ("loadProvinceMap", "selectProvince", "applyProvinceZoom", "provinceFeatureMatches", 'url.searchParams.set("province"'):
             self.assertIn(token, app)
-        for token in (".province-map-host.observed-overlay", "--marker-counter-scale", ".map-viewport"):
+        for token in (".province-map-host.observed-overlay", ".feature-shape-host", ".map-viewport"):
             self.assertIn(token, css)
+
+    def test_numbered_map_markers_are_replaced_by_selectable_feature_shapes(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        overlay = (ROOT / "figures" / "oceanlines-atlas-feature-shapes.svg").read_text(encoding="utf-8")
+        builder = (ROOT / "analysis" / "build_atlas_feature_overlay.py").read_text(encoding="utf-8")
+        self.assertIn('id="feature-shape-host"', html)
+        self.assertEqual(36, overlay.count('class="feature-shape"'))
+        for token in ("loadFeatureShapes", "selectable feature shapes", "Shapes are schematic geographic indexes"):
+            self.assertIn(token, app + overlay)
+        for feature_id in ("indo-pacific-warm-pool", "gulf-stream", "antarctic-polar-front", "mid-atlantic-ridge", "sargasso-sea"):
+            self.assertIn(f'data-id="{feature_id}"', overlay)
+        self.assertNotIn('button.className = "marker"', app)
+        self.assertIn("The first twelve geometries preserve", builder)
 
     def test_heat_continents_have_coastlike_shapes_distinct_from_blobs(self):
         builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
@@ -329,9 +343,9 @@ class AtlasTests(unittest.TestCase):
     def test_ocean_geography_filters_are_overlapping_accessible_and_bookmarkable(self):
         html = HTML.read_text(encoding="utf-8")
         app = APP.read_text(encoding="utf-8")
-        for token in ("ALL FEATURES", "WATERS", "FLOWS", "EDGES", "FLOOR", "LIFE", "EVENTS", 'id="filter-status"', 'aria-live="polite"', "not centroids or boundaries"):
+        for token in ("ALL FEATURES", "WATERS", "FLOWS", "EDGES", "FLOOR", "LIFE", "EVENTS", 'id="filter-status"', 'aria-live="polite"', "not observed boundaries"):
             self.assertIn(token, html + app)
-        for token in ("zoneMatches", "applyGeographyFilters", 'searchParams.set("lens"', 'marker.hidden = !show', "marker.tabIndex = show ? 0 : -1"):
+        for token in ("zoneMatches", "applyGeographyFilters", 'searchParams.set("lens"', 'shape.toggleAttribute("hidden", !show)', "shape.tabIndex = show ? 0 : -1"):
             self.assertIn(token, app)
 
     def test_coordinate_probe_has_pointer_keyboard_and_text_paths(self):

@@ -31,7 +31,7 @@ symmetrically at ±5°C while the text summary retains the sampled source range.
 The preview adds geographic reference labels and a three-tick scale, states a
 plain-language conclusion before the controls, keeps polar and full-latitude
 diagnostics behind an explicit disclosure, separates nearby conceptual
-markers, and provides a text directory plus a full-size province map for
+features, and provides a text directory plus a full-size province map for
 small screens. It does not change the underlying fields or evidence class.
 
 The shared province ground uses Natural Earth 1:110m public-domain land geometry at
@@ -42,11 +42,11 @@ Coastlines are geographic reference. The 56 classic identities are placed by
 original approximate geographic seeds, then real land is removed so each
 coastal province inherits the coast it reaches. Internal borders, areas,
 contacts, and point membership are schematic—not published Longhurst geometry.
-All fluid features remain conceptual index points, not measured footprints.
+All fluid features remain schematic geographic shapes, not measured footprints.
 
 The conceptual atlas offers two treatments of the same province ground.
 **Ocean states** uses the strongest monochrome borders and labels. **Quiet
-states** reduces their contrast so crossing feature markers lead. The toggle
+states** reduces their contrast so crossing feature shapes lead. The toggle
 changes emphasis only; it does not change geometry, records, evidence, or
 interpretation. Selecting a province by map or dropdown zooms the entire
 geographic stack; the URL records that selection, and switching to SST,
@@ -69,6 +69,17 @@ python analysis/build_fluid_geography.py `
   --water-first-output figures/oceanlines-fluid-geography-water-first.svg `
   --water-first-interactive-output figures/oceanlines-fluid-geography-water-first-interactive.svg
 ```
+
+Regenerate the 36 selectable atlas shapes with:
+
+```powershell
+python analysis/build_atlas_feature_overlay.py
+```
+
+The first twelve preserve the established fluid-geography artwork. The rest
+use mechanism-specific schematic geometry—water regions, gyre loops, fronts,
+ridges, a trench, a plateau, and biogeochemical regions. Stable record numbers
+remain in the text directory but are no longer drawn as map symbols.
 
 Serve the repository root locally so relative links resolve:
 
@@ -93,7 +104,7 @@ small reviewed contract rather than inferred from page prose.
 
 ## Evidence status
 
-Every displayed footprint and marker in the conceptual view is schematic. A
+Every displayed feature shape in the conceptual view is schematic. A
 zone record declares its role, depth, clock, evidence class, source, and
 inferential boundary. The surface views are fixed daily analyses and the Argo
 view is a fixed monthly objective analysis at one pressure level. None is a

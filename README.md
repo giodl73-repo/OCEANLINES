@@ -6,7 +6,7 @@
 
 ## Enter OCEANLINES
 
-**[Explore 56 ocean states, 36 crossing features, and the Atlas 10 depth ladder →](atlas/)**
+**[Explore 56 ocean states, 36 shaped features, and the Atlas 10 depth ladder →](atlas/)**
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
 [Compare ocean-first projections](projections/) ·
