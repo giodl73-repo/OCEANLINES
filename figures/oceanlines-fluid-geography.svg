@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
   <title id="title">OCEANLINES fluid geography of Earth's ocean</title>
-  <desc id="desc">An ocean-first conceptual map on Natural Earth coastlines. Twelve numbered callouts identify warm reservoirs, boundary-current pathways, transient anomalies, buried polar water masses, the Antarctic Circumpolar Current, and exchange gates. All heat shapes and pathways are schematic, permeable, and moving rather than measured boundaries. The figure does not calculate heat content or transport.</desc>
+  <desc id="desc">An ocean-first conceptual map on Natural Earth coastlines. Twelve numbered callouts identify continent-like warm reservoirs, boundary-current pathways, transient anomalies, buried polar water masses, the Antarctic Circumpolar Current, and exchange gates. Reservoirs use irregular fluid coastlines to distinguish persistent or seasonal heatmasses from round transient blobs. All heat shapes and pathways are schematic, permeable, and moving rather than measured boundaries. The figure does not calculate heat content or transport.</desc>
   <metadata>
     Natural Earth 1:110m land geometry, public domain, commit ca96624a56bd078437bca8184e78163e5039ad19, source SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. OCEANLINES conceptual overlays are original MIT-licensed artwork.
   </metadata>
@@ -10,11 +10,11 @@
       <stop offset="0.47" stop-color="#0a2b39"/>
       <stop offset="1" stop-color="#071c29"/>
     </linearGradient>
-    <radialGradient id="warmPool" cx="50%" cy="50%" r="55%">
-      <stop offset="0" stop-color="#ffd66f" stop-opacity=".92"/>
-      <stop offset=".45" stop-color="#ffad48" stop-opacity=".66"/>
-      <stop offset="1" stop-color="#ff7d48" stop-opacity="0"/>
-    </radialGradient>
+    <linearGradient id="warmPool" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd66f" stop-opacity=".74"/>
+      <stop offset=".55" stop-color="#ffad48" stop-opacity=".62"/>
+      <stop offset="1" stop-color="#ff7d48" stop-opacity=".38"/>
+    </linearGradient>
     <radialGradient id="blob" cx="50%" cy="50%" r="55%">
       <stop offset="0" stop-color="#ff766c" stop-opacity=".54"/>
       <stop offset="1" stop-color="#ff766c" stop-opacity=".04"/>
@@ -45,6 +45,8 @@
       .geo-label { fill:#b2d1d2; fill-opacity:.38; font-size:18px; font-weight:700; letter-spacing:5px; }
       .land { fill:#182d31; stroke:#799395; stroke-width:1.5; vector-effect:non-scaling-stroke; }
       .coast-glow { fill:none; stroke:#b7ccca; stroke-opacity:.2; stroke-width:5; vector-effect:non-scaling-stroke; }
+      .heat-continent { fill:url(#warmPool); stroke:#ffd06b; stroke-opacity:.96; stroke-width:3.5; stroke-linejoin:round; }
+      .heat-shelf { fill:none; stroke:#fff0b8; stroke-opacity:.62; stroke-width:2; stroke-dasharray:14 8; stroke-linecap:round; }
       .current-halo { fill:none; stroke:#031116; stroke-opacity:.72; stroke-width:17; stroke-linecap:round; stroke-linejoin:round; }
       .current { fill:none; stroke:#ffb454; stroke-width:8; stroke-linecap:round; stroke-linejoin:round; filter:url(#softGlow); marker-end:url(#warmArrow); }
       .acc-halo { fill:none; stroke:#031116; stroke-opacity:.76; stroke-width:20; }
@@ -74,9 +76,16 @@
     <path d="M60 674C280 650 490 679 735 660C970 642 1260 672 1540 652L1540 760C1280 742 1040 756 800 746C530 735 300 760 60 742Z" fill="url(#buriedBand)" stroke="#b7a7ff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="11 8"/>
     <path d="M770 126C850 102 980 108 1058 146C1090 162 1078 203 1035 221C955 255 824 241 767 206C733 186 739 141 770 126Z" fill="url(#buriedPattern)" stroke="#b7a7ff" stroke-opacity=".6" stroke-width="2" stroke-dasharray="9 7"/>
 
-    <ellipse cx="1345" cy="442" rx="255" ry="98" fill="url(#warmPool)" stroke="#ffc862" stroke-opacity=".72" stroke-width="2.5"/>
-    <ellipse cx="73" cy="452" rx="180" ry="86" fill="url(#warmPool)" stroke="#ffc862" stroke-opacity=".48" stroke-width="2.5"/>
-    <ellipse cx="485" cy="430" rx="180" ry="82" fill="url(#warmPool)" stroke="#ffc862" stroke-opacity=".68" stroke-width="2.5"/>
+    <g id="indo-pacific-heat-continent" aria-label="Schematic Indo-Pacific warm-pool heat continent split by the map seam">
+      <path class="heat-continent" d="M1090 438Q1114 399 1162 391L1194 398Q1216 368 1256 374L1285 359Q1324 348 1357 370Q1394 353 1428 373L1460 367Q1504 380 1540 410L1540 500Q1504 520 1466 506L1432 513Q1401 519 1378 499Q1342 525 1300 507L1268 495Q1232 512 1203 490Q1160 500 1128 476L1104 466Q1084 454 1090 438Z"/>
+      <path class="heat-continent" d="M60 410Q95 390 130 394L159 386Q195 386 218 405L241 421Q261 441 248 464Q235 489 198 497L166 496Q139 515 108 504L82 507Q66 506 60 495Z"/>
+      <path class="heat-shelf" d="M1124 438Q1158 414 1197 416L1227 424Q1252 393 1288 397L1320 382Q1352 379 1380 399Q1410 386 1440 401L1471 397Q1492 405 1514 423Q1481 441 1452 449L1421 474Q1388 484 1363 470Q1333 495 1296 481L1265 469Q1234 487 1207 468Q1163 478 1133 459Z"/>
+      <path class="heat-shelf" d="M74 438Q105 415 139 421L166 413Q196 418 219 439Q227 452 211 466Q185 486 155 477Q126 493 95 476L76 468"/>
+    </g>
+    <g id="western-hemisphere-heat-continent" aria-label="Schematic Western Hemisphere seasonal warm-pool heat continent">
+      <path class="heat-continent" d="M304 445Q325 416 365 410L401 414Q426 380 465 384L493 372Q524 373 546 391Q582 380 612 399L636 416Q661 440 646 465L623 480Q595 508 557 500L525 506Q500 505 479 488Q443 505 407 489L376 477Q343 479 318 462Q302 454 304 445Z"/>
+      <path class="heat-shelf" d="M337 443Q367 425 399 432L430 438Q453 405 485 410L514 398Q542 403 559 422Q588 411 613 430L622 442Q601 450 581 465L555 481Q525 485 502 470Q474 484 447 463Q413 479 380 464L350 455Z"/>
+    </g>
     <ellipse cx="205" cy="285" rx="132" ry="78" fill="url(#blob)" stroke="#ff8d84" stroke-width="2.5" stroke-dasharray="11 8"/>
     <path d="M60 444C145 422 250 428 365 451C435 465 485 478 540 500C460 520 375 515 288 493C195 470 121 473 60 480Z" fill="#ff766c" fill-opacity=".22" stroke="#ff8d84" stroke-width="2.5" stroke-dasharray="11 8"/>
 
@@ -220,7 +229,7 @@
     <text x="0" y="17" fill="#67e4da" font-size="12" font-weight="900" letter-spacing="2.5">READ THE MAP BY MECHANISM, NOT COLOR ALONE</text>
     <g transform="translate(0 38)">
       <rect width="282" height="96" rx="14" fill="#0a2229" stroke="#29484f"/>
-      <ellipse cx="45" cy="47" rx="27" ry="18" fill="url(#warmPool)" stroke="#ffc862"/>
+      <path d="M18 50C22 31 39 25 52 31C65 25 78 35 73 49C69 63 52 68 41 61C28 67 16 60 18 50Z" fill="url(#warmPool)" stroke="#ffc862" stroke-width="2"/>
       <text x="84" y="39" fill="#eef9f7" font-size="14" font-weight="800">RESERVOIR</text><text x="84" y="61" fill="#8da9a9" font-size="11">persistent or seasonal heatmass</text>
     </g>
     <g transform="translate(299 38)">

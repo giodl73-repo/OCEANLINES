@@ -158,6 +158,16 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(12, figure.count('class="callout"'))
         self.assertEqual(0, interactive_figure.count('class="callout"'))
 
+    def test_heat_continents_have_coastlike_shapes_distinct_from_blobs(self):
+        builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
+        figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
+        self.assertIn('id="indo-pacific-heat-continent"', builder)
+        self.assertIn('id="western-hemisphere-heat-continent"', builder)
+        self.assertGreaterEqual(figure.count('class="heat-continent"'), 3)
+        self.assertGreaterEqual(figure.count('class="heat-shelf"'), 3)
+        self.assertIn('<ellipse cx="205" cy="285"', figure)
+        self.assertNotIn('<ellipse cx="1345" cy="442"', figure)
+
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")
         data = (ROOT / "atlas" / "data" / "oisst-2026-08-01.js").read_text(encoding="utf-8")

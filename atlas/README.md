@@ -38,6 +38,11 @@ commit `ca96624a56bd078437bca8184e78163e5039ad19`. The coastline source response
 has SHA-256
 `9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9`.
 Coastlines are geographic reference; all fluid overlays remain conceptual.
+Persistent and seasonal reservoirs use irregular, continent-like silhouettes
+with an inset shelf contour. Transient anomalies remain soft, round, and
+dashed. This is a visual vocabulary for distinguishing mechanisms, not a
+claim that the reservoir edges were measured, thresholded, fixed, or
+impermeable.
 
 Rebuild the conceptual SVG after acquiring that exact GeoJSON response:
 
