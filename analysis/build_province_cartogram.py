@@ -107,7 +107,7 @@ def tile_path(x0: float, y0: float, x1: float, y1: float, seed: int) -> str:
     )
 
 
-def render_cluster(name: str, x: int, y: int, width: int, height: int, columns: int) -> str:
+def render_cluster(name: str, x: int, y: int, width: int, height: int, columns: int, monochrome: bool = False) -> str:
     provinces = PROVINCES[name]
     rows = (len(provinces) + columns - 1) // columns
     cell_w = width / columns
@@ -120,7 +120,7 @@ def render_cluster(name: str, x: int, y: int, width: int, height: int, columns: 
         # Last incomplete row expands to the right edge instead of leaving ocean blank.
         if row == rows - 1 and index == len(provinces) - 1:
             x1 = x + width
-        fill, ink = COLORS[biome]
+        fill, ink = ("#d4dfdc", "#11282e") if monochrome else COLORS[biome]
         safe_name = html.escape(province)
         safe_code = html.escape(code)
         parts.append(
@@ -137,14 +137,14 @@ def render_cluster(name: str, x: int, y: int, width: int, height: int, columns: 
     return "".join(parts)
 
 
-def render_strip(name: str, y: int, height: int) -> str:
+def render_strip(name: str, y: int, height: int, monochrome: bool = False) -> str:
     provinces = PROVINCES[name]
     x, width = 92, 1416
     cell_w = width / len(provinces)
     parts = [f'<g class="basin" id="{name.lower()}-provinces">']
     for index, (code, province, biome) in enumerate(provinces):
         x0, x1 = x + index * cell_w, x + (index + 1) * cell_w
-        fill, ink = COLORS[biome]
+        fill, ink = ("#d4dfdc", "#11282e") if monochrome else COLORS[biome]
         parts.append(
             f'<g class="province {biome.lower()}" tabindex="0">'
             f'<title>{html.escape(code)} — {html.escape(province)} · {name} · {biome} biome</title>'
@@ -221,6 +221,161 @@ def render_continental_context(geojson: dict) -> str:
   </g>'''
 
 
+def continent_hole_path(geojson: dict) -> str:
+    """Return compressed filled continental silhouettes for the lakes study."""
+
+    groups = {
+        "americas": (-180.0, -20.0, 42.0, 140.0),
+        "africa": (-25.0, 55.0, 990.0, 1112.0),
+        "eurasia": (-20.0, 180.0, 700.0, 832.0),
+    }
+    paths: dict[str, list[str]] = {name: [] for name in groups}
+
+    def clip_polygon(
+        ring: list[tuple[float, float]],
+        x_min: float,
+        x_max: float,
+        y_min: float,
+        y_max: float,
+    ) -> list[tuple[float, float]]:
+        points = ring[:-1] if ring and ring[0] == ring[-1] else list(ring)
+
+        def clip_edge(points, inside, intersect):
+            if not points:
+                return []
+            output = []
+            previous = points[-1]
+            previous_inside = inside(previous)
+            for current in points:
+                current_inside = inside(current)
+                if current_inside:
+                    if not previous_inside:
+                        output.append(intersect(previous, current))
+                    output.append(current)
+                elif previous_inside:
+                    output.append(intersect(previous, current))
+                previous, previous_inside = current, current_inside
+            return output
+
+        def vertical(boundary):
+            def intersection(a, b):
+                fraction = (boundary - a[0]) / (b[0] - a[0]) if b[0] != a[0] else 0
+                return boundary, a[1] + fraction * (b[1] - a[1])
+            return intersection
+
+        def horizontal(boundary):
+            def intersection(a, b):
+                fraction = (boundary - a[1]) / (b[1] - a[1]) if b[1] != a[1] else 0
+                return a[0] + fraction * (b[0] - a[0]), boundary
+            return intersection
+
+        points = clip_edge(points, lambda p: p[0] >= x_min, vertical(x_min))
+        points = clip_edge(points, lambda p: p[0] <= x_max, vertical(x_max))
+        points = clip_edge(points, lambda p: p[1] >= y_min, horizontal(y_min))
+        return clip_edge(points, lambda p: p[1] <= y_max, horizontal(y_max))
+
+    def project(ring: list[tuple[float, float]], group: str) -> str:
+        lon_min, lon_max, x_min, x_max = groups[group]
+        points = []
+        for longitude, latitude in ring:
+            longitude = max(lon_min, min(lon_max, longitude))
+            latitude = max(-60.0, min(84.0, latitude))
+            x = x_min + (longitude - lon_min) / (lon_max - lon_min) * (x_max - x_min)
+            y = 242 + (84 - latitude) / 144 * 466
+            points.append((x, y))
+        return "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in points) + " Z"
+
+    windows = {
+        "americas": [(-180.0, -20.0, -60.0, 84.0)],
+        "africa": [(-25.0, 55.0, -40.0, 38.0)],
+        # Eurasia is clipped in north and south windows because Natural Earth
+        # stores Afro-Eurasia as one land polygon. Australia shares this hole.
+        "eurasia": [(-20.0, 180.0, 30.0, 84.0), (35.0, 180.0, -15.0, 30.0), (110.0, 180.0, -50.0, -10.0)],
+    }
+    for feature in geojson["features"]:
+        for ring in geometry_rings(feature["geometry"]):
+            for group, boxes in windows.items():
+                for box in boxes:
+                    clipped = clip_polygon(ring, *box)
+                    if len(clipped) >= 3:
+                        longitudes = [longitude for longitude, _ in clipped]
+                        latitudes = [latitude for _, latitude in clipped]
+                        if (max(longitudes) - min(longitudes)) * (max(latitudes) - min(latitudes)) >= 1.0:
+                            paths[group].append(project(clipped, group))
+
+    americas = " ".join(paths["americas"])
+    # Duplicate the cylindrical seam so both Atlantic and Pacific coast-facing
+    # provinces terminate at the same recognizable continental cutout.
+    # Translating the already projected path is cleaner and exactly symmetric.
+    return (
+        f'<path d="{americas}"/>'
+        f'<path d="{americas}" transform="translate(1418 0)"/>'
+        f'<path d="{" ".join(paths["eurasia"])}"/>'
+        f'<path d="{" ".join(paths["africa"])}"/>'
+    )
+
+
+def build_lakes_svg(geojson: dict, source_sha256: str) -> str:
+    count = sum(len(values) for values in PROVINCES.values())
+    if count != 56:
+        raise ValueError(f"Expected 56 provinces, found {count}")
+    clusters = "".join(
+        [
+            render_strip("Arctic", 174, 64, monochrome=True),
+            render_cluster("Pacific", 92, 256, 650, 424, 5, monochrome=True),
+            render_cluster("Indian", 786, 256, 244, 424, 2, monochrome=True),
+            render_cluster("Atlantic", 1074, 256, 434, 424, 4, monochrome=True),
+            render_strip("Southern", 726, 92, monochrome=True),
+        ]
+    )
+    holes = continent_hole_path(geojson)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">OCEANLINES monochrome 56-province lakes cartogram</title>
+  <desc id="desc">A monochrome state-map study of the classic 56 Longhurst surface-ocean provinces. Continents are compressed real-coastline holes cut out of the unified ocean field like lakes. Province shapes, sizes, and most internal adjacencies remain schematic and non-metric.</desc>
+  <metadata>Original OCEANLINES province cartogram, MIT licensed. Continental cutouts use public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. The continental silhouettes are strongly compressed horizontally. No geographic Longhurst boundary dataset is reproduced.</metadata>
+  <defs>
+    <mask id="continent-cutouts" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1000">
+      <rect width="1600" height="1000" fill="white"/>
+      <g fill="black" fill-rule="evenodd">{holes}</g>
+    </mask>
+  </defs>
+  <style>
+    .province path {{ stroke:#183239; stroke-width:5; stroke-linejoin:round; transition:fill .15s,stroke .15s; }}
+    .province text {{ font:900 15px ui-monospace,Consolas,monospace; text-anchor:middle; pointer-events:none; }}
+    .province:focus {{ outline:none; }} .province:hover path,.province:focus path {{ fill:#f4f7f3; stroke:#06171c; stroke-width:8; }}
+    .basin-label {{ fill:#587479; font:800 12px ui-monospace,Consolas,monospace; letter-spacing:4px; text-anchor:middle; }}
+    .ocean-body {{ fill:#d4dfdc; stroke:#183239; stroke-width:5; }}
+    .hole-outline {{ fill:none; stroke:#789398; stroke-width:2.5; stroke-linejoin:round; }}
+    .hole-label {{ fill:#a8babc; font:800 8px ui-monospace,Consolas,monospace; letter-spacing:1.4px; text-anchor:middle; paint-order:stroke; stroke:#06171c; stroke-width:3px; }}
+  </style>
+  <rect width="1600" height="1000" fill="#06171c"/>
+  <text x="72" y="70" fill="#b9cdca" font-family="ui-monospace,Consolas,monospace" font-size="13" font-weight="900" letter-spacing="2.2">EXPERIMENT 03B · CONTINENTS AS LAKES</text>
+  <text x="72" y="123" fill="#eef4f1" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="900" letter-spacing="-2">THE OCEAN, AS 56 PROVINCES</text>
+  <text x="1528" y="75" fill="#eef4f1" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="950" text-anchor="end">56</text>
+  <text x="1528" y="98" fill="#8da9a9" font-family="ui-monospace,Consolas,monospace" font-size="10" font-weight="800" letter-spacing="1.5" text-anchor="end">ONE CONNECTED MAP</text>
+  <g mask="url(#continent-cutouts)">
+    <path class="ocean-body" d="M92 174H1508V818H92Z"/>
+    {clusters}
+  </g>
+  <g class="hole-outline" aria-label="Continental holes cut from the province field">{holes}</g>
+  <text class="hole-label" x="92" y="480" transform="rotate(-90 92 480)">AMERICAS</text>
+  <text class="hole-label" x="1510" y="480" transform="rotate(90 1510 480)">AMERICAS</text>
+  <text class="hole-label" x="765" y="470" transform="rotate(-90 765 470)">EURASIA · AUSTRALIA</text>
+  <text class="hole-label" x="1053" y="500" transform="rotate(-90 1053 500)">AFRICA</text>
+  <g transform="translate(92 872)" font-family="ui-monospace,Consolas,monospace">
+    <text fill="#b9cdca" font-size="11" font-weight="900" letter-spacing="1.6">STATE-MAP STUDY</text>
+    <text y="25" fill="#8da9a9" font-size="11">ONE FILL · 56 LABELED PIECES · CONTINENTS BECOME NEGATIVE SPACE</text>
+  </g>
+  <g transform="translate(844 866)" font-family="ui-monospace,Consolas,monospace" font-size="10">
+    <text fill="#eef4f1" font-weight="900" letter-spacing="1.4">REFERENCE CARTOGRAM · NOT A PROJECTION</text>
+    <text y="22" fill="#8da9a9">Real coastlines cut the edge pieces, but are horizontally compressed.</text>
+    <text y="38" fill="#8da9a9">Province shape, size, distance, and most adjacency remain schematic.</text>
+    <text y="62" fill="#8da9a9">The next study varies the 56 internal puzzle shapes.</text>
+  </g>
+  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE IDENTITY · NATURAL EARTH CONTINENTAL CUTOUTS · ORIGINAL OCEANLINES LAYOUT</text>
+</svg>'''
+
+
 def build_svg(geojson: dict, source_sha256: str) -> str:
     count = sum(len(values) for values in PROVINCES.values())
     if count != 56:
@@ -282,6 +437,11 @@ def main() -> None:
         type=pathlib.Path,
         default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas.svg",
     )
+    parser.add_argument(
+        "--lakes-output",
+        type=pathlib.Path,
+        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-lakes.svg",
+    )
     parser.add_argument("--land-geojson", required=True, type=pathlib.Path)
     parser.add_argument(
         "--catalog-output",
@@ -295,6 +455,7 @@ def main() -> None:
         raise SystemExit(f"Natural Earth source checksum mismatch: {digest}")
     geojson = json.loads(payload)
     args.output.write_text(build_svg(geojson, digest), encoding="utf-8", newline="\n")
+    args.lakes_output.write_text(build_lakes_svg(geojson, digest), encoding="utf-8", newline="\n")
     with args.catalog_output.open("w", encoding="utf-8", newline="") as destination:
         writer = csv.writer(destination, lineterminator="\n")
         writer.writerow(("code", "province", "basin", "biome", "edition", "geometry_status"))
@@ -302,6 +463,7 @@ def main() -> None:
             for code, province, biome in provinces:
                 writer.writerow((code, province, basin, biome, "classic 56-province reference", "OCEANLINES non-metric cartogram"))
     print(args.output)
+    print(args.lakes_output)
     print(args.catalog_output)
 
 

@@ -10,7 +10,7 @@
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
 [Compare ocean-first projections](projections/) ·
-[See the ocean as 56 state-like provinces](figures/oceanlines-province-atlas.svg) ·
+[See the monochrome 56-province state map](figures/oceanlines-province-atlas-lakes.svg) ·
 [Download the 56-province directory](research/longhurst-province-reference.csv) ·
 [Read the project history](HISTORY.md) ·
 [Read the field guide](HEATMASS.md) ·
