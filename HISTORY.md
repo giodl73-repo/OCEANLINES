@@ -23,6 +23,10 @@ Active code, artifacts, metadata, and interface branding use `OSW` and the
 `osw-` filename prefix. Dated reviews below retain the former project name when
 describing work performed before the rename.
 
+The reviewed `atlas-08-private-preview` branch was subsequently pushed at the
+owner's request. It is publicly visible for review but has not replaced Atlas
+07 on `main` or GitHub Pages and is not a promoted release.
+
 ## 2026-08-29 — The ocean becomes a place
 
 ### The breakthrough

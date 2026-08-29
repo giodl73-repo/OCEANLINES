@@ -108,9 +108,9 @@ class AtlasTests(unittest.TestCase):
         status = (ROOT / "PREVIEW-STATUS.md").read_text(encoding="utf-8")
         checklist = (ROOT / "PUBLICATION-CHECKLIST.md").read_text(encoding="utf-8")
         self.assertIn("released Atlas 07", readme)
-        self.assertIn("private Atlas 08", readme)
-        self.assertIn("APPROVED FOR PRIVATE PREVIEW", readme)
-        for token in ("has not replaced the released Atlas 07", "has not been pushed from this branch", "Still not present", "Decisions deliberately still open"):
+        self.assertIn("publicly visible review branch", readme)
+        self.assertIn("APPROVED REVIEW PREVIEW; NOT RELEASED", readme)
+        for token in ("visible on the pushed", "have not replaced the released Atlas 07", "Still not present", "Decisions deliberately still open"):
             self.assertIn(token, status)
         self.assertIn("- [ ] Obtain owner visual approval", checklist)
         self.assertIn("- [ ] Decide whether to promote", checklist)

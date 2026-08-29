@@ -50,7 +50,7 @@
 - [x] Add a validated BibTeX export and optional bounded review guide
 - [x] Add deterministic twelve-zone and four-claim CSV exports
 - [x] Record reviewed Atlas 08 components without representing the preview as released
-- [ ] Obtain owner visual approval of the private preview
+- [ ] Obtain owner visual approval of the review preview
 - [ ] Decide whether to promote the preview to the released atlas
 
 The MIT license covers the repository, including its code, prose, and original
