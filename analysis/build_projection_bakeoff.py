@@ -258,7 +258,8 @@ def render_candidate(candidate: Candidate, geojson: dict, source_sha256: str) ->
     screen = screen_transform(bounds)
     coastline_commands: list[str] = []
     for ring in all_rings(geojson):
-        coastline_commands.append(svg_path(projected_segments(ring, candidate.projector, bounds, close=True), screen))
+        segments = projected_segments(ring, candidate.projector, bounds, close=True)
+        coastline_commands.append(svg_path(segments, screen))
     coastlines = "".join(coastline_commands)
 
     graticule_commands: list[str] = []
@@ -268,9 +269,26 @@ def render_candidate(candidate: Candidate, geojson: dict, source_sha256: str) ->
         graticule_commands.append(line_path([(longitude, latitude) for latitude in range(-88, 89, 2)], candidate.projector, bounds, screen))
     graticule = "".join(graticule_commands)
 
+    heat_polygons = [
+        [(96, -3), (103, 5), (114, 9), (126, 7), (136, 11), (149, 8), (159, 3), (172, 1), (180, -3), (180, -14), (167, -16), (154, -12), (142, -15), (129, -10), (116, -12), (105, -8), (96, -3)],
+        [(-180, -3), (-169, -4), (-158, -8), (-145, -12), (-151, -18), (-163, -18), (-175, -14), (-180, -14), (-180, -3)],
+        [(-115, 5), (-108, 12), (-98, 15), (-88, 13), (-82, 18), (-72, 20), (-63, 16), (-56, 10), (-61, 4), (-72, 2), (-82, 6), (-91, 3), (-103, 6), (-115, 5)],
+    ]
+    heat_shelves = [
+        [(105, -2), (115, 4), (126, 3), (137, 7), (149, 4), (160, -1), (173, -3)],
+        [(-177, -7), (-166, -8), (-155, -12), (-149, -14)],
+        [(-108, 8), (-98, 11), (-89, 9), (-80, 14), (-70, 15), (-62, 10)],
+    ]
+    heatmass_paths = "".join(
+        f'<path class="heatmass" d="{svg_path(projected_segments(polygon, candidate.projector, bounds, close=True), screen, close=True)}"/>'
+        for polygon in heat_polygons
+    )
+    shelf_paths = "".join(
+        f'<path class="shelf" d="{line_path(shelf, candidate.projector, bounds, screen)}"/>'
+        for shelf in heat_shelves
+    )
+
     fluid_lines = {
-        "indo": [(105, 1), (125, 3), (150, 1), (175, -3), (200, -7)],
-        "western": [(-112, 8), (-94, 12), (-78, 15), (-62, 11)],
         "elnino": [(175, 0), (200, 0), (230, -1), (260, -2)],
         "gulf": [(-80, 25), (-73, 35), (-58, 43), (-38, 49)],
         "kuroshio": [(128, 22), (138, 34), (154, 40), (178, 43)],
@@ -308,8 +326,8 @@ def render_candidate(candidate: Candidate, geojson: dict, source_sha256: str) ->
     <style>
       text {{ font-family: Inter, ui-sans-serif, system-ui, sans-serif; }}
       .grid {{ fill:none; stroke:#aad4d6; stroke-opacity:.12; stroke-width:1; }}
-      .coast {{ fill:none; stroke:#a7c2c1; stroke-opacity:.34; stroke-width:1.25; vector-effect:non-scaling-stroke; }}
-      .heatmass {{ fill:none; stroke:url(#heat); stroke-width:45; stroke-linecap:round; stroke-linejoin:round; stroke-opacity:.72; }}
+      .coast {{ fill:none; stroke:#a7c2c1; stroke-opacity:.32; stroke-width:1.15; vector-effect:non-scaling-stroke; }}
+      .heatmass {{ fill:url(#heat); fill-opacity:.72; stroke:#ffd06b; stroke-width:3; stroke-linejoin:round; }}
       .shelf {{ fill:none; stroke:#ffe6a5; stroke-width:2; stroke-dasharray:12 8; stroke-linecap:round; stroke-opacity:.8; }}
       .anomaly {{ fill:url(#blob); stroke:#ff8d84; stroke-width:2.5; stroke-dasharray:9 7; }}
       .tongue {{ fill:none; stroke:#ff8178; stroke-width:26; stroke-linecap:round; stroke-dasharray:10 7; stroke-opacity:.7; }}
@@ -327,8 +345,7 @@ def render_candidate(candidate: Candidate, geojson: dict, source_sha256: str) ->
   <g clip-path="url(#map-clip)">
     <rect x="42" y="108" width="816" height="538" fill="url(#ocean)"/>
     <path class="grid" d="{graticule}"/>
-    <path class="heatmass" d="{paths['indo']}"/><path class="shelf" d="{paths['indo']}"/>
-    <path class="heatmass" d="{paths['western']}"/><path class="shelf" d="{paths['western']}"/>
+    {heatmass_paths}{shelf_paths}
     <path class="anomaly" d="{blob}"/>
     <path class="tongue" d="{paths['elnino']}"/>
     <path class="coast" d="{coastlines}"/>

@@ -84,6 +84,8 @@ python build_projection_bakeoff.py `
   --output-dir ../figures
 ```
 
-The three outputs use identical schematic heatmasses, anomalies, currents,
-buried Arctic inflow, gates, and ACC. They compare projection behavior; they
-are not observational heat fields or transport calculations.
+The three outputs use identical schematic heatmass polygons with inset shelf
+contours, anomalies, currents, buried Arctic inflow, gates, and ACC. Polygon
+boundaries are illustrative rather than observed thresholds. The figures
+compare projection behavior; they are not observational heat fields or
+transport calculations.

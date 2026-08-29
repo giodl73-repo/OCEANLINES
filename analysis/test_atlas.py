@@ -196,6 +196,9 @@ class AtlasTests(unittest.TestCase):
             self.assertIn("9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9", figure)
             for feature in ('class="heatmass"', 'class="anomaly"', 'class="current"', 'class="acc"', 'class="buried"', 'class="gate"'):
                 self.assertIn(feature, figure)
+            self.assertGreaterEqual(figure.count('class="heatmass"'), 3)
+            self.assertGreaterEqual(figure.count('class="shelf"'), 3)
+            self.assertNotIn("stroke-width:45", figure)
 
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")
