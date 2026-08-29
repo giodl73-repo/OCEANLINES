@@ -1,8 +1,8 @@
-"""Build the OCEANLINES conceptual fluid-geography SVG.
+"""Build the OSW conceptual fluid-geography SVG.
 
 The coastline is generated from Natural Earth 1:110m land geometry. All heat
 reservoirs, paths, anomalies, buried layers, gates, and labels remain explicitly
-conceptual OCEANLINES artwork.
+conceptual OSW artwork.
 """
 
 from __future__ import annotations
@@ -127,10 +127,10 @@ def build_svg(
     ) if include_callouts else ""
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{WIDTH}" height="{HEIGHT}" viewBox="0 0 {WIDTH} {HEIGHT}" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES fluid geography of Earth's ocean</title>
+  <title id="title">OSW fluid geography of Earth's ocean</title>
   <desc id="desc">An ocean-first conceptual map on Natural Earth coastlines. {view_description}Twelve numbered callouts identify continent-like warm reservoirs, boundary-current pathways, transient anomalies, buried polar water masses, the Antarctic Circumpolar Current, and exchange gates. Reservoirs use irregular fluid coastlines to distinguish persistent or seasonal heatmasses from round transient blobs. All heat shapes and pathways are schematic, permeable, and moving rather than measured boundaries. The figure does not calculate heat content or transport.</desc>
   <metadata>
-    Natural Earth 1:110m land geometry, public domain, commit {SOURCE_COMMIT}, source SHA-256 {source_sha256}, {SOURCE_URL}. OCEANLINES conceptual overlays are original MIT-licensed artwork.
+    Natural Earth 1:110m land geometry, public domain, commit {SOURCE_COMMIT}, source SHA-256 {source_sha256}, {SOURCE_URL}. OSW conceptual overlays are original MIT-licensed artwork.
   </metadata>
   <defs>
     <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
@@ -190,7 +190,7 @@ def build_svg(
   </defs>
 
   <rect width="1600" height="1050" fill="#06171c"/>
-  <text x="60" y="43" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="4">OCEANLINES / FLUID GEOGRAPHY</text>
+  <text x="60" y="43" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="4">OSW / FLUID GEOGRAPHY</text>
   <text x="1540" y="43" text-anchor="end" fill="#ffb454" font-size="12" font-weight="800" letter-spacing="2.2">{view_stamp}</text>
 
   <g clip-path="url(#mapClip)">

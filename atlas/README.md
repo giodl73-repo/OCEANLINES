@@ -84,10 +84,10 @@ study. Rebuild it with:
 ```powershell
 python analysis/build_fluid_geography.py `
   --land-geojson path/to/ne_110m_land.geojson `
-  --output figures/oceanlines-fluid-geography.svg `
-  --interactive-output figures/oceanlines-fluid-geography-interactive.svg `
-  --water-first-output figures/oceanlines-fluid-geography-water-first.svg `
-  --water-first-interactive-output figures/oceanlines-fluid-geography-water-first-interactive.svg
+  --output figures/osw-fluid-geography.svg `
+  --interactive-output figures/osw-fluid-geography-interactive.svg `
+  --water-first-output figures/osw-fluid-geography-water-first.svg `
+  --water-first-interactive-output figures/osw-fluid-geography-water-first-interactive.svg
 ```
 
 Regenerate the 36 selectable atlas shapes with:
@@ -299,8 +299,8 @@ foreach ($pressure in 10, 300, 700, 1000) {
 Any observational release must name the product version, retrieval date,
 temporal aggregation, depth support, baseline, transformation code, and license.
 All three committed OISST artifacts conform to
-`oceanlines.oisst.snapshot.v2` and retain source-response SHA-256 checksums.
+`osw.oisst.snapshot.v2` and retain source-response SHA-256 checksums.
 The four committed Argo artifacts conform to
-`oceanlines.argo.pressure-anomaly.v1`; each records the July 2026 product URL,
+`osw.argo.pressure-anomaly.v1`; each records the July 2026 product URL,
 retrieval timestamp, exact pressure selection, 2-degree stride, and shared SHA-256 checksum
 `5a19dc77aaccecfd7e6aec34e80e42e1cbd83642c3f08a94d98c7018f631bb5c`.

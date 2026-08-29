@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES 56 coastal states study</title>
+  <title id="title">OSW 56 coastal states study</title>
   <desc id="desc">A monochrome ocean-first map in which 56 approximate province states cover the world ocean. Real Natural Earth land is removed from the states, so coastal provinces inherit recognizable coastline edges. Internal boundaries are original nearest-seed approximations, not scientific Longhurst geometry.</desc>
-  <metadata>Original OCEANLINES nearest-seed state geometry, MIT licensed. Coast edges use public-domain Natural Earth 1:110m land geometry, commit ca96624a56bd078437bca8184e78163e5039ad19, SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. Province seeds are approximate geographic placements; no geographic Longhurst boundary dataset is reproduced.</metadata>
+  <metadata>Original OSW nearest-seed state geometry, MIT licensed. Coast edges use public-domain Natural Earth 1:110m land geometry, commit ca96624a56bd078437bca8184e78163e5039ad19, SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. Province seeds are approximate geographic placements; no geographic Longhurst boundary dataset is reproduced.</metadata>
   <defs>
     <mask id="ocean-only" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1000">
       <rect x="92" y="174" width="1416" height="644" fill="white"/>
@@ -32,5 +32,5 @@
     <text y="22" fill="#8da9a9">Real coast edges; approximate nearest-seed internal borders and contacts.</text>
     <text y="38" fill="#8da9a9">The coastline is clipped into each province rather than overlaid as decoration.</text>
   </g>
-  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">CLASSIC 56-PROVINCE VOCABULARY · NATURAL EARTH COASTS · ORIGINAL OCEANLINES STATE GEOMETRY</text>
+  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">CLASSIC 56-PROVINCE VOCABULARY · NATURAL EARTH COASTS · ORIGINAL OSW STATE GEOMETRY</text>
 </svg>

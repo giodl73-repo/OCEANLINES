@@ -3,9 +3,9 @@
 ## Status
 
 This is a source-qualified research design, not a reported result. It defines
-what OCEANLINES would need to map and test abyssal source-versus-transport
+what OSW would need to map and test abyssal source-versus-transport
 hypotheses. No focal input fields, solver outputs, or derived masks have been
-imported into OCEANLINES.
+imported into OSW.
 
 ## The question
 
@@ -30,7 +30,7 @@ kept separate.
 
 Temperature tendency, integrated heat content, source power, boundary heat
 flux, and the fraction of a tagged source delivered to a target are different
-quantities. OCEANLINES will not substitute one for another.
+quantities. OSW will not substitute one for another.
 
 ## Observational anchor and competing mechanisms
 
@@ -81,9 +81,9 @@ It must be accompanied by, rather than substituted for:
   sensitivity tests; and
 - uncertainty inherited from the observations and source construction.
 
-## Evidence needed for an OCEANLINES result
+## Evidence needed for an OSW result
 
-To turn this case into maps or a reproduced result, OCEANLINES needs:
+To turn this case into maps or a reproduced result, OSW needs:
 
 1. input source fields with provider, product, version, units, license, URLs,
    retrieval dates, and checksums;
@@ -97,10 +97,10 @@ To turn this case into maps or a reproduced result, OCEANLINES needs:
 6. matched actual and climatological outputs sufficient to recompute every
    plotted diagnostic.
 
-Without those artifacts, OCEANLINES can map the question and candidate source
+Without those artifacts, OSW can map the question and candidate source
 geography, but it cannot label a figure as a reproduced transport result.
 
-## What OCEANLINES can contribute
+## What OSW can contribute
 
 - a public four-layer atlas that keeps observation, source opportunity, and
   modeled delivery visually distinct;
@@ -112,7 +112,7 @@ geography, but it cannot label a figure as a reproduced transport result.
 
 ## Stop conditions
 
-OCEANLINES will pause causal interpretation if the compared experiments differ
+OSW will pause causal interpretation if the compared experiments differ
 in more than their declared velocity treatment, if the delivered fraction is
 not dimensionally defined, if remapping fails its power-conservation check, or
 if the result cannot be regenerated from shareable inputs and configuration.

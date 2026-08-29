@@ -101,7 +101,7 @@ def build_svg(land_path: str) -> str:
         )
         (exempt_groups if feature_id in COAST_CLEARANCE_EXEMPT else groups).append(group)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES selectable fluid feature shapes</title>
+  <title id="title">OSW selectable fluid feature shapes</title>
   <desc id="desc">Thirty-six schematic, selectable ocean feature shapes aligned to the interactive province map. Shapes indicate geographic form and mechanism but are not observed boundaries, centroids, or measured footprints.</desc>
   <defs>
     <marker id="flow-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto"><path d="M1 1L11 6L1 11Z" fill="#ffb454"/></marker>
@@ -148,8 +148,8 @@ def build_svg(land_path: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "figures" / "oceanlines-atlas-feature-shapes.svg")
-    parser.add_argument("--province-map", type=Path, default=Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-interactive.svg")
+    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "figures" / "osw-atlas-feature-shapes.svg")
+    parser.add_argument("--province-map", type=Path, default=Path(__file__).resolve().parents[1] / "figures" / "osw-province-atlas-interactive.svg")
     args = parser.parse_args()
     args.output.write_text(build_svg(load_land_path(args.province_map)), encoding="utf-8", newline="\n")
     print(args.output)

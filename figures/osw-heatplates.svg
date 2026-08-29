@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES HEATPLATES</title>
+  <title id="title">OSW HEATPLATES</title>
   <desc id="desc">Six flat local equal-area panels show the individual schematic shapes of the Indo-Pacific warm pool, Western Hemisphere warm pool, Northeast Pacific Blob, El Niño tongue, buried Atlantic Water in the Arctic, and Circumpolar Deep Water. Every panel uses its own zoom, so footprint areas must not be compared.</desc>
-  <metadata>Natural Earth 1:110m land, public domain, commit ca96624a56bd078437bca8184e78163e5039ad19, SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. Local Lambert equal-area views and schematic heat polygons are original MIT-licensed OCEANLINES work.</metadata>
+  <metadata>Natural Earth 1:110m land, public domain, commit ca96624a56bd078437bca8184e78163e5039ad19, SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. Local Lambert equal-area views and schematic heat polygons are original MIT-licensed OSW work.</metadata>
   <defs>
     <linearGradient id="plate-ocean" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#123f4c"/><stop offset="1" stop-color="#061922"/></linearGradient>
     <linearGradient id="plate-heat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd46b"/><stop offset="1" stop-color="#ff8f4d"/></linearGradient>
@@ -17,7 +17,7 @@
     </style>
   </defs>
   <rect width="1200" height="900" fill="#06171c"/>
-  <text x="30" y="40" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="3">OCEANLINES / SHAPE ATLAS</text>
+  <text x="30" y="40" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="3">OSW / SHAPE ATLAS</text>
   <text x="30" y="82" fill="#eef9f7" font-size="38" font-weight="950">HEATPLATES</text>
   <text x="1170" y="48" text-anchor="end" fill="#ffb454" font-size="12" font-weight="900" letter-spacing="1.8">SHAPE FIRST · NOT ONE WORLD MAP</text>
   <text x="1170" y="76" text-anchor="end" fill="#8da9a9" font-size="12">Schematic boundaries · local equal-area · zoom varies by panel</text>

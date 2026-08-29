@@ -1,16 +1,25 @@
-# OCEANLINES
+# OSW
 
-## Mapping Earth's Hidden Waterworld
+## Ocean States of the World
 
-[![validate](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml/badge.svg)](https://github.com/giodl73-repo/OCEANLINES/actions/workflows/validate.yml)
+**The Ocean States**, colloquially: a fluid atlas of the world ocean.
 
-## Enter OCEANLINES
+**Naming contract:** `OSW` always expands to **Ocean States of the World**.
+In prose, the project may be called **The Ocean States**. `OSW` is the compact
+repository and interface mark; it is not a second scientific classification.
+The former OCEANLINES name remains in dated history and review records and in
+the already-versioned observation schema/global identifiers retained for
+backward compatibility.
+
+[![validate](https://github.com/giodl73-repo/OSW/actions/workflows/validate.yml/badge.svg)](https://github.com/giodl73-repo/OSW/actions/workflows/validate.yml)
+
+## Enter the Ocean States
 
 **[Explore 56 ocean states, 36 shaped features, and the Atlas 10 depth ladder →](atlas/)**
 
-[Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
+[Open the full annotated map](figures/osw-fluid-geography.svg) ·
 [Compare ocean-first projections](projections/) ·
-[See the coast-owned 56-province state map](figures/oceanlines-province-atlas-coastal-states.svg) ·
+[See the coast-owned 56-province state map](figures/osw-province-atlas-coastal-states.svg) ·
 [Download the 56-province directory](research/longhurst-province-reference.csv) ·
 [Read the project history](HISTORY.md) ·
 [Read the field guide](HEATMASS.md) ·
@@ -22,7 +31,7 @@
 
 | If you want to… | Go here |
 |---|---|
-| See the idea in one image | [Full fluid-geography map](figures/oceanlines-fluid-geography.svg) |
+| See the idea in one image | [Full fluid-geography map](figures/osw-fluid-geography.svg) |
 | Understand the Province Atlas breakthrough and its next promise | [Project history](HISTORY.md) and [shape-system plan](plans/province-atlas-shape-system.md) |
 | Compare ocean-first world geometries and the 56-province cartogram | [Projection laboratory](projections/) |
 | Explore waters, flows, edges, seafloor, life, events, and observational layers | [Interactive Atlas](atlas/) |
@@ -34,7 +43,7 @@
 | Inspect evidence, limitations, and provenance | [Atlas method](atlas/README.md) and [source register](SOURCE-REGISTER.md) |
 
 The currently published site still serves
-[Atlas 07](https://giodl73-repo.github.io/OCEANLINES/atlas/). Atlas 08 remains
+[Atlas 07](https://giodl73-repo.github.io/OSW/atlas/). Atlas 08 remains
 the approved private review preview, Atlas 09 is the approved first depth
 layer, and Atlas 10 is the native-role-approved pressure ladder on this branch.
 
@@ -43,16 +52,16 @@ layer, and Atlas 10 is the native-role-approved pressure ladder on this branch.
 > views are not absolute temperature, vertically integrated heat content,
 > transport, or Antarctic shelf delivery. Atlas 07 remains publicly released.
 
-![OCEANLINES fluid geography](figures/oceanlines-fluid-geography.svg)
+![OSW fluid geography](figures/osw-fluid-geography.svg)
 
-Most world maps end at the coastline. OCEANLINES starts there.
+Most world maps end at the coastline. **Ocean States of the World** starts there.
 
 The ocean has its own geography: continent-scale reservoirs, fast boundary
 currents, fronts, eddies, vertical layers, buried polar heat, and narrow gates
 that control exchange. Unlike land, these provinces move, leak, split, merge,
 and change identity with depth.
 
-OCEANLINES develops a visual and quantitative atlas for that fluid geography.
+OSW develops a visual and quantitative atlas for that fluid geography.
 Heat is the first revealing layer—not the only possible layer.
 
 ## Three map families
@@ -63,7 +72,7 @@ Heat is the first revealing layer—not the only possible layer.
 | **OCEANREALMS** | Which fronts, layers, topography, and budgets maintain a province? | [Heat zones are budgets](OCEANREALMS.md) |
 | **OCEANBELTS** | Which comparisons survive when ocean bands are translated to gas giants? | [Gas-giant heat zones](OCEANBELTS.md) |
 
-The names describe complementary objects: **OCEANLINES reveal HEATMASSES
+The names describe complementary objects: **The Ocean States reveal HEATMASSES
 inside OCEANREALMS**.
 
 ## Abyssal heat: source or transport?
@@ -74,7 +83,7 @@ changing heat from below or by changing circulation-mediated delivery. It
 keeps observed warming, estimated seafloor source power, lithosphere and vent
 opportunity, and modeled transport in four separate layers.
 
-This is a source-qualified research design, not an OCEANLINES transport
+This is a source-qualified research design, not an OSW transport
 result. It states what artifacts would make independent mapping and validation
 possible.
 
@@ -108,7 +117,7 @@ quantitative.
 
 ## Review organization
 
-OCEANLINES uses eight functional [review roles](.roles/ROLE.md) for physical
+OSW uses eight functional [review roles](.roles/ROLE.md) for physical
 oceanography, climate-data stewardship, cartography, public science,
 accessibility, reproducibility, repository maintenance, and planetary
 comparison. They organize internal quality control and do not replace external
@@ -144,7 +153,7 @@ approximate nearest-seed geometry; no Longhurst boundary dataset is redistribute
 
 ## Project status
 
-OCEANLINES is an early observation-class research and visual-atlas project.
+OSW is an early observation-class research and visual-atlas project.
 The released Atlas 07 combines conceptual SVG geography with fixed NOAA OISST
 absolute, anomaly, and estimated-error surface layers, a bookmarkable
 coordinate probe, symmetric latitude-ring comparisons, and a 45-pair latitude
@@ -162,8 +171,8 @@ remaining promotion decisions.
 The abyssal-heat research design defines a reproducible transport-test
 contract; no focal fields or solver outputs have been imported.
 
-Public repository: [github.com/giodl73-repo/OCEANLINES](https://github.com/giodl73-repo/OCEANLINES).
-Live atlas: [giodl73-repo.github.io/OCEANLINES/atlas/](https://giodl73-repo.github.io/OCEANLINES/atlas/).
+Public repository: [github.com/giodl73-repo/OSW](https://github.com/giodl73-repo/OSW).
+Live atlas: [giodl73-repo.github.io/OSW/atlas/](https://giodl73-repo.github.io/OSW/atlas/).
 The first hosted validation run passed both the offline suite and pinned NetCDF
 fixture job on the approved Atlas 03 history.
 

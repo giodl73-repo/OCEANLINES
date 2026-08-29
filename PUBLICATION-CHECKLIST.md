@@ -7,10 +7,10 @@
 - [x] Calculator and tests packaged as standalone public artifacts
 - [x] Add the portfolio-standard MIT license
 - [x] Add author/maintainer and citation metadata
-- [x] Install the OCEANLINES functional review roles
-- [x] Resolve all P1 and P2 findings in the OCEANLINES atlas role review
+- [x] Install the OSW functional review roles
+- [x] Resolve all P1 and P2 findings in the OSW atlas role review
 - [x] Select `giodl73-repo` as the public GitHub owner
-- [x] Create the public `giodl73-repo/OCEANLINES` repository
+- [x] Create the public `giodl73-repo/OSW` repository
 - [x] Add an offline CI definition and validate its commands locally
 - [x] Confirm the first hosted CI run after remote publication
 - [x] Run a final secret and provenance scan
@@ -32,7 +32,7 @@
 - [x] Separate observation, source estimate, opportunity, and modeled delivery
 - [x] Define the actual-versus-climatology transport-test contract
 - [ ] Acquire shareable focal inputs, code, configuration, outputs, and receipts
-- [ ] Reproduce the reported diagnostics before publishing them as OCEANLINES results
+- [ ] Reproduce the reported diagnostics before publishing them as OSW results
 
 ## Atlas 08 review preview
 

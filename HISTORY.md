@@ -1,8 +1,27 @@
-# OCEANLINES project history
+# OSW project history
 
 This record preserves changes in the project's way of seeing the ocean, not
 only software releases. Atlas version status remains in `README.md` and
 `PREVIEW-STATUS.md`.
+
+## 2026-08-29 — Ocean States of the World
+
+After the 56-state surface geography and 36 overlapping feature systems became
+the center of the work, **OCEANLINES** no longer described the project: lines
+were only one kind of ocean object. The project was renamed **OSW — Ocean
+States of the World**. In ordinary conversation it may be called **The Ocean
+States**.
+
+The new name preserves the project's central map idea: ocean states can be
+learned like the states on a familiar political map, while waters, currents,
+fronts, seafloor structures, living systems, and events cross and overlap
+them. “States” remains a visual and organizational analogy, not a claim that
+the approximate provinces are sovereign, fixed, exhaustive through depth, or
+published Longhurst boundary geometry.
+
+Active code, artifacts, metadata, and interface branding use `OSW` and the
+`osw-` filename prefix. Dated reviews below retain the former project name when
+describing work performed before the rename.
 
 ## 2026-08-29 — The ocean becomes a place
 

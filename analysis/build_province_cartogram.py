@@ -1,4 +1,4 @@
-"""Build the OCEANLINES 56-province reference cartogram.
+"""Build the OSW 56-province reference cartogram.
 
 This is an original adjacency-inspired atlas layout, not a geographic projection
 or a redistribution of the Marine Regions Longhurst geometry.  Province codes,
@@ -469,9 +469,9 @@ def build_coastal_states_svg(geojson: dict, source_sha256: str) -> str:
     states, labels = coastal_state_geometry()
     land = projected_land_path(geojson)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES 56 coastal states study</title>
+  <title id="title">OSW 56 coastal states study</title>
   <desc id="desc">A monochrome ocean-first map in which 56 approximate province states cover the world ocean. Real Natural Earth land is removed from the states, so coastal provinces inherit recognizable coastline edges. Internal boundaries are original nearest-seed approximations, not scientific Longhurst geometry.</desc>
-  <metadata>Original OCEANLINES nearest-seed state geometry, MIT licensed. Coast edges use public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. Province seeds are approximate geographic placements; no geographic Longhurst boundary dataset is reproduced.</metadata>
+  <metadata>Original OSW nearest-seed state geometry, MIT licensed. Coast edges use public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. Province seeds are approximate geographic placements; no geographic Longhurst boundary dataset is reproduced.</metadata>
   <defs>
     <mask id="ocean-only" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1000">
       <rect x="92" y="174" width="1416" height="644" fill="white"/>
@@ -502,7 +502,7 @@ def build_coastal_states_svg(geojson: dict, source_sha256: str) -> str:
     <text y="22" fill="#8da9a9">Real coast edges; approximate nearest-seed internal borders and contacts.</text>
     <text y="38" fill="#8da9a9">The coastline is clipped into each province rather than overlaid as decoration.</text>
   </g>
-  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">CLASSIC 56-PROVINCE VOCABULARY · NATURAL EARTH COASTS · ORIGINAL OCEANLINES STATE GEOMETRY</text>
+  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">CLASSIC 56-PROVINCE VOCABULARY · NATURAL EARTH COASTS · ORIGINAL OSW STATE GEOMETRY</text>
 </svg>'''
 
 
@@ -511,9 +511,9 @@ def build_interactive_states_svg(geojson: dict, source_sha256: str) -> str:
     states, labels = coastal_state_geometry(60, 90, 1480, 740, 90, -90)
     land = projected_land_path(geojson, 60, 90, 1480, 740, 90, -90)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
-  <title id="title">Interactive OCEANLINES 56-province ground</title>
+  <title id="title">Interactive OSW 56-province ground</title>
   <desc id="desc">Selectable approximate ocean states with real coast-owned edges, aligned to every Atlas 10 conceptual and observed layer.</desc>
-  <metadata>Original OCEANLINES nearest-seed geometry. Natural Earth 1:110m land, public domain, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}. No geographic Longhurst boundary dataset is reproduced.</metadata>
+  <metadata>Original OSW nearest-seed geometry. Natural Earth 1:110m land, public domain, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}. No geographic Longhurst boundary dataset is reproduced.</metadata>
   <defs><mask id="interactive-ocean-only"><rect x="60" y="90" width="1480" height="740" fill="white"/><path d="{land}" fill="black" fill-rule="evenodd"/></mask></defs>
   <style>
     .map-field {{ fill:#0b242b; }}
@@ -546,9 +546,9 @@ def build_lakes_svg(geojson: dict, source_sha256: str) -> str:
     )
     holes = continent_hole_path(geojson)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES monochrome 56-province lakes cartogram</title>
+  <title id="title">OSW monochrome 56-province lakes cartogram</title>
   <desc id="desc">A monochrome state-map study of the classic 56 Longhurst surface-ocean provinces. Continents are compressed real-coastline holes cut out of the unified ocean field like lakes. Province shapes, sizes, and most internal adjacencies remain schematic and non-metric.</desc>
-  <metadata>Original OCEANLINES province cartogram, MIT licensed. Continental cutouts use public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. The continental silhouettes are strongly compressed horizontally. No geographic Longhurst boundary dataset is reproduced.</metadata>
+  <metadata>Original OSW province cartogram, MIT licensed. Continental cutouts use public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. The continental silhouettes are strongly compressed horizontally. No geographic Longhurst boundary dataset is reproduced.</metadata>
   <defs>
     <mask id="continent-cutouts" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1000">
       <rect width="1600" height="1000" fill="white"/>
@@ -588,7 +588,7 @@ def build_lakes_svg(geojson: dict, source_sha256: str) -> str:
     <text y="38" fill="#8da9a9">Province shape, size, distance, and most adjacency remain schematic.</text>
     <text y="62" fill="#8da9a9">The next study varies the 56 internal puzzle shapes.</text>
   </g>
-  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE IDENTITY · NATURAL EARTH CONTINENTAL CUTOUTS · ORIGINAL OCEANLINES LAYOUT</text>
+  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE IDENTITY · NATURAL EARTH CONTINENTAL CUTOUTS · ORIGINAL OSW LAYOUT</text>
 </svg>'''
 
 
@@ -608,9 +608,9 @@ def build_svg(geojson: dict, source_sha256: str) -> str:
     )
     continental_context = render_continental_context(geojson)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES 56-province ocean cartogram</title>
+  <title id="title">OSW 56-province ocean cartogram</title>
   <desc id="desc">An original flat reference layout of the classic 56 Longhurst surface-ocean provinces. Pacific, Indian, and Atlantic province groups occupy most of the canvas, joined by an Arctic cap and a Southern Ocean base. Real Natural Earth coastlines are horizontally compressed into narrow continental fingerprints. Province shapes and areas remain schematic; hover or focus a province to read its full name.</desc>
-  <metadata>Original OCEANLINES cartogram geometry, MIT licensed. Province identities follow the classic 56-province vocabulary discussed by Reygondeau et al. 2013, DOI 10.1002/gbc.20089, with OCAL and CCAL shown separately as in the older classification. Continental context uses public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. This graphic does not reproduce the CC-BY-NC-SA Marine Regions boundary dataset.</metadata>
+  <metadata>Original OSW cartogram geometry, MIT licensed. Province identities follow the classic 56-province vocabulary discussed by Reygondeau et al. 2013, DOI 10.1002/gbc.20089, with OCAL and CCAL shown separately as in the older classification. Continental context uses public-domain Natural Earth 1:110m land geometry, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. This graphic does not reproduce the CC-BY-NC-SA Marine Regions boundary dataset.</metadata>
   <style>
     .province path {{ stroke:#06171c; stroke-width:5; stroke-linejoin:round; transition:filter .15s,stroke .15s; }}
     .province text {{ font:900 15px ui-monospace,Consolas,monospace; text-anchor:middle; pointer-events:none; }}
@@ -642,7 +642,7 @@ def build_svg(geojson: dict, source_sha256: str) -> str:
     <text y="38" fill="#8da9a9">direction, and exact coast contact are intentionally not preserved.</text>
     <text y="62" fill="#8da9a9">Static provinces are mean ecological references. Natural boundaries move.</text>
   </g>
-  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE REFERENCE · ORIGINAL OCEANLINES LAYOUT · DOI 10.1002/GBC.20089</text>
+  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE REFERENCE · ORIGINAL OSW LAYOUT · DOI 10.1002/GBC.20089</text>
 </svg>'''
 
 
@@ -651,22 +651,22 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=pathlib.Path,
-        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas.svg",
+        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "osw-province-atlas.svg",
     )
     parser.add_argument(
         "--lakes-output",
         type=pathlib.Path,
-        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-lakes.svg",
+        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "osw-province-atlas-lakes.svg",
     )
     parser.add_argument(
         "--coastal-states-output",
         type=pathlib.Path,
-        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-coastal-states.svg",
+        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "osw-province-atlas-coastal-states.svg",
     )
     parser.add_argument(
         "--interactive-states-output",
         type=pathlib.Path,
-        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-interactive.svg",
+        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "osw-province-atlas-interactive.svg",
     )
     parser.add_argument("--land-geojson", required=True, type=pathlib.Path)
     parser.add_argument(
@@ -689,7 +689,7 @@ def main() -> None:
         writer.writerow(("code", "province", "basin", "biome", "edition", "geometry_status"))
         for basin, provinces in PROVINCES.items():
             for code, province, biome in provinces:
-                writer.writerow((code, province, basin, biome, "classic 56-province reference", "OCEANLINES non-metric cartogram"))
+                writer.writerow((code, province, basin, biome, "classic 56-province reference", "OSW non-metric cartogram"))
     print(args.output)
     print(args.lakes_output)
     print(args.coastal_states_output)

@@ -1,4 +1,4 @@
-"""Offline gate for OCEANLINES feature-geometry admission records."""
+"""Offline gate for OSW feature-geometry admission records."""
 
 from __future__ import annotations
 

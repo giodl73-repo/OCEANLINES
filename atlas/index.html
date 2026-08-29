@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Atlas 10 research preview: an interactive atlas of ocean heat geography with surface observations, a four-level Argo anomaly ladder, and optional polar diagnostics.">
-  <title>OCEANLINES Atlas 10 Preview — Mapping Earth's Hidden Waterworld</title>
+  <title>OSW Atlas 10 Preview — Ocean States of the World</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23071b22'/%3E%3Cpath d='M10 34c8-10 15-10 23 0s15 10 21 0' fill='none' stroke='%235ee2d6' stroke-width='7'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="masthead">
-    <a class="wordmark" href="../README.md" aria-label="OCEANLINES home">OCEANLINES</a>
-    <p>Mapping Earth's Hidden Waterworld</p>
+    <a class="wordmark" href="../README.md" aria-label="OSW home">OSW</a>
+    <p>Ocean States of the World</p>
     <nav class="project-nav" aria-label="Project guide">
-      <a href="../figures/oceanlines-fluid-geography.svg" target="_blank" rel="noopener">Map</a>
+      <a href="../figures/osw-fluid-geography.svg" target="_blank" rel="noopener">Map</a>
       <a href="../HEATMASS.md">Field guide</a>
       <a class="research-link" href="../research/">Research note</a>
       <a class="method-link" href="README.md">Method</a>
@@ -52,7 +52,7 @@
       <button type="reset">Reset to waters</button>
       <output id="filter-status" aria-live="polite">12 matching water features.</output>
     </form>
-    <nav class="legacy-studies" aria-label="Original OCEANLINES studies">Original studies: <a href="../HEATMASS.md">HEATMASS</a><a href="../OCEANREALMS.md">OCEANREALMS</a><a href="../OCEANBELTS.md">OCEANBELTS</a></nav>
+    <nav class="legacy-studies" aria-label="Original OSW studies">Original studies: <a href="../HEATMASS.md">HEATMASS</a><a href="../OCEANREALMS.md">OCEANREALMS</a><a href="../OCEANBELTS.md">OCEANBELTS</a></nav>
     <div class="feature-legend" aria-label="Geographic feature legend"><span data-lens="waters">WATERS</span><span data-lens="flows">FLOWS</span><span data-lens="edges">EDGES</span><span data-lens="floor">FLOOR</span><span data-lens="life">LIFE</span><span data-lens="events">EVENTS</span></div>
     <section class="atlas-shell" aria-label="Interactive ocean heat atlas">
       <div class="map-panel">
@@ -87,9 +87,9 @@
         </div>
         <div class="map-stage" id="map-stage">
           <div class="map-viewport" id="map-viewport">
-          <div id="province-map-host" class="province-map-host"><img id="conceptual-map" src="../figures/oceanlines-province-atlas-interactive.svg"
+          <div id="province-map-host" class="province-map-host"><img id="conceptual-map" src="../figures/osw-province-atlas-interactive.svg"
             alt="Interactive map of 56 approximate ocean provinces with coast-owned edges."></div>
-          <div id="feature-shape-host" class="feature-shape-host"><img src="../figures/oceanlines-atlas-feature-shapes.svg"
+          <div id="feature-shape-host" class="feature-shape-host"><img src="../figures/osw-atlas-feature-shapes.svg"
             alt="Schematic geographic shapes for 36 selectable waters, flows, edges, seafloor features, living systems, and events."></div>
           <div class="ocean-basin-labels" id="ocean-basin-labels" aria-hidden="true"><span class="np">NORTH PACIFIC</span><span class="sp">SOUTH PACIFIC</span><span class="na">NORTH ATLANTIC</span><span class="sa">SOUTH ATLANTIC</span><span class="io">INDIAN OCEAN</span><span class="so">SOUTHERN OCEAN</span><span class="ao">ARCTIC OCEAN</span></div>
           <canvas id="sst-canvas" width="720" height="360" hidden
@@ -130,7 +130,7 @@
           <p class="relation-method">This is a sampled relationship between two schematic display layers—not observed membership, transport, or a physical boundary.</p>
         </section>
         <div class="conceptual-actions" id="conceptual-actions">
-          <a id="full-size-conceptual-map" href="../figures/oceanlines-province-atlas-coastal-states.svg" target="_blank" rel="noopener">Open the full-size province map ↗</a>
+          <a id="full-size-conceptual-map" href="../figures/osw-province-atlas-coastal-states.svg" target="_blank" rel="noopener">Open the full-size province map ↗</a>
           <a href="../projections/">Open projection laboratory →</a>
           <details class="zone-directory">
             <summary id="directory-summary">Browse 12 matching features as text</summary>
@@ -280,7 +280,7 @@
       </div>
     </section>
   </main>
-  <footer><strong>OCEANLINES</strong><p>Atlas 10 compares four pressure-level anomalies from one Argo product; the ladder is not heat content, transport, or Antarctic shelf delivery. Polar mirrors remain a geometry comparison, not physical equivalence.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
+  <footer><strong>OSW</strong><p>Atlas 10 compares four pressure-level anomalies from one Argo product; the ladder is not heat content, transport, or Antarctic shelf delivery. Polar mirrors remain a geometry comparison, not physical equivalence.</p><a href="../LICENSE">MIT · Gio Della-Libera</a></footer>
   <noscript>This atlas requires JavaScript for zone selection. The complete map remains visible above.</noscript>
   <script src="data/oisst-2026-08-01.js" defer></script>
   <script src="data/oisst-anomaly-2026-08-01.js" defer></script>

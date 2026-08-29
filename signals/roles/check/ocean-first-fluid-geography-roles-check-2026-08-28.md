@@ -14,7 +14,7 @@ verdict: APPROVED
 ## Artifact identification
 
 - **Type:** conceptual scientific map, interactive atlas view, generator, and documentation.
-- **Reviewed:** `figures/oceanlines-fluid-geography.svg`, its interactive variant, `atlas/`, `analysis/build_fluid_geography.py`, source register, and Atlas README.
+- **Reviewed:** `figures/osw-fluid-geography.svg`, its interactive variant, `atlas/`, `analysis/build_fluid_geography.py`, source register, and Atlas README.
 - **Evidence class:** explanatory synthesis. Natural Earth supplies geographic context; heat regions, currents, gates, and pathways are schematic rather than measured fields.
 - **Approval scope:** private visual preview. This is not approval of an observational heat atlas or a public release.
 

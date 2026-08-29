@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES monochrome 56-province lakes cartogram</title>
+  <title id="title">OSW monochrome 56-province lakes cartogram</title>
   <desc id="desc">A monochrome state-map study of the classic 56 Longhurst surface-ocean provinces. Continents are compressed real-coastline holes cut out of the unified ocean field like lakes. Province shapes, sizes, and most internal adjacencies remain schematic and non-metric.</desc>
-  <metadata>Original OCEANLINES province cartogram, MIT licensed. Continental cutouts use public-domain Natural Earth 1:110m land geometry, commit ca96624a56bd078437bca8184e78163e5039ad19, SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. The continental silhouettes are strongly compressed horizontally. No geographic Longhurst boundary dataset is reproduced.</metadata>
+  <metadata>Original OSW province cartogram, MIT licensed. Continental cutouts use public-domain Natural Earth 1:110m land geometry, commit ca96624a56bd078437bca8184e78163e5039ad19, SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. The continental silhouettes are strongly compressed horizontally. No geographic Longhurst boundary dataset is reproduced.</metadata>
   <defs>
     <mask id="continent-cutouts" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1000">
       <rect width="1600" height="1000" fill="white"/>
@@ -41,5 +41,5 @@
     <text y="38" fill="#8da9a9">Province shape, size, distance, and most adjacency remain schematic.</text>
     <text y="62" fill="#8da9a9">The next study varies the 56 internal puzzle shapes.</text>
   </g>
-  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE IDENTITY · NATURAL EARTH CONTINENTAL CUTOUTS · ORIGINAL OCEANLINES LAYOUT</text>
+  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE IDENTITY · NATURAL EARTH CONTINENTAL CUTOUTS · ORIGINAL OSW LAYOUT</text>
 </svg>

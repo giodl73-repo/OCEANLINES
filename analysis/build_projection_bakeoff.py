@@ -140,7 +140,7 @@ def candidates() -> list[Candidate]:
         Candidate(
             "pelagos",
             "PELAGOS",
-            "The OCEANLINES experiment",
+            "The OSW experiment",
             "EQUAL-AREA · SAHARA EDGE",
             "Ocean continuity leads; shape distortion grows toward Africa.",
             pyproj_projector("+proj=laea +lat_0=-20 +lon_0=-165 +R=1 +units=m +no_defs"),
@@ -356,8 +356,8 @@ def render_candidate(candidate: Candidate, geojson: dict, source_sha256: str) ->
         frame_shape = '<rect x="42" y="112" width="816" height="530" rx="24"/>'
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{WIDTH}" height="{HEIGHT}" viewBox="0 0 {WIDTH} {HEIGHT}" role="img" aria-labelledby="title desc">
   <title id="title">{candidate.title} ocean projection prototype</title>
-  <desc id="desc">The {candidate.title} candidate projects the same schematic OCEANLINES heat reservoirs, transient anomaly, currents, and Antarctic Circumpolar Current over checksum-pinned Natural Earth coastlines. {candidate.tradeoff}</desc>
-  <metadata>Natural Earth 1:110m land, public domain, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. Projection rendering and conceptual overlays are original MIT-licensed OCEANLINES work. PELAGOS is an experimental aspect of Lambert azimuthal equal-area, not a new projection equation.</metadata>
+  <desc id="desc">The {candidate.title} candidate projects the same schematic OSW heat reservoirs, transient anomaly, currents, and Antarctic Circumpolar Current over checksum-pinned Natural Earth coastlines. {candidate.tradeoff}</desc>
+  <metadata>Natural Earth 1:110m land, public domain, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. Projection rendering and conceptual overlays are original MIT-licensed OSW work. PELAGOS is an experimental aspect of Lambert azimuthal equal-area, not a new projection equation.</metadata>
   <defs>
     <linearGradient id="ocean" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#123f4c"/><stop offset="1" stop-color="#061922"/></linearGradient>
     <linearGradient id="heat" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ffd46b"/><stop offset="1" stop-color="#ff8f4d"/></linearGradient>
@@ -379,7 +379,7 @@ def render_candidate(candidate: Candidate, geojson: dict, source_sha256: str) ->
     </style>
   </defs>
   <rect width="900" height="760" fill="#06171c"/>
-  <text x="42" y="44" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="3">OCEANLINES / PROJECTION LAB</text>
+  <text x="42" y="44" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="3">OSW / PROJECTION LAB</text>
   <text x="42" y="79" fill="#eef9f7" font-size="30" font-weight="900">{candidate.title}</text>
   <text x="858" y="56" text-anchor="end" fill="#ffb454" font-size="12" font-weight="900" letter-spacing="1.8">{candidate.property_label}</text>
   <text x="858" y="79" text-anchor="end" fill="#8da9a9" font-size="13">{candidate.subtitle}</text>
@@ -493,9 +493,9 @@ def render_heatplates(geojson: dict, source_sha256: str) -> str:
     </g>''')
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES HEATPLATES</title>
+  <title id="title">OSW HEATPLATES</title>
   <desc id="desc">Six flat local equal-area panels show the individual schematic shapes of the Indo-Pacific warm pool, Western Hemisphere warm pool, Northeast Pacific Blob, El Niño tongue, buried Atlantic Water in the Arctic, and Circumpolar Deep Water. Every panel uses its own zoom, so footprint areas must not be compared.</desc>
-  <metadata>Natural Earth 1:110m land, public domain, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. Local Lambert equal-area views and schematic heat polygons are original MIT-licensed OCEANLINES work.</metadata>
+  <metadata>Natural Earth 1:110m land, public domain, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}, {SOURCE_URL}. Local Lambert equal-area views and schematic heat polygons are original MIT-licensed OSW work.</metadata>
   <defs>
     <linearGradient id="plate-ocean" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#123f4c"/><stop offset="1" stop-color="#061922"/></linearGradient>
     <linearGradient id="plate-heat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd46b"/><stop offset="1" stop-color="#ff8f4d"/></linearGradient>
@@ -511,7 +511,7 @@ def render_heatplates(geojson: dict, source_sha256: str) -> str:
     </style>
   </defs>
   <rect width="1200" height="900" fill="#06171c"/>
-  <text x="30" y="40" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="3">OCEANLINES / SHAPE ATLAS</text>
+  <text x="30" y="40" fill="#67e4da" font-size="15" font-weight="900" letter-spacing="3">OSW / SHAPE ATLAS</text>
   <text x="30" y="82" fill="#eef9f7" font-size="38" font-weight="950">HEATPLATES</text>
   <text x="1170" y="48" text-anchor="end" fill="#ffb454" font-size="12" font-weight="900" letter-spacing="1.8">SHAPE FIRST · NOT ONE WORLD MAP</text>
   <text x="1170" y="76" text-anchor="end" fill="#8da9a9" font-size="12">Schematic boundaries · local equal-area · zoom varies by panel</text>
@@ -535,9 +535,9 @@ def main() -> None:
     geojson = json.loads(payload)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     for candidate in candidates():
-        output = args.output_dir / f"oceanlines-projection-{candidate.slug}.svg"
+        output = args.output_dir / f"osw-projection-{candidate.slug}.svg"
         output.write_text(render_candidate(candidate, geojson, digest), encoding="utf-8", newline="\n")
-    heatplates_output = args.output_dir / "oceanlines-heatplates.svg"
+    heatplates_output = args.output_dir / "osw-heatplates.svg"
     heatplates_output.write_text(render_heatplates(geojson, digest), encoding="utf-8", newline="\n")
 
 

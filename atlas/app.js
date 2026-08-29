@@ -797,11 +797,11 @@ function renderFeatureLabels() {
 }
 
 function verifyRelationSmokeFixture() {
-  const fixture = window.OCEANLINES_RELATION_SMOKE_FIXTURE || [];
+  const fixture = window.OSW_RELATION_SMOKE_FIXTURE || [];
   const failures = fixture.filter(expected => relationMatrix.get(relationKey(expected.provinceCode, expected.featureId))?.relation !== expected.relation);
-  window.OCEANLINES_RELATION_SMOKE = Object.freeze({ passed: failures.length === 0, checked: fixture.length, failures });
+  window.OSW_RELATION_SMOKE = Object.freeze({ passed: failures.length === 0, checked: fixture.length, failures });
   document.querySelector("#relation-panel").dataset.smoke = failures.length ? "failed" : "passed";
-  if (failures.length) console.error("OCEANLINES relation smoke fixture failed", failures);
+  if (failures.length) console.error("OSW relation smoke fixture failed", failures);
 }
 
 async function buildRelationMatrix() {
@@ -825,8 +825,8 @@ async function buildRelationMatrix() {
     }
   }
   hiddenFeatures.forEach(group => group.setAttribute("hidden", ""));
-  window.OCEANLINES_RELATION_MATRIX = relationMatrix;
-  window.OCEANLINES_RELATION_METHOD = RELATION_METHOD;
+  window.OSW_RELATION_MATRIX = relationMatrix;
+  window.OSW_RELATION_METHOD = RELATION_METHOD;
   verifyRelationSmokeFixture();
   relationMatrixBuilding = false;
   document.querySelector("#relation-export").disabled = false;
@@ -935,7 +935,7 @@ function exportRelationMatrix() {
   const url = URL.createObjectURL(new Blob([`${rows.join("\n")}\n`], { type: "text/csv;charset=utf-8" }));
   const link = document.createElement("a");
   link.href = url;
-  link.download = "oceanlines-schematic-rendered-overlap.csv";
+  link.download = "osw-schematic-rendered-overlap.csv";
   link.click();
   URL.revokeObjectURL(url);
 }
@@ -1015,7 +1015,7 @@ function selectProvince(group, updateUrl = true) {
     fields.property.textContent = group.dataset.biome.toUpperCase();
     fields.depth.textContent = "surface province identity; other atlas layers may be deeper";
     fields.clock.textContent = "mean reference; natural boundaries move";
-    fields.evidence.textContent = "classic 56 vocabulary · schematic OCEANLINES geometry";
+    fields.evidence.textContent = "classic 56 vocabulary · schematic OSW geometry";
     fields.boundary.textContent = "The inherited coast is real context. Internal state boundaries and sampled shape overlaps are approximate display relationships, not published Longhurst geometry or observed ocean membership.";
     fields.source.href = "../research/longhurst-province-reference.csv";
     fields.source.textContent = "Open the 56-province directory →";
@@ -1068,7 +1068,7 @@ function zoomToSelectedFeature(updateUrl = true, invoker = null) {
 async function loadProvinceMap() {
   const host = document.querySelector("#province-map-host");
   try {
-    const response = await fetch("../figures/oceanlines-province-atlas-interactive.svg");
+    const response = await fetch("../figures/osw-province-atlas-interactive.svg");
     if (!response.ok) throw new Error(`Province map request failed: ${response.status}`);
     const svgText = await response.text();
     provinceSvgSha256 = await sha256Text(svgText);
@@ -1105,7 +1105,7 @@ async function loadProvinceMap() {
 async function loadFeatureShapes() {
   const host = document.querySelector("#feature-shape-host");
   try {
-    const response = await fetch("../figures/oceanlines-atlas-feature-shapes.svg");
+    const response = await fetch("../figures/osw-atlas-feature-shapes.svg");
     if (!response.ok) throw new Error(`Feature-shape request failed: ${response.status}`);
     const svgText = await response.text();
     featureSvgSha256 = await sha256Text(svgText);
@@ -1165,7 +1165,7 @@ function setConceptualView(view, updateUrl = true) {
       path.style.removeProperty("stroke");
     }
   });
-  document.querySelector("#full-size-conceptual-map").href = "../figures/oceanlines-province-atlas-coastal-states.svg";
+  document.querySelector("#full-size-conceptual-map").href = "../figures/osw-province-atlas-coastal-states.svg";
   document.querySelectorAll("#conceptual-views button").forEach(button => {
     button.setAttribute("aria-pressed", String(button.dataset.conceptualView === view));
   });

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
-  <title id="title">OCEANLINES 56-province ocean cartogram</title>
+  <title id="title">OSW 56-province ocean cartogram</title>
   <desc id="desc">An original flat reference layout of the classic 56 Longhurst surface-ocean provinces. Pacific, Indian, and Atlantic province groups occupy most of the canvas, joined by an Arctic cap and a Southern Ocean base. Real Natural Earth coastlines are horizontally compressed into narrow continental fingerprints. Province shapes and areas remain schematic; hover or focus a province to read its full name.</desc>
-  <metadata>Original OCEANLINES cartogram geometry, MIT licensed. Province identities follow the classic 56-province vocabulary discussed by Reygondeau et al. 2013, DOI 10.1002/gbc.20089, with OCAL and CCAL shown separately as in the older classification. Continental context uses public-domain Natural Earth 1:110m land geometry, commit ca96624a56bd078437bca8184e78163e5039ad19, SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. This graphic does not reproduce the CC-BY-NC-SA Marine Regions boundary dataset.</metadata>
+  <metadata>Original OSW cartogram geometry, MIT licensed. Province identities follow the classic 56-province vocabulary discussed by Reygondeau et al. 2013, DOI 10.1002/gbc.20089, with OCAL and CCAL shown separately as in the older classification. Continental context uses public-domain Natural Earth 1:110m land geometry, commit ca96624a56bd078437bca8184e78163e5039ad19, SHA-256 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9, https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson. This graphic does not reproduce the CC-BY-NC-SA Marine Regions boundary dataset.</metadata>
   <style>
     .province path { stroke:#06171c; stroke-width:5; stroke-linejoin:round; transition:filter .15s,stroke .15s; }
     .province text { font:900 15px ui-monospace,Consolas,monospace; text-anchor:middle; pointer-events:none; }
@@ -44,5 +44,5 @@
     <text y="38" fill="#8da9a9">direction, and exact coast contact are intentionally not preserved.</text>
     <text y="62" fill="#8da9a9">Static provinces are mean ecological references. Natural boundaries move.</text>
   </g>
-  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE REFERENCE · ORIGINAL OCEANLINES LAYOUT · DOI 10.1002/GBC.20089</text>
+  <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">LONGHURST CLASSIC 56-PROVINCE REFERENCE · ORIGINAL OSW LAYOUT · DOI 10.1002/GBC.20089</text>
 </svg>

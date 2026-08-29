@@ -1,4 +1,4 @@
-# OCEANLINES — optional research review guide
+# OSW — optional research review guide
 
 Thank you for taking a look. This is a private, early-stage atlas preview, and
 there is no expectation of endorsement, detailed review, or collaboration.
@@ -10,7 +10,7 @@ Brief reactions are useful; silence is also completely fine.
    data receipt, and literature spine.
 2. Open the [interactive Atlas](atlas/) and select one conceptual marker.
 3. Switch once between **Observed SST** and **SST anomaly**.
-4. If useful, open the [full annotated map](figures/oceanlines-fluid-geography.svg).
+4. If useful, open the [full annotated map](figures/osw-fluid-geography.svg).
 
 ## Questions that would help
 

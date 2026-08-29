@@ -16,7 +16,7 @@ REFERENCES = ROOT / "REFERENCES.bib"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "projections" / "index.html", ROOT / "projections" / "styles.css", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "figures" / "oceanlines-fluid-geography-water-first.svg", ROOT / "figures" / "oceanlines-fluid-geography-water-first-interactive.svg", *(ROOT / "figures" / f"oceanlines-projection-{slug}.svg" for slug in ("spilhaus", "oceanic-goode", "pelagos")), ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", *(ROOT / "atlas" / "data" / f"argo-temperature-anomaly-{pressure}dbar-2026-07.js" for pressure in (10, 300, 700, 1000))):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "projections" / "index.html", ROOT / "projections" / "styles.css", ROOT / "figures" / "osw-fluid-geography.svg", ROOT / "figures" / "osw-fluid-geography-interactive.svg", ROOT / "figures" / "osw-fluid-geography-water-first.svg", ROOT / "figures" / "osw-fluid-geography-water-first-interactive.svg", *(ROOT / "figures" / f"osw-projection-{slug}.svg" for slug in ("spilhaus", "oceanic-goode", "pelagos")), ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", *(ROOT / "atlas" / "data" / f"argo-temperature-anomaly-{pressure}dbar-2026-07.js" for pressure in (10, 300, 700, 1000))):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -40,9 +40,9 @@ class AtlasTests(unittest.TestCase):
     def test_readme_and_atlas_expose_clear_entry_routes(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         html = HTML.read_text(encoding="utf-8")
-        for token in ("## Enter OCEANLINES", "Explore 56 ocean states, 36 shaped features, and the Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
+        for token in ("## Enter the Ocean States", "Ocean States of the World", "Explore 56 ocean states, 36 shaped features, and the Atlas 10 depth ladder", "Open the full annotated map", "Read the field guide", "Open the research note", "Check every source"):
             self.assertIn(token, readme)
-        for target in ("../figures/oceanlines-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
+        for target in ("../figures/osw-fluid-geography.svg", "../HEATMASS.md", "../research/", "README.md", "../SOURCE-REGISTER.md"):
             self.assertIn(f'href="{target}"', html)
 
     def test_research_note_separates_claims_and_records_data_receipts(self):
@@ -117,7 +117,7 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(token, html)
         for token in ("list.append(item)", "scrollIntoView"):
             self.assertIn(token, app)
-        self.assertIn("OCEANLINES Atlas 10 Preview", html)
+        self.assertIn("OSW Atlas 10 Preview", html)
         self.assertIn("zoneMatches", app)
         self.assertIn(".atlas-shell.observed-mode .zone-panel", css)
 
@@ -148,16 +148,16 @@ class AtlasTests(unittest.TestCase):
 
     def test_conceptual_boundaries_are_explicitly_permeable(self):
         html = HTML.read_text(encoding="utf-8")
-        figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
+        figure = (ROOT / "figures" / "osw-fluid-geography.svg").read_text(encoding="utf-8")
         self.assertIn("schematic geographic indexes", html)
         self.assertIn("schematic, permeable, and moving rather than measured boundaries", figure)
 
     def test_conceptual_map_uses_pinned_natural_earth_geometry(self):
         html = HTML.read_text(encoding="utf-8")
-        figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
-        interactive_figure = (ROOT / "figures" / "oceanlines-province-atlas-interactive.svg").read_text(encoding="utf-8")
+        figure = (ROOT / "figures" / "osw-fluid-geography.svg").read_text(encoding="utf-8")
+        interactive_figure = (ROOT / "figures" / "osw-province-atlas-interactive.svg").read_text(encoding="utf-8")
         builder = (ROOT / "analysis" / "build_province_cartogram.py").read_text(encoding="utf-8")
-        self.assertIn("oceanlines-province-atlas-interactive.svg", html)
+        self.assertIn("osw-province-atlas-interactive.svg", html)
         self.assertIn("ca96624a56bd078437bca8184e78163e5039ad19", figure)
         self.assertIn("9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9", builder)
         self.assertEqual(12, figure.count('class="callout"'))
@@ -178,7 +178,7 @@ class AtlasTests(unittest.TestCase):
     def test_numbered_map_markers_are_replaced_by_selectable_feature_shapes(self):
         html = HTML.read_text(encoding="utf-8")
         app = APP.read_text(encoding="utf-8")
-        overlay = (ROOT / "figures" / "oceanlines-atlas-feature-shapes.svg").read_text(encoding="utf-8")
+        overlay = (ROOT / "figures" / "osw-atlas-feature-shapes.svg").read_text(encoding="utf-8")
         builder = (ROOT / "analysis" / "build_atlas_feature_overlay.py").read_text(encoding="utf-8")
         self.assertIn('id="feature-shape-host"', html)
         self.assertEqual(36, overlay.count('class="feature-shape"'))
@@ -190,7 +190,7 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("The first twelve geometries preserve", builder)
 
     def test_feature_shapes_use_character_rich_mechanism_grammar(self):
-        figure_path = ROOT / "figures" / "oceanlines-atlas-feature-shapes.svg"
+        figure_path = ROOT / "figures" / "osw-atlas-feature-shapes.svg"
         overlay = figure_path.read_text(encoding="utf-8")
         ET.parse(figure_path)
         for token in (
@@ -206,8 +206,8 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(36, overlay.count('aria-label="Select '))
 
     def test_feature_shapes_subtract_the_exact_province_map_land(self):
-        overlay_path = ROOT / "figures" / "oceanlines-atlas-feature-shapes.svg"
-        province_path = ROOT / "figures" / "oceanlines-province-atlas-interactive.svg"
+        overlay_path = ROOT / "figures" / "osw-atlas-feature-shapes.svg"
+        province_path = ROOT / "figures" / "osw-province-atlas-interactive.svg"
         overlay = overlay_path.read_text(encoding="utf-8")
         namespace = "{http://www.w3.org/2000/svg}"
         overlay_root = ET.parse(overlay_path).getroot()
@@ -242,7 +242,7 @@ class AtlasTests(unittest.TestCase):
 
     def test_heat_continents_have_coastlike_shapes_distinct_from_blobs(self):
         builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
-        figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
+        figure = (ROOT / "figures" / "osw-fluid-geography.svg").read_text(encoding="utf-8")
         self.assertIn('id="indo-pacific-heat-continent"', builder)
         self.assertIn('id="western-hemisphere-heat-continent"', builder)
         self.assertGreaterEqual(figure.count('class="heat-continent"'), 3)
@@ -253,8 +253,8 @@ class AtlasTests(unittest.TestCase):
     def test_water_first_view_changes_emphasis_not_fluid_geography(self):
         html = HTML.read_text(encoding="utf-8")
         app = APP.read_text(encoding="utf-8")
-        reference = (ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg").read_text(encoding="utf-8")
-        water_first = (ROOT / "figures" / "oceanlines-fluid-geography-water-first-interactive.svg").read_text(encoding="utf-8")
+        reference = (ROOT / "figures" / "osw-fluid-geography-interactive.svg").read_text(encoding="utf-8")
+        water_first = (ROOT / "figures" / "osw-fluid-geography-water-first-interactive.svg").read_text(encoding="utf-8")
         self.assertIn('data-conceptual-view="water-first"', html)
         self.assertIn('url.searchParams.set("view", currentConceptualView)', app)
         self.assertIn("WATER-FIRST", water_first)
@@ -275,7 +275,7 @@ class AtlasTests(unittest.TestCase):
             self.assertIn(token, css)
 
     def test_feature_overlay_declares_clearance_gate_exemptions_and_seams(self):
-        overlay = (ROOT / "figures" / "oceanlines-atlas-feature-shapes.svg").read_text(encoding="utf-8")
+        overlay = (ROOT / "figures" / "osw-atlas-feature-shapes.svg").read_text(encoding="utf-8")
         builder = (ROOT / "analysis" / "build_atlas_feature_overlay.py").read_text(encoding="utf-8")
         self.assertIn('id="feature-ocean-gates"', overlay)
         self.assertIn('stroke-width="10"', overlay)
@@ -313,7 +313,7 @@ class AtlasTests(unittest.TestCase):
         page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")
         builder = (ROOT / "analysis" / "build_projection_bakeoff.py").read_text(encoding="utf-8")
         source_register = (ROOT / "SOURCE-REGISTER.md").read_text(encoding="utf-8")
-        figures = [(ROOT / "figures" / f"oceanlines-projection-{slug}.svg").read_text(encoding="utf-8") for slug in ("spilhaus", "oceanic-goode", "equal-earth", "pelagos")]
+        figures = [(ROOT / "figures" / f"osw-projection-{slug}.svg").read_text(encoding="utf-8") for slug in ("spilhaus", "oceanic-goode", "equal-earth", "pelagos")]
         for token in ("Spilhaus", "Oceanic Goode", "Equal Earth", "PELAGOS", "HEATPLATES", "not a newly derived projection equation", "+proj=laea +lat_0=-20 +lon_0=-165 +R=1"):
             self.assertIn(token, page)
         for token in ("adams_ws2", "+proj=igh_o +lon_0=-160", "+proj=eqearth +lon_0=-165", "+proj=laea +lat_0=-20 +lon_0=-165", "EXPECTED_SOURCE_SHA256"):
@@ -330,8 +330,8 @@ class AtlasTests(unittest.TestCase):
 
     def test_heatplates_prioritize_shape_without_implying_cross_panel_area(self):
         page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")
-        figure_path = ROOT / "figures" / "oceanlines-heatplates.svg"
-        equal_earth_path = ROOT / "figures" / "oceanlines-projection-equal-earth.svg"
+        figure_path = ROOT / "figures" / "osw-heatplates.svg"
+        equal_earth_path = ROOT / "figures" / "osw-projection-equal-earth.svg"
         self.assertTrue(figure_path.is_file())
         self.assertTrue(equal_earth_path.is_file())
         figure = figure_path.read_text(encoding="utf-8")
@@ -345,9 +345,9 @@ class AtlasTests(unittest.TestCase):
 
     def test_province_atlas_exposes_all_56_without_claiming_a_projection(self):
         page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")
-        figure_path = ROOT / "figures" / "oceanlines-province-atlas.svg"
-        lakes_path = ROOT / "figures" / "oceanlines-province-atlas-lakes.svg"
-        coastal_states_path = ROOT / "figures" / "oceanlines-province-atlas-coastal-states.svg"
+        figure_path = ROOT / "figures" / "osw-province-atlas.svg"
+        lakes_path = ROOT / "figures" / "osw-province-atlas-lakes.svg"
+        coastal_states_path = ROOT / "figures" / "osw-province-atlas-coastal-states.svg"
         builder = (ROOT / "analysis" / "build_province_cartogram.py").read_text(encoding="utf-8")
         catalog_path = ROOT / "research" / "longhurst-province-reference.csv"
         self.assertTrue(figure_path.is_file())
@@ -376,10 +376,10 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("Open the complete 56-row province directory", page)
         for token in ("CONTINENTS AS LAKES", 'mask id="continent-cutouts"', "ONE FILL", "Real coastlines cut the edge pieces"):
             self.assertIn(token, lakes)
-        self.assertIn("oceanlines-province-atlas-lakes.svg", page)
+        self.assertIn("osw-province-atlas-lakes.svg", page)
         for token in ("COAST-OWNED STATES", 'mask id="ocean-only"', "ALSK inherits Alaska", "nearest-seed internal borders"):
             self.assertIn(token, coastal_states + page)
-        self.assertIn("oceanlines-province-atlas-coastal-states.svg", page)
+        self.assertIn("osw-province-atlas-coastal-states.svg", page)
 
     def test_province_atlas_breakthrough_is_preserved_in_project_history(self):
         history = (ROOT / "HISTORY.md").read_text(encoding="utf-8")
