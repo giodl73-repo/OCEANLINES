@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import math
 import re
 import sys
@@ -69,6 +70,13 @@ def validate_register(path: Path = REGISTER) -> list[str]:
         for checksum in ("source_checksum", "output_checksum"):
             if not SHA256.fullmatch(row[checksum]):
                 errors.append(f"{prefix}: invalid {checksum}")
+        geometry_path = (path.parent / row["geometry_path"]).resolve()
+        if geometry_path.is_file():
+            actual_checksum = hashlib.sha256(geometry_path.read_bytes()).hexdigest()
+            if actual_checksum != row["output_checksum"]:
+                errors.append(f"{prefix}: output checksum does not match geometry_path")
+        else:
+            errors.append(f"{prefix}: geometry_path does not resolve to a file")
         if row["geometry_basis"] == "illustrative" and row["reviewer_status"] == "admitted" and row["evidence_class"] != "CONCEPTUAL":
             errors.append(f"{prefix}: illustrative geometry cannot be admitted as evidence-backed geometry")
         for field in ("simplification_tolerance",):

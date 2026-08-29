@@ -293,6 +293,7 @@ footer strong { color: var(--cyan); letter-spacing: .15em; } footer a { margin-l
   .argo-depths { grid-template-columns: 1fr 1fr; } .argo-depths > span { grid-column: 1 / -1; min-height: 34px; } .argo-depths button:nth-of-type(2) { border-right: 0; }
   .conceptual-views { grid-template-columns: 1fr 1fr; } .conceptual-views > span { grid-column: 1 / -1; min-height: 34px; }
   .how-explore > div { grid-template-columns:1fr; }
+  .feature-label-layer { display:none; }
   .province-controls { align-items:stretch; flex-direction:column; } .province-controls label { margin-left:0; } .province-controls select { flex:1; max-width:none; }
   .probe-controls { grid-template-columns: 1fr 1fr; } .probe-controls button { grid-column: 1 / -1; }
   .ring-heading { grid-template-columns: 1fr; } .ring-form { align-items: end; }
