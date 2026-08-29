@@ -109,7 +109,7 @@ class AtlasTests(unittest.TestCase):
         html = HTML.read_text(encoding="utf-8")
         app = APP.read_text(encoding="utf-8")
         css = CSS.read_text(encoding="utf-8")
-        for token in ('id="map-insight"', 'class="ring-workbench"', 'class="advanced-diagnostics"', "Inspect the paired rings", "Open polar mirrors and the latitude continuity ladder", 'id="zone-directory-list"', "Open the full-size map"):
+        for token in ('id="map-insight"', 'class="ring-workbench"', 'class="advanced-diagnostics"', "Inspect the paired rings", "Open polar mirrors and the latitude continuity ladder", 'id="zone-directory-list"', "Open the full-size province map"):
             self.assertIn(token, html)
         for token in ("list.append(item)", "scrollIntoView"):
             self.assertIn(token, app)
@@ -151,13 +151,25 @@ class AtlasTests(unittest.TestCase):
     def test_conceptual_map_uses_pinned_natural_earth_geometry(self):
         html = HTML.read_text(encoding="utf-8")
         figure = (ROOT / "figures" / "oceanlines-fluid-geography.svg").read_text(encoding="utf-8")
-        interactive_figure = (ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg").read_text(encoding="utf-8")
-        builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")
-        self.assertIn("oceanlines-fluid-geography-interactive.svg", html)
+        interactive_figure = (ROOT / "figures" / "oceanlines-province-atlas-interactive.svg").read_text(encoding="utf-8")
+        builder = (ROOT / "analysis" / "build_province_cartogram.py").read_text(encoding="utf-8")
+        self.assertIn("oceanlines-province-atlas-interactive.svg", html)
         self.assertIn("ca96624a56bd078437bca8184e78163e5039ad19", figure)
         self.assertIn("9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9", builder)
         self.assertEqual(12, figure.count('class="callout"'))
-        self.assertEqual(0, interactive_figure.count('class="callout"'))
+        self.assertEqual(56, interactive_figure.count('class="province '))
+        self.assertIn('data-code="ALSK"', interactive_figure)
+
+    def test_province_ground_is_selectable_zoomable_and_shared_by_all_modes(self):
+        html = HTML.read_text(encoding="utf-8")
+        app = APP.read_text(encoding="utf-8")
+        css = CSS.read_text(encoding="utf-8")
+        for token in ('id="province-select"', 'id="province-reset"', 'id="map-viewport"', "56 APPROXIMATE OCEAN STATES", 'aria-live="polite"'):
+            self.assertIn(token, html)
+        for token in ("loadProvinceMap", "selectProvince", "applyProvinceZoom", "provinceFeatureMatches", 'url.searchParams.set("province"'):
+            self.assertIn(token, app)
+        for token in (".province-map-host.observed-overlay", "--marker-counter-scale", ".map-viewport"):
+            self.assertIn(token, css)
 
     def test_heat_continents_have_coastlike_shapes_distinct_from_blobs(self):
         builder = (ROOT / "analysis" / "build_fluid_geography.py").read_text(encoding="utf-8")

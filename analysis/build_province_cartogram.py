@@ -368,10 +368,15 @@ def clip_half_plane(
     return result
 
 
-def coastal_state_geometry() -> tuple[str, list[str]]:
+def coastal_state_geometry(
+    left: float = 92.0,
+    top: float = 174.0,
+    width: float = 1416.0,
+    height: float = 644.0,
+    latitude_top: float = 84.0,
+    latitude_bottom: float = -72.0,
+) -> tuple[str, list[str]]:
     """Build 56 periodic nearest-seed states and their label positions."""
-    left, top, width, height = 92.0, 174.0, 1416.0, 644.0
-    latitude_top, latitude_bottom = 84.0, -72.0
 
     def project(longitude: float, latitude: float) -> tuple[float, float]:
         x = left + ((longitude + 180.0) % 360.0) / 360.0 * width
@@ -393,6 +398,7 @@ def coastal_state_geometry() -> tuple[str, list[str]]:
     labels = []
     for code, name, biome, basin, seed_x, seed_y in seeds:
         pieces = []
+        focus_box = None
         # Copies allow states at the dateline to appear on both map edges while
         # remaining one named province.
         for target_x in (seed_x - width, seed_x, seed_x + width):
@@ -412,9 +418,18 @@ def coastal_state_geometry() -> tuple[str, list[str]]:
                     break
             if len(polygon) >= 3:
                 pieces.append("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in polygon) + " Z")
+                if abs(target_x - seed_x) < 0.01:
+                    xs, ys = [point[0] for point in polygon], [point[1] for point in polygon]
+                    focus_box = (min(xs), min(ys), max(xs), max(ys))
         safe_code, safe_name = html.escape(code), html.escape(name)
+        safe_id = code.lower().replace(" ", "-")
+        if focus_box is None:
+            focus_box = (seed_x - 35, seed_y - 35, seed_x + 35, seed_y + 35)
+        viewbox = " ".join(f"{value:.1f}" for value in focus_box)
         state_groups.append(
-            f'<g class="province {biome.lower()}" tabindex="0">'
+            f'<g id="province-{safe_id}" class="province {biome.lower()}" tabindex="0" role="button" '
+            f'data-code="{safe_code}" data-name="{safe_name}" data-basin="{html.escape(basin)}" '
+            f'data-biome="{html.escape(biome)}" data-viewbox="{viewbox}" aria-label="Zoom to {safe_code}, {safe_name}">'
             f'<title>{safe_code} — {safe_name} · {basin} · approximate coastal-state cartogram</title>'
             f'<path d="{" ".join(pieces)}"/>'
             f'</g>'
@@ -425,17 +440,24 @@ def coastal_state_geometry() -> tuple[str, list[str]]:
     return "".join(state_groups), labels
 
 
-def projected_land_path(geojson: dict) -> str:
+def projected_land_path(
+    geojson: dict,
+    left: float = 92.0,
+    top: float = 174.0,
+    width: float = 1416.0,
+    height: float = 644.0,
+    latitude_top: float = 84.0,
+    latitude_bottom: float = -72.0,
+) -> str:
     """Project Natural Earth land into the coastal-state map frame."""
-    left, top, width, height = 92.0, 174.0, 1416.0, 644.0
     commands = []
     for feature in geojson["features"]:
         for ring in geometry_rings(feature["geometry"]):
             points = []
             for longitude, latitude in ring:
                 x = left + (longitude + 180.0) / 360.0 * width
-                bounded_latitude = max(-72.0, min(84.0, latitude))
-                y = top + (84.0 - bounded_latitude) / 156.0 * height
+                bounded_latitude = max(latitude_bottom, min(latitude_top, latitude))
+                y = top + (latitude_top - bounded_latitude) / (latitude_top - latitude_bottom) * height
                 points.append((x, y))
             if len(points) >= 3:
                 commands.append("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in points) + " Z")
@@ -481,6 +503,31 @@ def build_coastal_states_svg(geojson: dict, source_sha256: str) -> str:
     <text y="38" fill="#8da9a9">The coastline is clipped into each province rather than overlaid as decoration.</text>
   </g>
   <text x="92" y="966" fill="#617d80" font-family="ui-monospace,Consolas,monospace" font-size="9">CLASSIC 56-PROVINCE VOCABULARY · NATURAL EARTH COASTS · ORIGINAL OCEANLINES STATE GEOMETRY</text>
+</svg>'''
+
+
+def build_interactive_states_svg(geojson: dict, source_sha256: str) -> str:
+    """Build the Atlas 10 province ground in its existing 1600×1050 frame."""
+    states, labels = coastal_state_geometry(60, 90, 1480, 740, 90, -90)
+    land = projected_land_path(geojson, 60, 90, 1480, 740, 90, -90)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
+  <title id="title">Interactive OCEANLINES 56-province ground</title>
+  <desc id="desc">Selectable approximate ocean states with real coast-owned edges, aligned to every Atlas 10 conceptual and observed layer.</desc>
+  <metadata>Original OCEANLINES nearest-seed geometry. Natural Earth 1:110m land, public domain, commit {SOURCE_COMMIT}, SHA-256 {source_sha256}. No geographic Longhurst boundary dataset is reproduced.</metadata>
+  <defs><mask id="interactive-ocean-only"><rect x="60" y="90" width="1480" height="740" fill="white"/><path d="{land}" fill="black" fill-rule="evenodd"/></mask></defs>
+  <style>
+    .map-field {{ fill:#0b242b; }}
+    .province path {{ fill:#d7dfdc; stroke:#183239; stroke-width:3; stroke-linejoin:round; vector-effect:non-scaling-stroke; transition:fill .15s,stroke .15s; }}
+    .province:hover path,.province:focus path,.province.selected path {{ fill:#f4f6f3; stroke:#ffb454; stroke-width:5; }}
+    .province:focus {{ outline:none; }}
+    .province-labels text {{ fill:#10272d; font:900 10.5px ui-monospace,Consolas,monospace; text-anchor:middle; paint-order:stroke; stroke:#d7dfdc; stroke-width:3.2px; pointer-events:none; }}
+    .land-outline {{ fill:none; stroke:#879b9b; stroke-width:2; stroke-linejoin:round; vector-effect:non-scaling-stroke; pointer-events:none; }}
+  </style>
+  <rect class="map-field" x="60" y="90" width="1480" height="740" rx="28"/>
+  <g class="province-field" mask="url(#interactive-ocean-only)">{states}</g>
+  <path class="land-outline" d="{land}" fill-rule="evenodd"/>
+  <g class="province-labels" mask="url(#interactive-ocean-only)">{''.join(labels)}</g>
+  <rect class="map-frame" x="60" y="90" width="1480" height="740" rx="28" fill="none" stroke="#456972" stroke-width="2"/>
 </svg>'''
 
 
@@ -616,6 +663,11 @@ def main() -> None:
         type=pathlib.Path,
         default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-coastal-states.svg",
     )
+    parser.add_argument(
+        "--interactive-states-output",
+        type=pathlib.Path,
+        default=pathlib.Path(__file__).resolve().parents[1] / "figures" / "oceanlines-province-atlas-interactive.svg",
+    )
     parser.add_argument("--land-geojson", required=True, type=pathlib.Path)
     parser.add_argument(
         "--catalog-output",
@@ -631,6 +683,7 @@ def main() -> None:
     args.output.write_text(build_svg(geojson, digest), encoding="utf-8", newline="\n")
     args.lakes_output.write_text(build_lakes_svg(geojson, digest), encoding="utf-8", newline="\n")
     args.coastal_states_output.write_text(build_coastal_states_svg(geojson, digest), encoding="utf-8", newline="\n")
+    args.interactive_states_output.write_text(build_interactive_states_svg(geojson, digest), encoding="utf-8", newline="\n")
     with args.catalog_output.open("w", encoding="utf-8", newline="") as destination:
         writer = csv.writer(destination, lineterminator="\n")
         writer.writerow(("code", "province", "basin", "biome", "edition", "geometry_status"))
@@ -640,6 +693,7 @@ def main() -> None:
     print(args.output)
     print(args.lakes_output)
     print(args.coastal_states_output)
+    print(args.interactive_states_output)
     print(args.catalog_output)
 
 

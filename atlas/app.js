@@ -62,6 +62,9 @@ let selectedZone = zones[0];
 let currentLens = "waters";
 let currentMode = "conceptual";
 let currentConceptualView = "reference";
+let selectedProvinceCode = null;
+let provinceView = null;
+let requestedProvinceCode = new URLSearchParams(window.location.search).get("province");
 let probeCell = null;
 let ringLatitude = 64;
 let currentArgoPressure = 700;
@@ -600,28 +603,138 @@ function updateAtlasUrl() {
     url.searchParams.delete("view");
     for (const parameter of ["lens", "depth", "property", "clock"]) url.searchParams.delete(parameter);
   }
+  if (selectedProvinceCode || requestedProvinceCode) url.searchParams.set("province", selectedProvinceCode || requestedProvinceCode);
+  else url.searchParams.delete("province");
   window.history.replaceState({}, "", url);
 }
 
+function provinceFeatureMatches(group) {
+  if (!window.DOMPoint || !group.querySelector("path")?.isPointInFill) return [];
+  const path = group.querySelector("path");
+  return zones.filter(zone => path.isPointInFill(new DOMPoint(zone.x / 100 * 1600, zone.y / 100 * 1050)));
+}
+
+function applyProvinceZoom() {
+  const viewport = document.querySelector("#map-viewport");
+  const stage = document.querySelector("#map-stage");
+  if (!provinceView) {
+    viewport.style.transform = "none";
+    viewport.style.setProperty("--marker-counter-scale", "1");
+    return;
+  }
+  const [x, y, width, height] = provinceView;
+  const scale = 1600 / width;
+  const translateX = -x / 1600 * stage.clientWidth * scale;
+  const translateY = -y / 1050 * stage.clientHeight * scale;
+  viewport.style.transform = `matrix(${scale},0,0,${scale},${translateX},${translateY})`;
+  viewport.style.setProperty("--marker-counter-scale", String(1 / scale));
+}
+
+function expandedProvinceView(group) {
+  const [minimumX, minimumY, maximumX, maximumY] = group.dataset.viewbox.split(" ").map(Number);
+  const padding = 62;
+  let x = Math.max(0, minimumX - padding);
+  let y = Math.max(0, minimumY - padding);
+  let width = Math.min(1600 - x, maximumX - minimumX + padding * 2);
+  let height = Math.min(1050 - y, maximumY - minimumY + padding * 2);
+  const aspect = 1600 / 1050;
+  if (width / height < aspect) {
+    const expandedWidth = height * aspect;
+    x = Math.max(0, Math.min(1600 - expandedWidth, x - (expandedWidth - width) / 2));
+    width = expandedWidth;
+  } else {
+    const expandedHeight = width / aspect;
+    y = Math.max(0, Math.min(1050 - expandedHeight, y - (expandedHeight - height) / 2));
+    height = expandedHeight;
+  }
+  return [x, y, width, height];
+}
+
+function selectProvince(group, updateUrl = true) {
+  if (!group) return;
+  selectedProvinceCode = group.dataset.code;
+  requestedProvinceCode = null;
+  provinceView = expandedProvinceView(group);
+  document.querySelectorAll("#province-map-host .province").forEach(item => item.classList.toggle("selected", item === group));
+  document.querySelector("#province-select").value = selectedProvinceCode;
+  document.querySelector("#province-reset").disabled = false;
+  document.querySelector("#province-status").textContent = `${selectedProvinceCode} · ${group.dataset.name} · click another state or change any view.`;
+  if (currentMode === "conceptual") {
+    const related = provinceFeatureMatches(group);
+    fields.index.textContent = `PROVINCE ${selectedProvinceCode} · ${group.dataset.biome.toUpperCase()}`;
+    fields.name.textContent = group.dataset.name;
+    fields.kind.textContent = `${group.dataset.basin.toUpperCase()} · CLASSIC 56`;
+    fields.summary.textContent = `${related.length} curated atlas feature point${related.length === 1 ? " falls" : "s fall"} inside this approximate state: ${related.length ? related.map(zone => zone.name).join(", ") : "none in the current 36-feature index"}. Switch lenses or observed fields without leaving the province.`;
+    fields.lens.textContent = "ALL SIX LENSES + OBSERVED FIELDS";
+    fields.role.textContent = "surface ecological reference province";
+    fields.basis.textContent = "approximate geographic seed with its real Natural Earth coast edge";
+    fields.property.textContent = group.dataset.biome.toUpperCase();
+    fields.depth.textContent = "surface province identity; other atlas layers may be deeper";
+    fields.clock.textContent = "mean reference; natural boundaries move";
+    fields.evidence.textContent = "classic 56 vocabulary · schematic OCEANLINES geometry";
+    fields.boundary.textContent = "The inherited coast is real context. The internal state boundary, area, adjacency, and feature-point membership are approximate and are not published Longhurst geometry.";
+    fields.source.href = "../research/longhurst-province-reference.csv";
+    fields.source.textContent = "Open the 56-province directory →";
+  }
+  applyProvinceZoom();
+  if (updateUrl) updateAtlasUrl();
+}
+
+function resetProvince(updateUrl = true) {
+  selectedProvinceCode = null;
+  requestedProvinceCode = null;
+  provinceView = null;
+  document.querySelectorAll("#province-map-host .province").forEach(item => item.classList.remove("selected"));
+  document.querySelector("#province-select").value = "all";
+  document.querySelector("#province-reset").disabled = true;
+  document.querySelector("#province-status").textContent = "Select a province to inspect and zoom.";
+  applyProvinceZoom();
+  if (currentMode === "conceptual") selectZone(selectedZone);
+  if (updateUrl) updateAtlasUrl();
+}
+
+async function loadProvinceMap() {
+  const host = document.querySelector("#province-map-host");
+  try {
+    const response = await fetch("../figures/oceanlines-province-atlas-interactive.svg");
+    if (!response.ok) throw new Error(`Province map request failed: ${response.status}`);
+    const documentSvg = new DOMParser().parseFromString(await response.text(), "image/svg+xml");
+    const svg = documentSvg.documentElement;
+    svg.removeAttribute("width");
+    svg.removeAttribute("height");
+    host.replaceChildren(document.importNode(svg, true));
+    const groups = [...host.querySelectorAll(".province")];
+    const select = document.querySelector("#province-select");
+    groups.sort((a, b) => a.dataset.code.localeCompare(b.dataset.code)).forEach(group => {
+      const option = document.createElement("option");
+      option.value = group.dataset.code;
+      option.textContent = `${group.dataset.code} — ${group.dataset.name}`;
+      select.append(option);
+      group.addEventListener("click", () => selectProvince(group));
+      group.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectProvince(group);
+        }
+      });
+    });
+    if (requestedProvinceCode) selectProvince(groups.find(group => group.dataset.code === requestedProvinceCode), false);
+  } catch (error) {
+    document.querySelector("#province-status").textContent = "Static province map loaded; interactive zoom requires the local web preview.";
+  }
+}
+
 function conceptualMapNote() {
-  const view = currentConceptualView === "water-first" ? "water-first · ghost coastlines · " : "land-reference · ";
-  return `<span></span> ${view}markers are representative index points—not centroids or boundaries · overlapping conceptual geography`;
+  const view = currentConceptualView === "water-first" ? "quiet province ground · " : "coast-owned province ground · ";
+  return `<span></span> ${view}56 approximate states · markers are representative index points—not centroids or boundaries`;
 }
 
 function setConceptualView(view, updateUrl = true) {
   if (!['reference', 'water-first'].includes(view)) return;
   currentConceptualView = view;
   const waterFirst = view === "water-first";
-  const map = document.querySelector("#conceptual-map");
-  map.src = waterFirst
-    ? "../figures/oceanlines-fluid-geography-water-first-interactive.svg"
-    : "../figures/oceanlines-fluid-geography-interactive.svg";
-  map.alt = waterFirst
-    ? "Water-first conceptual world map with ghosted coastlines and selectable index points for overlapping waters, flows, edges, seafloor, living chemistry, and events."
-    : "Conceptual world map with selectable index points for overlapping waters, flows, edges, seafloor, living chemistry, and events.";
-  document.querySelector("#full-size-conceptual-map").href = waterFirst
-    ? "../figures/oceanlines-fluid-geography-water-first.svg"
-    : "../figures/oceanlines-fluid-geography.svg";
+  document.querySelector("#province-map-host").classList.toggle("quiet", waterFirst);
+  document.querySelector("#full-size-conceptual-map").href = "../figures/oceanlines-province-atlas-coastal-states.svg";
   document.querySelectorAll("#conceptual-views button").forEach(button => {
     button.setAttribute("aria-pressed", String(button.dataset.conceptualView === view));
   });
@@ -671,7 +784,7 @@ function setMapMode(mode) {
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
   });
-  document.querySelector("#conceptual-map").hidden = observed;
+  document.querySelector("#province-map-host").classList.toggle("observed-overlay", observed);
   document.querySelector("#sst-canvas").hidden = !observed;
   document.querySelector("#observed-stamp").hidden = !observed;
   document.querySelector("#temperature-key").hidden = !observed;
@@ -698,7 +811,7 @@ function setMapMode(mode) {
   const canvas = document.querySelector("#sst-canvas");
   canvas.setAttribute("aria-label", subsurface ? `Scripps RG Argo potential-temperature anomaly at ${data.pressure_dbar.toFixed(0)} dbar for July 2026, displayed on a two-degree equirectangular grid from 64.5 degrees south to 79.5 degrees north.` : anomaly ? "NOAA OISST anomaly for 1 August 2026 relative to 1971 to 2000, displayed on a two-degree equirectangular grid." : error ? "NOAA OISST estimated analysis error for 1 August 2026, displayed on a two-degree equirectangular grid." : "NOAA OISST absolute sea surface temperature for 1 August 2026, displayed on a two-degree equirectangular grid.");
   document.querySelector("#map-note").innerHTML = observed
-    ? `<span></span> ${subsurface ? `${data.pressure_dbar.toFixed(0)} dbar anomaly · RG 2019 seasonal reference · July 2026 · symmetric ±5°C display clamp · 64.5°S–79.5°N · slate outside source domain` : anomaly ? "SST anomaly · 1971–2000 reference · symmetric ±5°C display clamp" : error ? "estimated analysis error · 0.1–0.6°C display clamp" : "absolute SST"} · equirectangular · antimeridian seam · 2° display stride`
+    ? `<span></span> ${subsurface ? `${data.pressure_dbar.toFixed(0)} dbar anomaly · RG 2019 seasonal reference · July 2026 · symmetric ±5°C display clamp · 64.5°S–79.5°N · slate outside source domain` : anomaly ? "SST anomaly · 1971–2000 reference · symmetric ±5°C display clamp" : error ? "estimated analysis error · 0.1–0.6°C display clamp" : "absolute SST"} · equirectangular · antimeridian seam · 2° display stride · province borders are approximate reference geometry`
     : conceptualMapNote();
   if (observed) {
     renderObservedField(data, anomaly || subsurface ? anomalyColor : error ? errorColor : temperatureColor);
@@ -706,6 +819,9 @@ function setMapMode(mode) {
     renderTextSummary(data, mode);
     if (!subsurface) renderRingComparison(data, mode, anomaly ? anomalyColor : error ? errorColor : temperatureColor);
     if (probeCell) inspectCoordinates(probeCell.latitude, probeCell.longitude, false);
+  } else if (selectedProvinceCode) {
+    const selected = [...document.querySelectorAll("#province-map-host .province")].find(group => group.dataset.code === selectedProvinceCode);
+    if (selected) selectProvince(selected, false);
   } else selectZone(selectedZone);
   updateAtlasUrl();
 }
@@ -816,6 +932,12 @@ document.querySelector("#geography-filters").addEventListener("reset", () => {
 document.querySelectorAll(".map-mode").forEach(button => button.addEventListener("click", () => setMapMode(button.dataset.mode)));
 document.querySelectorAll("#argo-depths button").forEach(button => button.addEventListener("click", () => setArgoPressure(Number(button.dataset.pressure))));
 document.querySelectorAll("#conceptual-views button").forEach(button => button.addEventListener("click", () => setConceptualView(button.dataset.conceptualView)));
+document.querySelector("#province-select").addEventListener("change", event => {
+  if (event.target.value === "all") resetProvince();
+  else selectProvince([...document.querySelectorAll("#province-map-host .province")].find(group => group.dataset.code === event.target.value));
+});
+document.querySelector("#province-reset").addEventListener("click", () => resetProvince());
+window.addEventListener("resize", applyProvinceZoom);
 document.querySelector("#coordinate-probe").addEventListener("submit", event => {
   event.preventDefault();
   inspectCoordinates(Number(document.querySelector("#probe-lat").value), Number(document.querySelector("#probe-lon").value));
@@ -851,3 +973,4 @@ if (["observed", "sst", "anomaly", "argo700", "error"].includes(requestedMode)) 
 if (currentMode !== "conceptual" && requestedParameters.has("lat") && requestedParameters.has("lon")) {
   inspectCoordinates(Number(requestedParameters.get("lat")), Number(requestedParameters.get("lon")));
 }
+loadProvinceMap();

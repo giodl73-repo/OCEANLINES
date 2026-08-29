@@ -71,13 +71,19 @@
           <button type="button" data-pressure="1000" aria-pressed="false">1000 dbar <small>deep</small></button>
         </div>
         <div class="conceptual-views" id="conceptual-views" role="group" aria-label="Conceptual map land emphasis">
-          <span>FIGURE / GROUND</span>
-          <button type="button" data-conceptual-view="reference" aria-pressed="true">Land reference <small>continents visible</small></button>
-          <button type="button" data-conceptual-view="water-first" aria-pressed="false">Water first <small>ghost coastlines</small></button>
+          <span>PROVINCE GROUND</span>
+          <button type="button" data-conceptual-view="reference" aria-pressed="true">Ocean states <small>coast-owned edges</small></button>
+          <button type="button" data-conceptual-view="water-first" aria-pressed="false">Quiet states <small>lighter boundaries</small></button>
+        </div>
+        <div class="province-controls" id="province-controls">
+          <p><strong>56 APPROXIMATE OCEAN STATES</strong><span id="province-status" aria-live="polite">Select a province to inspect and zoom.</span></p>
+          <label for="province-select">Province <select id="province-select"><option value="all">All 56 provinces</option></select></label>
+          <button type="button" id="province-reset" disabled>Return to all 56</button>
         </div>
         <div class="map-stage" id="map-stage">
-          <img id="conceptual-map" src="../figures/oceanlines-fluid-geography-interactive.svg"
-            alt="Conceptual world map with selectable index points for overlapping waters, flows, edges, seafloor, living chemistry, and events.">
+          <div class="map-viewport" id="map-viewport">
+          <div id="province-map-host" class="province-map-host"><img id="conceptual-map" src="../figures/oceanlines-province-atlas-interactive.svg"
+            alt="Interactive map of 56 approximate ocean provinces with coast-owned edges."></div>
           <div class="ocean-basin-labels" id="ocean-basin-labels" aria-hidden="true"><span class="np">NORTH PACIFIC</span><span class="sp">SOUTH PACIFIC</span><span class="na">NORTH ATLANTIC</span><span class="sa">SOUTH ATLANTIC</span><span class="io">INDIAN OCEAN</span><span class="so">SOUTHERN OCEAN</span><span class="ao">ARCTIC OCEAN</span></div>
           <canvas id="sst-canvas" width="720" height="360" hidden
             aria-label="NOAA OISST surface field for 1 August 2026, displayed on a two-degree equirectangular grid."
@@ -94,6 +100,7 @@
             <span class="longitude east-90">90°E</span>
           </div>
           <div id="markers" class="markers" aria-label="Selectable ocean zones"></div>
+          </div>
           <div class="observed-stamp" id="observed-stamp" hidden>
             <strong id="observed-title">OBSERVATIONAL · SURFACE</strong>
             <span id="observed-status">NOAA OISST v2.1 · FINAL · 2026-08-01</span>
@@ -105,7 +112,7 @@
         </div>
         <p class="map-note" id="map-note"><span></span> Markers are representative index points—not centroids or boundaries · conceptual, overlapping geography</p>
         <div class="conceptual-actions" id="conceptual-actions">
-          <a id="full-size-conceptual-map" href="../figures/oceanlines-fluid-geography.svg" target="_blank" rel="noopener">Open the full-size map ↗</a>
+          <a id="full-size-conceptual-map" href="../figures/oceanlines-province-atlas-coastal-states.svg" target="_blank" rel="noopener">Open the full-size province map ↗</a>
           <a href="../projections/">Open projection laboratory →</a>
           <details class="zone-directory">
             <summary id="directory-summary">Browse 12 matching features as text</summary>
