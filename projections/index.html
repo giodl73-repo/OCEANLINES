@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="OCEANLINES projection laboratory comparing Spilhaus, Oceanic Goode, and the experimental PELAGOS ocean-first equal-area aspect.">
+  <title>Projection Laboratory · OCEANLINES</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="../">OCEANLINES</a>
+    <p>Mapping Earth's Hidden Waterworld</p>
+    <nav aria-label="Primary"><a href="../atlas/">Atlas</a><a href="../research/">Research note</a><a href="../atlas/README.md">Method</a></nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">EXPERIMENT 01 · PROJECTION BAKEOFF</p>
+      <h1 id="page-title">Where should the<br>world ocean begin?</h1>
+      <p class="lede">Most world maps preserve continents by cutting the ocean. This experiment reverses that priority and asks which projection best preserves the geography of reservoirs, anomalies, currents, and gates.</p>
+      <div class="status"><strong>Leading hypothesis</strong><span>PELAGOS</span><p>Equal-area, ocean-led, and deliberately weakest over the Sahara—not yet adopted as the atlas default.</p></div>
+    </section>
+
+    <section class="criteria" aria-labelledby="criteria-title">
+      <h2 id="criteria-title">The test</h2>
+      <ol>
+        <li><b>01</b><span>Do not cut a major ocean pathway.</span></li>
+        <li><b>02</b><span>Preserve area when comparing heatmass scale.</span></li>
+        <li><b>03</b><span>Keep the warm pool, Arctic approaches, and ACC legible together.</span></li>
+        <li><b>04</b><span>Put unavoidable distortion and seams over land.</span></li>
+      </ol>
+    </section>
+
+    <section class="candidates" aria-label="Projection candidates">
+      <article>
+        <header><span>01</span><div><h2>Spilhaus</h2><p>Continuity benchmark</p></div></header>
+        <a href="../figures/oceanlines-projection-spilhaus.svg" target="_blank" rel="noopener"><img src="../figures/oceanlines-projection-spilhaus.svg" alt="Spilhaus projection with a connected world ocean, distorted heatmass areas, an enclosed Antarctic Circumpolar Current, and fragmented continents."></a>
+        <div class="verdict"><strong>What it proves</strong><p>The world ocean can become the continuous subject rather than the space between continents.</p><strong>Where it fails this atlas</strong><p>The conformal square preserves local angles, not area. A heatmass can look larger or smaller because of projection distortion.</p></div>
+      </article>
+
+      <article>
+        <header><span>02</span><div><h2>Oceanic Goode</h2><p>Area benchmark</p></div></header>
+        <a href="../figures/oceanlines-projection-oceanic-goode.svg" target="_blank" rel="noopener"><img src="../figures/oceanlines-projection-oceanic-goode.svg" alt="Oceanic Goode equal-area projection showing honest relative area but interruptions across the global ocean and current paths."></a>
+        <div class="verdict"><strong>What it proves</strong><p>Relative heatmass area can remain honest across the entire world.</p><strong>Where it fails this atlas</strong><p>Its lobes interrupt the ocean system—the very relationship OCEANLINES is trying to reveal.</p></div>
+      </article>
+
+      <article class="leading">
+        <header><span>03</span><div><h2>Pelagos</h2><p>OCEANLINES experiment</p></div><em>LEADING</em></header>
+        <a href="../figures/oceanlines-projection-pelagos.svg" target="_blank" rel="noopener"><img src="../figures/oceanlines-projection-pelagos.svg" alt="PELAGOS equal-area circular projection centered in the South Pacific, showing tropical heat reservoirs across the middle and the Antarctic Circumpolar Current as a closed southern ring."></a>
+        <div class="verdict"><strong>What it offers</strong><p>The Pacific heat reservoir leads, the ACC closes visibly around Antarctica, and the major ocean pathways stay away from the outer edge.</p><strong>Declared weakness</strong><p>Shape distortion increases toward Africa. The antipodal singular edge is placed at 20°N, 15°E in the Sahara.</p></div>
+      </article>
+    </section>
+
+    <section class="scorecard" aria-labelledby="scorecard-title">
+      <div><p class="eyebrow">DECISION SURFACE</p><h2 id="scorecard-title">No projection wins everything.</h2><p>PELAGOS leads because area and ocean continuity are more important to this atlas than familiar continental shapes.</p></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Candidate</th><th>Area</th><th>Ocean continuity</th><th>Local shape</th><th>Primary cost</th></tr></thead>
+        <tbody>
+          <tr><th>Spilhaus</th><td>No</td><td>Strong</td><td>Strong locally</td><td>Apparent scale</td></tr>
+          <tr><th>Oceanic Goode</th><td>Yes</td><td>Interrupted</td><td>Moderate by lobe</td><td>Broken pathways</td></tr>
+          <tr class="selected"><th>PELAGOS</th><td>Yes</td><td>Interior ocean</td><td>Best near center</td><td>African edge</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="method" aria-labelledby="method-title">
+      <div><p class="eyebrow">METHOD FIREWALL</p><h2 id="method-title">New viewpoint,<br>established mathematics.</h2></div>
+      <div>
+        <p>PELAGOS is an experimental <strong>aspect and cut policy</strong>, not a newly derived projection equation. It uses spherical Lambert azimuthal equal-area centered at 20°S, 165°W:</p>
+        <code>+proj=laea +lat_0=-20 +lon_0=-165 +R=1</code>
+        <p>Its antipode—and unavoidable singular boundary—is 20°N, 15°E. Placing that point in the Sahara moves the projection's greatest failure away from the Pacific warm pool, the Southern Ocean ring, and most major exchange pathways.</p>
+        <p>All three maps use the same schematic fluid features and the same checksum-pinned Natural Earth 1:110m coastlines. They are projection tests, not heat observations or transport calculations.</p>
+        <p class="sources">Technical grounding: <a href="https://doi.org/10.1038/s41597-023-02309-6">Spilhaus ocean-science study</a> · <a href="https://proj.org/en/stable/operations/projections/igh_o.html">Oceanic Goode specification</a> · <a href="https://proj.org/en/stable/operations/projections/laea.html">Lambert equal-area specification</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>OCEANLINES · PRIVATE PROJECTION EXPERIMENT</span><a href="../atlas/">Return to the atlas →</a></footer>
+</body>
+</html>

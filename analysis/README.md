@@ -67,3 +67,23 @@ These are objectively mapped anomalies at four pressure surfaces. They are not
 raw-float coverage, absolute temperature, water-column heat content, or transport.
 The product grid ends at 64.5°S, so it cannot diagnose Antarctic shelf or
 ice-cavity heat delivery.
+
+## Projection bakeoff
+
+`build_projection_bakeoff.py` projects one schematic fluid overlay and the
+checksum-pinned Natural Earth coastline geometry into three candidates:
+Spilhaus, Oceanic Interrupted Goode Homolosine, and experimental PELAGOS.
+PELAGOS uses established spherical Lambert azimuthal equal-area mathematics
+centered at 20°S, 165°W, placing its antipodal singular boundary at 20°N,
+15°E in the Sahara. It is a proposed aspect and cut policy, not a new equation.
+
+```powershell
+python -m pip install -r ../requirements-projections.txt
+python build_projection_bakeoff.py `
+  --land-geojson path/to/ne_110m_land.geojson `
+  --output-dir ../figures
+```
+
+The three outputs use identical schematic heatmasses, anomalies, currents,
+buried Arctic inflow, gates, and ACC. They compare projection behavior; they
+are not observational heat fields or transport calculations.

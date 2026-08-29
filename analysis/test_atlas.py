@@ -12,7 +12,7 @@ REFERENCES = ROOT / "REFERENCES.bib"
 
 class AtlasTests(unittest.TestCase):
     def test_public_surface_files_exist(self):
-        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "figures" / "oceanlines-fluid-geography-water-first.svg", ROOT / "figures" / "oceanlines-fluid-geography-water-first-interactive.svg", ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", *(ROOT / "atlas" / "data" / f"argo-temperature-anomaly-{pressure}dbar-2026-07.js" for pressure in (10, 300, 700, 1000))):
+        for path in (APP, HTML, CSS, RESEARCH_HTML, REFERENCES, ROOT / "REVIEW-GUIDE.md", ROOT / "PREVIEW-STATUS.md", ROOT / "research" / "styles.css", ROOT / "research" / "zone-catalog.csv", ROOT / "research" / "claims-ledger.csv", ROOT / "atlas" / "README.md", ROOT / "projections" / "index.html", ROOT / "projections" / "styles.css", ROOT / "figures" / "oceanlines-fluid-geography.svg", ROOT / "figures" / "oceanlines-fluid-geography-interactive.svg", ROOT / "figures" / "oceanlines-fluid-geography-water-first.svg", ROOT / "figures" / "oceanlines-fluid-geography-water-first-interactive.svg", *(ROOT / "figures" / f"oceanlines-projection-{slug}.svg" for slug in ("spilhaus", "oceanic-goode", "pelagos")), ROOT / "atlas" / "data" / "oisst-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-anomaly-2026-08-01.js", ROOT / "atlas" / "data" / "oisst-error-2026-08-01.js", *(ROOT / "atlas" / "data" / f"argo-temperature-anomaly-{pressure}dbar-2026-07.js" for pressure in (10, 300, 700, 1000))):
             self.assertTrue(path.is_file(), path)
 
     def test_zone_catalog_has_unique_numbered_records(self):
@@ -180,6 +180,22 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("fill:#182d31; stroke:#799395", reference)
         for feature in ('id="indo-pacific-heat-continent"', '<ellipse cx="205" cy="285"', 'class="current"', 'class="gate"'):
             self.assertEqual(reference.count(feature), water_first.count(feature), feature)
+
+    def test_projection_lab_compares_one_overlay_and_declares_pelagos_status(self):
+        page = (ROOT / "projections" / "index.html").read_text(encoding="utf-8")
+        builder = (ROOT / "analysis" / "build_projection_bakeoff.py").read_text(encoding="utf-8")
+        source_register = (ROOT / "SOURCE-REGISTER.md").read_text(encoding="utf-8")
+        figures = [(ROOT / "figures" / f"oceanlines-projection-{slug}.svg").read_text(encoding="utf-8") for slug in ("spilhaus", "oceanic-goode", "pelagos")]
+        for token in ("Spilhaus", "Oceanic Goode", "PELAGOS", "not a newly derived projection equation", "+proj=laea +lat_0=-20 +lon_0=-165 +R=1"):
+            self.assertIn(token, page)
+        for token in ("adams_ws2", "+proj=igh_o +lon_0=-160", "+proj=laea +lat_0=-20 +lon_0=-165", "EXPECTED_SOURCE_SHA256"):
+            self.assertIn(token, builder)
+        for token in ("P1", "P2", "P3", "new center-and-edge policy"):
+            self.assertIn(token, source_register)
+        for figure in figures:
+            self.assertIn("9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9", figure)
+            for feature in ('class="heatmass"', 'class="anomaly"', 'class="current"', 'class="acc"', 'class="buried"', 'class="gate"'):
+                self.assertIn(feature, figure)
 
     def test_observed_layer_is_explicitly_surface_only(self):
         html = HTML.read_text(encoding="utf-8")

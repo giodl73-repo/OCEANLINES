@@ -9,6 +9,7 @@
 **[Explore the interactive Atlas 10 depth ladder →](atlas/)**
 
 [Open the full annotated map](figures/oceanlines-fluid-geography.svg) ·
+[Compare ocean-first projections](projections/) ·
 [Read the field guide](HEATMASS.md) ·
 [Open the research note](research/) ·
 [Import the bibliography](REFERENCES.bib) ·
@@ -19,6 +20,7 @@
 | If you want to… | Go here |
 |---|---|
 | See the idea in one image | [Full fluid-geography map](figures/oceanlines-fluid-geography.svg) |
+| Compare ocean-first world geometries | [Projection laboratory](projections/) |
 | Explore regions and observational layers | [Interactive Atlas](atlas/) |
 | Understand reservoirs, anomalies, pathways, and gates | [HEATMASS field guide](HEATMASS.md) |
 | Evaluate claims, receipts, and next measurements | [Research note](research/) |
@@ -91,13 +93,14 @@ quantitative.
 1. Explore the private [ATLAS 10 depth ladder](atlas/) for conceptual zones,
    surface observations, four Argo pressure levels, paired polar rings, the
    latitude ladder, and aligned polar-cap mirrors.
-2. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
-3. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
-4. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
-5. Frame source-versus-transport attribution in [ABYSSAL HEAT](ABYSSAL-HEAT.md).
-6. Carry the measurement discipline to Jupiter and Saturn in [OCEANBELTS](OCEANBELTS.md).
-7. Review the four falsifiable [PREDICTIONS](PREDICTIONS.md).
-8. Check claim provenance in the [SOURCE REGISTER](SOURCE-REGISTER.md).
+2. Compare Spilhaus, Oceanic Goode, and experimental [PELAGOS](projections/).
+3. Read [HEATMASS](HEATMASS.md) for the map vocabulary.
+4. Follow Antarctic heat through [OCEANREALMS](OCEANREALMS.md).
+5. Test competing mechanisms in [EXPERIMENTS](EXPERIMENTS.md).
+6. Frame source-versus-transport attribution in [ABYSSAL HEAT](ABYSSAL-HEAT.md).
+7. Carry the measurement discipline to Jupiter and Saturn in [OCEANBELTS](OCEANBELTS.md).
+8. Review the four falsifiable [PREDICTIONS](PREDICTIONS.md).
+9. Check claim provenance in the [SOURCE REGISTER](SOURCE-REGISTER.md).
 
 ## Review organization
 
